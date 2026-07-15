@@ -1,0 +1,19 @@
+{
+  "name": "agentsys",
+  "version": "1.0.0",
+  "description": "开源 LLM Agent 管理平台，定义、部署、编排和监控 AI Agent 集群。",
+  "main": "create_ppt.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "pptxgenjs": "^4.0.1",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "react-icons": "^5.7.0",
+    "sharp": "^0.35.3"
+  }
+}

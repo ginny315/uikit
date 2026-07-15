@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AgentSys — Design System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════════
+   AgentSys Design System — Light Theme (default)
+   ═══════════════════════════════════════════════════ */
+:root {
+  --bg-deep:       #F8F9FB;
+  --bg-primary:    #FFFFFF;
+  --bg-surface:    #F1F3F7;
+  --bg-card:       #FFFFFF;
+  --bg-card-hover: #F4F6FA;
+  --bg-sidebar:    #FAFBFC;
+
+  --text-primary:   #0F172A;
+  --text-secondary: #475569;
+  --text-muted:     #94A3B8;
+
+  --border-subtle:  rgba(0,0,0,0.06);
+  --border-default: rgba(0,0,0,0.10);
+  --border-active:  rgba(22,163,74,0.35);
+
+  --accent:         #16A34A;
+  --accent-glow:    #22C55E;
+  --accent-cyan:    #0891B2;
+  --accent-cyan-glow: #06B6D4;
+  --accent-purple:  #9333EA;
+  --accent-amber:   #D97706;
+  --accent-rose:    #E11D48;
+  --accent-blue:    #2563EB;
+
+  --radius-xs:  4px;
+  --radius-sm:  8px;
+  --radius-md:  12px;
+  --radius-lg:  16px;
+  --radius-xl:  24px;
+
+  --shadow-sm:  0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md:  0 4px 12px rgba(0,0,0,0.06);
+  --shadow-lg:  0 8px 24px rgba(0,0,0,0.08);
+
+  --space-xs:  4px;
+  --space-sm:  8px;
+  --space-md:  12px;
+  --space-lg:  16px;
+  --space-xl:  20px;
+  --space-2xl: 24px;
+  --space-3xl: 28px;
+  --space-4xl: 32px;
+
+  --font-brand: 'Space Grotesk', sans-serif;
+  --font-body:  'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono:  'JetBrains Mono', 'Fira Code', monospace;
+
+  --transition-fast: 150ms cubic-bezier(0.4,0,0.2,1);
+  --transition-base: 250ms cubic-bezier(0.4,0,0.2,1);
+
+  --sidebar-width: 220px;
+  --topbar-height: 0px;
+}
+
+/* ════════════════ Dark Theme ════════════════ */
+[data-theme="dark"] {
+  --bg-deep:       #060912;
+  --bg-primary:    #0A0E1A;
+  --bg-surface:    #111827;
+  --bg-card:       #151B2A;
+  --bg-card-hover: #1A2340;
+  --bg-sidebar:    #0D1320;
+
+  --text-primary:   #F1F5F9;
+  --text-secondary: #94A3B8;
+  --text-muted:     #64748B;
+
+  --border-subtle:  rgba(255,255,255,0.06);
+  --border-default: rgba(255,255,255,0.10);
+  --border-active:  rgba(34,197,94,0.25);
+
+  --accent:         #22C55E;
+  --accent-glow:    #4ADE80;
+  --accent-cyan:    #06B6D4;
+  --accent-cyan-glow: #22D3EE;
+  --accent-purple:  #A855F7;
+  --accent-amber:   #F59E0B;
+  --accent-rose:    #F43F5E;
+  --accent-blue:    #3B82F6;
+
+  --shadow-sm:  0 1px 2px rgba(0,0,0,0.3);
+  --shadow-md:  0 4px 12px rgba(0,0,0,0.4);
+  --shadow-lg:  0 8px 24px rgba(0,0,0,0.5);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ── Sidebar ── */
+.ds-sidebar {
+  width: var(--sidebar-width);
+  height: 100vh;
+  position: fixed;
+  left: 0; top: 0;
+  background: var(--bg-sidebar);
+  border-right: 1px solid var(--border-subtle);
+  display: flex; flex-direction: column;
+  z-index: 100;
+  overflow-y: auto;
+}
+.ds-sidebar__brand {
+  display: flex; align-items: center; gap: 10px;
+  padding: 20px 20px 16px;
+  font-family: var(--font-brand); font-weight: 700; font-size: 1.1rem;
+  color: var(--text-primary); text-decoration: none;
+  border-bottom: 1px solid var(--border-subtle);
+}
+.ds-sidebar__brand-icon {
+  width: 28px; height: 28px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-cyan));
+  border-radius: var(--radius-sm);
+  display: flex; align-items: center; justify-content: center;
+  color: #000; font-weight: 700; font-size: 0.7rem; flex-shrink: 0;
+}
+.ds-sidebar__nav { flex: 1; padding: 12px; display: flex; flex-direction: column; gap: 2px; }
+.ds-sidebar__section {
+  font-family: var(--font-mono); font-size: 0.62rem; font-weight: 500;
+  color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.12em;
+  padding: 14px 8px 4px;
+}
+.ds-sidebar__section:first-child { padding-top: 4px; }
+.ds-nav-item {
+  display: flex; align-items: center; gap: 8px;
+  padding: 7px 10px; border-radius: var(--radius-sm);
+  color: var(--text-secondary); text-decoration: none;
+  font-size: 0.82rem; font-weight: 500;
+  transition: all var(--transition-fast);
+  cursor: pointer; border: none; background: none;
+  width: 100%; text-align: left; font-family: inherit;
+}
+.ds-nav-item:hover { color: var(--text-primary); background: var(--border-subtle); }
+.ds-nav-item--active {
+  color: var(--accent); background: rgba(22,163,74,0.08); font-weight: 600;
+}
+
+.ds-sidebar__footer {
+  padding: 10px; border-top: 1px solid var(--border-subtle);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.theme-toggle {
+  display: flex; align-items: center; gap: 6px;
+  padding: 6px 10px; border-radius: var(--radius-sm);
+  border: 1px solid var(--border-default);
+  background: var(--bg-card); color: var(--text-secondary);
+  cursor: pointer; font-size: 0.72rem; font-family: var(--font-mono);
+  transition: all var(--transition-fast);
+}
+.theme-toggle:hover { border-color: var(--border-active); color: var(--text-primary); }
+
+/* ── Main ── */
+.ds-main {
+  margin-left: var(--sidebar-width);
+  flex: 1; min-height: 100vh;
+}
+.ds-main__content { padding: 32px 40px 60px; max-width: 960px; }
+
+/* ── Section Headers ── */
+.ds-section {
+  margin-bottom: 48px;
+  scroll-margin-top: 20px;
+}
+.ds-section__title {
+  font-family: var(--font-brand); font-size: 1.5rem; font-weight: 700;
+  margin-bottom: 6px; color: var(--text-primary);
+}
+.ds-section__desc {
+  font-size: 0.9rem; color: var(--text-muted); margin-bottom: 24px;
+}
+
+/* ── Token Display ── */
+.token-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 10px;
+}
+.token-swatch {
+  border: 1px solid var(--border-subtle); border-radius: var(--radius-md);
+  overflow: hidden; background: var(--bg-card);
+}
+.token-swatch__color {
+  height: 56px;
+}
+.token-swatch__meta {
+  padding: 8px 10px;
+}
+.token-swatch__name {
+  font-family: var(--font-mono); font-size: 0.68rem; font-weight: 500; color: var(--text-secondary);
+}
+.token-swatch__value {
+  font-family: var(--font-mono); font-size: 0.62rem; color: var(--text-muted); margin-top: 2px;
+}
+
+/* ── Type Scale ── */
+.type-sample {
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+.type-sample__preview { margin-bottom: 6px; }
+.type-sample__meta {
+  font-family: var(--font-mono); font-size: 0.68rem; color: var(--text-muted);
+  display: flex; gap: 16px;
+}
+.type-sample__meta span { color: var(--text-secondary); }
+
+/* ── Spacing scale ── */
+.space-bar {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 8px;
+}
+.space-bar__visual {
+  height: 24px; background: var(--accent); border-radius: 4px;
+  opacity: 0.3;
+}
+.space-bar__label {
+  font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-secondary);
+  width: 80px; flex-shrink: 0;
+}
+.space-bar__value {
+  font-family: var(--font-mono); font-size: 0.65rem; color: var(--text-muted);
+  width: 50px; text-align: right;
+}
+
+/* ── Component Preview ── */
+.comp-preview {
+  border: 1px dashed var(--border-default);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  margin-bottom: 16px;
+  background: var(--bg-deep);
+  position: relative;
+}
+.comp-preview--light { background: #F8F9FB; }
+.comp-preview--dark  { background: #060912; }
+.comp-preview--dark .stat-card,
+.comp-preview--dark .chart-card,
+.comp-preview--dark .queue-card,
+.comp-preview--dark .tasks-card,
+.comp-preview--dark .health-card { background: #151B2A; border-color: rgba(255,255,255,0.06); color: #F1F5F9; }
+.comp-preview--dark .stat-card__label { color: #64748B; }
+.comp-preview--dark .queue-item { background: #111827; border-color: rgba(255,255,255,0.06); }
+.comp-preview--dark .queue-item__label { color: #94A3B8; }
+.comp-preview--dark thead th { color: #64748B; border-color: rgba(255,255,255,0.06); }
+.comp-preview--dark tbody td { color: #94A3B8; border-color: rgba(255,255,255,0.06); }
+.comp-preview--dark tbody tr:hover { background: rgba(255,255,255,0.03); }
+.comp-preview--dark .health-card { background: #151B2A; border-color: rgba(255,255,255,0.06); }
+.comp-preview--dark .chart-card__title { color: #F1F5F9; }
+.comp-preview--dark .latency-row__track { background: rgba(255,255,255,0.06); }
+.comp-preview--dark .latency-row__label { color: #94A3B8; }
+
+.comp-label {
+  font-family: var(--font-mono); font-size: 0.7rem; font-weight: 600;
+  color: var(--accent); text-transform: uppercase;
+  letter-spacing: 0.06em; margin-bottom: 12px;
+}
+.comp-code {
+  margin-top: 12px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+.comp-code__header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 6px 12px;
+  border-bottom: 1px solid var(--border-subtle);
+  font-family: var(--font-mono); font-size: 0.62rem;
+  color: var(--text-muted);
+}
+.comp-code pre {
+  padding: 12px;
+  font-family: var(--font-mono); font-size: 0.7rem;
+  color: var(--text-secondary);
+  overflow-x: auto; line-height: 1.7;
+  white-space: pre;
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+/* ── Component: Stat Card ── */
+.stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; max-width: 800px; }
+.stat-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 18px 20px;
+  display: flex; flex-direction: column; gap: 8px;
+  transition: all var(--transition-base);
+  cursor: pointer;
+}
+.stat-card:hover {
+  border-color: var(--border-active);
+  background: var(--bg-card-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+.stat-card__header { display: flex; align-items: center; justify-content: space-between; }
+.stat-card__label { font-size: 0.78rem; color: var(--text-muted); font-weight: 500; }
+.stat-card__icon {
+  width: 30px; height: 30px; border-radius: var(--radius-sm);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.stat-card__value {
+  font-family: var(--font-brand); font-size: 1.7rem; font-weight: 700; line-height: 1;
+}
+.stat-card__trend { font-size: 0.74rem; display: flex; align-items: center; gap: 4px; }
+.trend-up { color: var(--accent); }
+.trend-down { color: var(--accent-rose); }
+
+/* ── Component: Chart Card ── */
+.chart-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 18px 20px;
+}
+.chart-card__header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 14px;
+}
+.chart-card__title { font-size: 0.9rem; font-weight: 600; color: var(--text-primary); }
+.chart-card__filter {
+  font-family: var(--font-mono); font-size: 0.66rem;
+  color: var(--text-muted);
+  padding: 3px 8px; border: 1px solid var(--border-subtle);
+  border-radius: 6px; background: none; cursor: pointer;
+}
+
+.bar-chart { display: flex; align-items: flex-end; gap: 10px; height: 130px; }
+.bar-chart__col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 5px; height: 100%; justify-content: flex-end; }
+.bar-chart__bar { width: 100%; max-width: 44px; border-radius: 5px 5px 0 0; transition: height var(--transition-base); cursor: pointer; }
+.bar-chart__bar:hover { filter: brightness(1.2); }
+.bar-chart__bar--green  { background: linear-gradient(180deg, var(--accent-glow), var(--accent)); }
+.bar-chart__bar--cyan   { background: linear-gradient(180deg, var(--accent-cyan-glow), var(--accent-cyan)); }
+.bar-chart__bar--purple { background: linear-gradient(180deg, #C084FC, var(--accent-purple)); }
+.bar-chart__bar--amber  { background: linear-gradient(180deg, #FBBF24, var(--accent-amber)); }
+.bar-chart__label { font-family: var(--font-mono); font-size: 0.62rem; color: var(--text-muted); }
+
+.latency-bars { display: flex; flex-direction: column; gap: 8px; }
+.latency-row { display: flex; align-items: center; gap: 10px; }
+.latency-row__label {
+  font-family: var(--font-mono); font-size: 0.7rem;
+  color: var(--text-secondary); width: 65px; flex-shrink: 0; text-align: right;
+}
+.latency-row__track { flex: 1; height: 7px; background: rgba(0,0,0,0.05); border-radius: 4px; overflow: hidden; }
+.latency-row__fill { height: 100%; border-radius: 4px; transition: width 0.8s; }
+.latency-row__fill--fast { background: var(--accent); }
+.latency-row__fill--mid  { background: var(--accent-cyan); }
+.latency-row__fill--slow { background: var(--accent-amber); }
+.latency-row__fill--tail { background: var(--accent-rose); }
+.latency-row__count { font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-muted); width: 35px; }
+
+/* ── Component: Queue ── */
+.queue-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 18px 20px;
+}
+.queue-card__title { font-size: 0.9rem; font-weight: 600; margin-bottom: 12px; }
+.queue-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px; border-radius: var(--radius-sm);
+  margin-bottom: 6px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+.queue-item:hover { background: var(--bg-card-hover); border-color: var(--border-default); }
+.queue-item__dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.queue-item__dot--urgent { background: var(--accent-rose); box-shadow: 0 0 5px rgba(225,29,72,0.25); }
+.queue-item__dot--high   { background: var(--accent-amber); box-shadow: 0 0 5px rgba(217,119,6,0.25); }
+.queue-item__dot--normal { background: var(--accent-cyan); box-shadow: 0 0 5px rgba(8,145,178,0.25); }
+.queue-item__dot--low    { background: var(--text-muted); }
+.queue-item__label { font-size: 0.82rem; color: var(--text-secondary); flex: 1; }
+.queue-item__count { font-family: var(--font-mono); font-size: 0.82rem; font-weight: 600; color: var(--text-primary); }
+
+/* ── Component: Table ── */
+.tasks-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 18px 20px;
+  overflow: hidden;
+}
+.tasks-card__header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 14px;
+}
+.tasks-card__title { font-size: 0.9rem; font-weight: 600; }
+.tasks-card__link {
+  font-size: 0.78rem; color: var(--accent); text-decoration: none; font-weight: 500;
+}
+.tasks-card__link:hover { color: var(--accent-glow); }
+
+.table-wrap { overflow-x: auto; }
+.ds-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+.ds-table thead th {
+  text-align: left;
+  font-family: var(--font-mono); font-size: 0.64rem; font-weight: 500;
+  color: var(--text-muted); text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+.ds-table tbody td {
+  padding: 9px 10px;
+  border-bottom: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+}
+.ds-table tbody tr { transition: background var(--transition-fast); cursor: pointer; }
+.ds-table tbody tr:hover { background: var(--border-subtle); }
+.ds-table tbody tr:last-child td { border-bottom: none; }
+
+/* ── Component: Status Badge ── */
+.status-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 0.72rem; font-weight: 500;
+  padding: 2px 8px; border-radius: 10px;
+}
+.status-badge--running   { background: rgba(8,145,178,0.12); color: var(--accent-cyan); }
+.status-badge--succeeded { background: rgba(22,163,74,0.12); color: var(--accent); }
+.status-badge--failed    { background: rgba(225,29,72,0.12); color: var(--accent-rose); }
+.status-badge--queued    { background: rgba(217,119,6,0.12); color: var(--accent-amber); }
+.status-badge__dot { width: 4px; height: 4px; border-radius: 50%; background: currentColor; }
+
+/* ── Component: Health Card ── */
+.health-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 10px;
+}
+.health-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  display: flex; align-items: center; gap: 10px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+.health-card:hover { border-color: var(--border-default); background: var(--bg-card-hover); }
+.health-card__indicator { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+.health-card__indicator--ok   { background: var(--accent); box-shadow: 0 0 6px rgba(22,163,74,0.2); }
+.health-card__indicator--warn { background: var(--accent-amber); box-shadow: 0 0 6px rgba(217,119,6,0.2); }
+.health-card__indicator--err  { background: var(--accent-rose); box-shadow: 0 0 6px rgba(225,29,72,0.2); }
+.health-card__info { flex: 1; min-width: 0; }
+.health-card__name { font-size: 0.78rem; font-weight: 600; font-family: var(--font-mono); }
+.health-card__meta { font-size: 0.68rem; color: var(--text-muted); margin-top: 1px; }
+
+/* ── Component: Button ── */
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 22px; border-radius: var(--radius-xl);
+  font-family: var(--font-brand); font-weight: 600;
+  font-size: 0.85rem; cursor: pointer;
+  transition: all var(--transition-fast);
+  border: none; text-decoration: none;
+  white-space: nowrap;
+}
+.btn--primary {
+  background: var(--accent); color: #000;
+}
+.btn--primary:hover { background: var(--accent-glow); }
+.btn--secondary {
+  background: transparent; color: var(--text-primary);
+  border: 1px solid var(--border-default);
+}
+.btn--secondary:hover { border-color: var(--border-active); }
+.btn--ghost {
+  background: transparent; color: var(--text-secondary);
+}
+.btn--ghost:hover { color: var(--text-primary); background: var(--border-subtle); }
+.btn--sm { padding: 6px 14px; font-size: 0.76rem; }
+.btn--lg { padding: 13px 28px; font-size: 0.95rem; }
+
+/* ── Component: Search Input ── */
+.search-box {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-sm);
+  padding: 7px 12px;
+  width: 220px;
+  transition: border-color var(--transition-fast);
+}
+.search-box:focus-within { border-color: var(--border-active); }
+.search-box input {
+  background: none; border: none; outline: none;
+  color: var(--text-primary); font-size: 0.82rem;
+  font-family: inherit; width: 100%;
+}
+.search-box input::placeholder { color: var(--text-muted); }
+
+/* ── Component: Navigation Bar ── */
+.nav-bar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 11px 22px;
+  background: rgba(17,24,39,0.75); backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: var(--radius-xl);
+}
+.nav-bar__brand {
+  display: flex; align-items: center; gap: 8px;
+  font-family: var(--font-brand); font-weight: 700; font-size: 1.05rem;
+  color: #F1F5F9;
+}
+.nav-bar__links { display: flex; gap: 24px; }
+.nav-bar__link {
+  color: #94A3B8; text-decoration: none;
+  font-size: 0.85rem; font-weight: 500;
+  transition: color var(--transition-fast);
+}
+.nav-bar__link:hover { color: #F1F5F9; }
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .ds-sidebar { display: none; }
+  .ds-main { margin-left: 0; }
+  .ds-main__content { padding: 20px; }
+  .stats-row { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
+</head>
+<body>
+
+<!-- ════════════════ SIDEBAR ════════════════ -->
+<aside class="ds-sidebar">
+  <a href="#" class="ds-sidebar__brand">
+    <div class="ds-sidebar__brand-icon">A</div>
+    Design System
+  </a>
+  <nav class="ds-sidebar__nav">
+    <div class="ds-sidebar__section">Design Tokens</div>
+    <a href="#colors" class="ds-nav-item ds-nav-item--active">🎨 色彩 Colors</a>
+    <a href="#typography" class="ds-nav-item">🔤 字体 Typography</a>
+    <a href="#spacing" class="ds-nav-item">📏 间距 Spacing</a>
+    <a href="#radius" class="ds-nav-item">⭕ 圆角 Radius</a>
+    <a href="#shadows" class="ds-nav-item">🌑 阴影 Shadows</a>
+
+    <div class="ds-sidebar__section">Components</div>
+    <a href="#comp-buttons" class="ds-nav-item">🔘 按钮 Buttons</a>
+    <a href="#comp-search" class="ds-nav-item">🔍 搜索 Search</a>
+    <a href="#comp-navbar" class="ds-nav-item">🧭 导航 Navbar</a>
+    <a href="#comp-statcards" class="ds-nav-item">📊 统计卡片 Stat Cards</a>
+    <a href="#comp-charts" class="ds-nav-item">📈 图表 Charts</a>
+    <a href="#comp-queue" class="ds-nav-item">📋 队列 Queue</a>
+    <a href="#comp-table" class="ds-nav-item">📑 表格 Table</a>
+    <a href="#comp-badges" class="ds-nav-item">🏷 状态标识 Badges</a>
+    <a href="#comp-health" class="ds-nav-item">💚 系统健康 Health</a>
+
+    <div class="ds-sidebar__section">Pages</div>
+    <a href="#page-dashboard" class="ds-nav-item">🖥 Dashboard 概览</a>
+    <a href="#page-dark" class="ds-nav-item">🌙 Dark 主题预览</a>
+  </nav>
+  <div class="ds-sidebar__footer">
+    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">
+      <span id="themeIcon">🌙</span>
+      <span id="themeLabel">Dark</span>
+    </button>
+  </div>
+</aside>
+
+<!-- ════════════════ MAIN ════════════════ -->
+<main class="ds-main">
+<div class="ds-main__content">
+
+<!-- ── Header ── -->
+<div class="ds-section">
+  <h1 style="font-family:var(--font-brand);font-size:2rem;font-weight:700;margin-bottom:4px;">AgentSys Design System</h1>
+  <p style="color:var(--text-muted);font-size:0.95rem;">基于 dashboard.html 和 landing page 的完整设计系统。所有颜色、字体、间距和组件均可直接引用。</p>
+</div>
+
+<!-- ════════════ COLORS ════════════ -->
+<div class="ds-section" id="colors">
+  <h2 class="ds-section__title">🎨 色彩 Colors</h2>
+  <p class="ds-section__desc">Light 主题为默认。所有颜色通过 CSS 变量暴露，切换 <code>data-theme="dark"</code> 即可切换整套配色。</p>
+
+  <h3 style="font-family:var(--font-brand);font-size:1rem;margin-bottom:12px;color:var(--text-secondary);">背景层级 Background</h3>
+  <div class="token-grid">
+    <div class="token-swatch"><div class="token-swatch__color" style="background:#F8F9FB;"></div><div class="token-swatch__meta"><div class="token-swatch__name">--bg-deep</div><div class="token-swatch__value">#F8F9FB</div></div></div>
+    <div class="token-swatch"><div class="token-swatch__color" style="background:#FFFFFF;border:1px solid #eee;"></div><div class="token-swatch__meta"><div class="token-swatch__name">--bg-primary</div><div class="token-swatch__value">#FFFFFF</div></div></div>
+    <div class="token-swatch"><div class="token-swatch__color" style="background:#F1F3F7;"></div><div class="token-swatch__meta"><div class="token-swatch__name">--bg-surface</div><div class="token-swatch__value">#F1F3F7</div></div></div>
+    <div class="token-swatch"><div class="token-swatch__color" style="background:#FFFFFF;border:1px solid #eee;"></div><div class="token-swatch__meta"><div class="token-swatch__name">--bg-card</div><div class="token-swatch__value">#FFFFFF</div></div></div>
+    <div class="token-swatch"><div class="token-swatch__color" style="background:#F4F6FA;"></div><div class="token-swatch__meta"><div class="token-swatch__name">--bg-card-hover</div><div class="token-swatch__value">#F4F6FA</div></div></div>
+    <div class="token-swatch"><div class="token-swatch__color" style="background:#FAFBFC;"></div><div class="token-swatch__meta"><div class="token-swatch__name">--bg-sidebar</div><div class="token-swatch__value">#FAFBFC</div></div></div>
+  </div>
+
+  <h3 style="font-family:var(--font-brand);font-size:1rem;margin:20px 0 12px;color:var(--text-secondary);">文字层级 Text</h3>
+  <div class="token-grid">
+    <div class="token-swatch"><div class="token-swatch__color" style="background:#0F172A;"></div><div class="token-swatch__meta"><div class="token-swatch__name">--text-primary</div><div class="token-swatch__value">#0F172A</div></div></div>
+    <div class="token-swatch"><div class="token-swatch__color" style="background:#475569;"></div><div class="token-swatch__meta"><div class="token-swatch__name">--text-secondary</div><div class="token-swatch__value">#475569</div></div></div>
+    <div class="token-swatch"><div class="token-swatch__color" style="background:#94A3B8;"></div><div class="token-swatch__meta"><div class="token-swatch__name">--text-muted</div><div class="token-swatch__value">#94A3B8</div></div></div>
+  </div>
+
+  <h3 style="font-family:var(--font-brand);font-size:1rem;margin:20px 0 12px;color:var(--text-secondary);">品牌 & 语义色 Brand & Semantic</h3>
+  <div class="token-grid">
+    <div class="token-swatch"><div class="token-swatch__color" style="background:#16A34A;"></div><div class="token-swatch__meta"><div class="token-swatch__name">--accent (绿)</div><div class="token-swatch__value">#16A34A</div></div></div>
+    <div class="token-swatch"><div class="token-swatch__color" style="background:#22C55E;"></div><div class="token-swatch__meta"><div class="token-swatch__name">--accent-glow</div><div class="token-swatch__value">#22C55E</div></div></div>
+    <div class="token-swatch"><div class="token-swatch__color" style="background:#0891B2;"></div><div class="token-swatch__meta"><div class="token-swatch__name">--accent-cyan</div><div class="token-swatch__value">#0891B2</div></div></div>
+    <div class="token-swatch"><div class="token-swatch__color" style="background:#9333EA;"></div><div class="token-swatch__meta"><div class="token-swatch__name">--accent-purple</div><div class="token-swatch__value">#9333EA</div></div></div>
+    <div class="token-swatch"><div class="token-swatch__color" style="background:#D97706;"></div><div class="token-swatch__meta"><div class="token-swatch__name">--accent-amber</div><div class="token-swatch__value">#D97706</div></div></div>
+    <div class="token-swatch"><div class="token-swatch__color" style="background:#E11D48;"></div><div class="token-swatch__meta"><div class="token-swatch__name">--accent-rose</div><div class="token-swatch__value">#E11D48</div></div></div>
+  </div>
+</div>
+
+<!-- ════════════ TYPOGRAPHY ════════════ -->
+<div class="ds-section" id="typography">
+  <h2 class="ds-section__title">🔤 字体 Typography</h2>
+  <p class="ds-section__desc">三套字体家族，覆盖品牌/正文/代码三种场景。</p>
+
+  <div class="type-sample">
+    <div class="type-sample__preview" style="font-family:var(--font-brand);font-size:2rem;font-weight:700;">Space Grotesk Bold — 页面标题</div>
+    <div class="type-sample__meta"><span>Space Grotesk</span> Bold · 32px · line-height 1.3 · 品牌/标题</div>
+  </div>
+  <div class="type-sample">
+    <div class="type-sample__preview" style="font-family:var(--font-brand);font-size:1.5rem;font-weight:600;">Space Grotesk SemiBold — Section 标题</div>
+    <div class="type-sample__meta"><span>Space Grotesk</span> SemiBold · 24px · line-height 1.3 · Section 标题、卡片标题</div>
+  </div>
+  <div class="type-sample">
+    <div class="type-sample__preview" style="font-family:var(--font-body);font-size:1rem;font-weight:400;">DM Sans Regular — 正文段落。AgentSys 是一个开源的 LLM Agent 管理平台，帮助你定义、部署、编排和监控 AI Agent。</div>
+    <div class="type-sample__meta"><span>DM Sans</span> Regular · 16px · line-height 1.6 · 正文、描述</div>
+  </div>
+  <div class="type-sample">
+    <div class="type-sample__preview" style="font-family:var(--font-body);font-size:0.88rem;font-weight:500;">DM Sans Medium — 导航项、按钮文字</div>
+    <div class="type-sample__meta"><span>DM Sans</span> Medium · 14px · line-height 1.5 · 导航、按钮、表单</div>
+  </div>
+  <div class="type-sample">
+    <div class="type-sample__preview" style="font-family:var(--font-mono);font-size:0.82rem;font-weight:400;">JetBrains Mono Regular — 代码和数据展示 agentsys agent create</div>
+    <div class="type-sample__meta"><span>JetBrains Mono</span> Regular · 13px · line-height 1.8 · 代码、CLI、数据</div>
+  </div>
+  <div class="type-sample">
+    <div class="type-sample__preview" style="font-family:var(--font-mono);font-size:0.65rem;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;">JETBRAINS MONO MEDIUM — SECTION LABEL</div>
+    <div class="type-sample__meta"><span>JetBrains Mono</span> Medium · 10.4px · uppercase · 表格头、sidebar 分组标签</div>
+  </div>
+</div>
+
+<!-- ════════════ SPACING ════════════ -->
+<div class="ds-section" id="spacing">
+  <h2 class="ds-section__title">📏 间距 Spacing</h2>
+  <p class="ds-section__desc">8px 基准网格。所有间距通过 CSS 变量使用。</p>
+  <div class="space-bar"><span class="space-bar__label">--space-xs</span><div class="space-bar__visual" style="width:4px;"></div><span class="space-bar__value">4px</span></div>
+  <div class="space-bar"><span class="space-bar__label">--space-sm</span><div class="space-bar__visual" style="width:8px;"></div><span class="space-bar__value">8px</span></div>
+  <div class="space-bar"><span class="space-bar__label">--space-md</span><div class="space-bar__visual" style="width:12px;"></div><span class="space-bar__value">12px</span></div>
+  <div class="space-bar"><span class="space-bar__label">--space-lg</span><div class="space-bar__visual" style="width:16px;"></div><span class="space-bar__value">16px</span></div>
+  <div class="space-bar"><span class="space-bar__label">--space-xl</span><div class="space-bar__visual" style="width:20px;"></div><span class="space-bar__value">20px</span></div>
+  <div class="space-bar"><span class="space-bar__label">--space-2xl</span><div class="space-bar__visual" style="width:24px;"></div><span class="space-bar__value">24px</span></div>
+  <div class="space-bar"><span class="space-bar__label">--space-3xl</span><div class="space-bar__visual" style="width:28px;"></div><span class="space-bar__value">28px</span></div>
+  <div class="space-bar"><span class="space-bar__label">--space-4xl</span><div class="space-bar__visual" style="width:32px;"></div><span class="space-bar__value">32px</span></div>
+</div>
+
+<!-- ════════════ RADIUS ════════════ -->
+<div class="ds-section" id="radius">
+  <h2 class="ds-section__title">⭕ 圆角 Border Radius</h2>
+  <p class="ds-section__desc">统一的圆角量表，从 4px 到 24px。</p>
+  <div style="display:flex;gap:20px;flex-wrap:wrap;">
+    <div style="width:64px;height:64px;background:var(--accent);border-radius:4px;display:flex;align-items:flex-end;justify-content:center;padding-bottom:6px;"><span style="font-family:var(--font-mono);font-size:0.6rem;color:#000;">4px</span></div>
+    <div style="width:64px;height:64px;background:var(--accent);border-radius:8px;display:flex;align-items:flex-end;justify-content:center;padding-bottom:6px;"><span style="font-family:var(--font-mono);font-size:0.6rem;color:#000;">8px</span></div>
+    <div style="width:64px;height:64px;background:var(--accent);border-radius:12px;display:flex;align-items:flex-end;justify-content:center;padding-bottom:6px;"><span style="font-family:var(--font-mono);font-size:0.6rem;color:#000;">12px</span></div>
+    <div style="width:64px;height:64px;background:var(--accent);border-radius:16px;display:flex;align-items:flex-end;justify-content:center;padding-bottom:6px;"><span style="font-family:var(--font-mono);font-size:0.6rem;color:#000;">16px</span></div>
+    <div style="width:64px;height:64px;background:var(--accent);border-radius:24px;display:flex;align-items:flex-end;justify-content:center;padding-bottom:6px;"><span style="font-family:var(--font-mono);font-size:0.6rem;color:#000;">24px</span></div>
+    <div style="width:64px;height:64px;background:var(--accent);border-radius:50%;display:flex;align-items:flex-end;justify-content:center;padding-bottom:6px;"><span style="font-family:var(--font-mono);font-size:0.6rem;color:#000;">full</span></div>
+  </div>
+</div>
+
+<!-- ════════════ SHADOWS ════════════ -->
+<div class="ds-section" id="shadows">
+  <h2 class="ds-section__title">🌑 阴影 Shadows</h2>
+  <div style="display:flex;gap:20px;flex-wrap:wrap;">
+    <div style="width:100px;height:80px;background:var(--bg-card);border-radius:12px;box-shadow:var(--shadow-sm);display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:0.65rem;color:var(--text-muted);">sm</div>
+    <div style="width:100px;height:80px;background:var(--bg-card);border-radius:12px;box-shadow:var(--shadow-md);display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:0.65rem;color:var(--text-muted);">md</div>
+    <div style="width:100px;height:80px;background:var(--bg-card);border-radius:12px;box-shadow:var(--shadow-lg);display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:0.65rem;color:var(--text-muted);">lg</div>
+  </div>
+</div>
+
+<!-- ════════════ COMPONENTS: BUTTONS ════════════ -->
+<div class="ds-section" id="comp-buttons">
+  <h2 class="ds-section__title">🔘 按钮 Buttons</h2>
+  <div class="comp-preview">
+    <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
+      <button class="btn btn--primary">快速开始</button>
+      <button class="btn btn--secondary">查看文档</button>
+      <button class="btn btn--ghost">了解更多</button>
+      <button class="btn btn--primary btn--lg">主按钮 Large</button>
+      <button class="btn btn--secondary btn--sm">次按钮 Small</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ SEARCH ════════════ -->
+<div class="ds-section" id="comp-search">
+  <h2 class="ds-section__title">🔍 搜索 Search</h2>
+  <div class="comp-preview">
+    <div class="search-box">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.3-4.3"/></svg>
+      <input type="text" placeholder="搜索 Agent、任务...">
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ NAVBAR ════════════ -->
+<div class="ds-section" id="comp-navbar">
+  <h2 class="ds-section__title">🧭 导航栏 Navbar (Dark only — Landing Page)</h2>
+  <div class="comp-preview comp-preview--dark">
+    <div class="nav-bar">
+      <div class="nav-bar__brand">
+        <div class="ds-sidebar__brand-icon">A</div>
+        AgentSys
+      </div>
+      <div class="nav-bar__links">
+        <a href="#" class="nav-bar__link">功能</a>
+        <a href="#" class="nav-bar__link">架构</a>
+        <a href="#" class="nav-bar__link">数据</a>
+        <a href="#" class="nav-bar__link">文档</a>
+      </div>
+      <button class="btn btn--primary btn--sm" style="background:#22C55E;">快速开始</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ STAT CARDS ════════════ -->
+<div class="ds-section" id="comp-statcards">
+  <h2 class="ds-section__title">📊 统计卡片 Stat Cards</h2>
+  <div class="comp-preview">
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-card__header">
+          <span class="stat-card__label">活跃 Agent</span>
+          <div class="stat-card__icon" style="background:rgba(168,85,247,0.12);color:#A855F7;">🤖</div>
+        </div>
+        <div class="stat-card__value">12</div>
+        <div class="stat-card__trend trend-up">↑ 2 本周新增</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card__header">
+          <span class="stat-card__label">今日任务</span>
+          <div class="stat-card__icon" style="background:rgba(6,182,212,0.12);color:#06B6D4;">✓</div>
+        </div>
+        <div class="stat-card__value">1,247</div>
+        <div class="stat-card__trend trend-up">↑ 12.5% vs 昨日</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card__header">
+          <span class="stat-card__label">成功率</span>
+          <div class="stat-card__icon" style="background:rgba(34,197,94,0.12);color:#22C55E;">✔</div>
+        </div>
+        <div class="stat-card__value">98.4<span style="font-size:0.9rem;color:var(--text-muted);">%</span></div>
+        <div class="stat-card__trend trend-up">↑ 0.3% 改善</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card__header">
+          <span class="stat-card__label">Token 消耗</span>
+          <div class="stat-card__icon" style="background:rgba(245,158,11,0.12);color:#F59E0B;">⚡</div>
+        </div>
+        <div class="stat-card__value">852K<span style="font-size:0.8rem;color:var(--text-muted);font-weight:400;"> / 5M</span></div>
+        <div class="stat-card__trend" style="color:var(--text-muted);">剩余配额 83%</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ CHARTS ════════════ -->
+<div class="ds-section" id="comp-charts">
+  <h2 class="ds-section__title">📈 图表 Charts</h2>
+
+  <h3 style="font-family:var(--font-mono);font-size:0.78rem;color:var(--text-muted);margin-bottom:8px;">Bar Chart — 任务吞吐量</h3>
+  <div class="comp-preview">
+    <div class="chart-card" style="max-width:500px;">
+      <div class="chart-card__header">
+        <span class="chart-card__title">任务吞吐量 (每小时)</span>
+        <select class="chart-card__filter"><option>今日</option></select>
+      </div>
+      <div class="bar-chart">
+        <div class="bar-chart__col"><div class="bar-chart__bar bar-chart__bar--green" style="height:45%"></div><span class="bar-chart__label">00:00</span></div>
+        <div class="bar-chart__col"><div class="bar-chart__bar bar-chart__bar--green" style="height:30%"></div><span class="bar-chart__label">03:00</span></div>
+        <div class="bar-chart__col"><div class="bar-chart__bar bar-chart__bar--green" style="height:65%"></div><span class="bar-chart__label">06:00</span></div>
+        <div class="bar-chart__col"><div class="bar-chart__bar bar-chart__bar--green" style="height:88%"></div><span class="bar-chart__label">09:00</span></div>
+        <div class="bar-chart__col"><div class="bar-chart__bar bar-chart__bar--green" style="height:95%"></div><span class="bar-chart__label">12:00</span></div>
+        <div class="bar-chart__col"><div class="bar-chart__bar bar-chart__bar--green" style="height:72%"></div><span class="bar-chart__label">15:00</span></div>
+        <div class="bar-chart__col"><div class="bar-chart__bar bar-chart__bar--green" style="height:58%"></div><span class="bar-chart__label">18:00</span></div>
+        <div class="bar-chart__col"><div class="bar-chart__bar bar-chart__bar--green" style="height:40%"></div><span class="bar-chart__label">21:00</span></div>
+      </div>
+    </div>
+  </div>
+
+  <h3 style="font-family:var(--font-mono);font-size:0.78rem;color:var(--text-muted);margin-bottom:8px;">Latency Distribution — 任务延迟</h3>
+  <div class="comp-preview">
+    <div class="chart-card" style="max-width:500px;">
+      <div class="chart-card__header">
+        <span class="chart-card__title">任务延迟分布</span>
+      </div>
+      <div class="latency-bars">
+        <div class="latency-row">
+          <span class="latency-row__label">&lt;100ms</span>
+          <div class="latency-row__track"><div class="latency-row__fill latency-row__fill--fast" style="width:62%"></div></div>
+          <span class="latency-row__count">774</span>
+        </div>
+        <div class="latency-row">
+          <span class="latency-row__label">100-500ms</span>
+          <div class="latency-row__track"><div class="latency-row__fill latency-row__fill--mid" style="width:24%"></div></div>
+          <span class="latency-row__count">299</span>
+        </div>
+        <div class="latency-row">
+          <span class="latency-row__label">500ms-2s</span>
+          <div class="latency-row__track"><div class="latency-row__fill latency-row__fill--slow" style="width:10%"></div></div>
+          <span class="latency-row__count">125</span>
+        </div>
+        <div class="latency-row">
+          <span class="latency-row__label">&gt;2s</span>
+          <div class="latency-row__track"><div class="latency-row__fill latency-row__fill--tail" style="width:4%"></div></div>
+          <span class="latency-row__count">49</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ QUEUE ════════════ -->
+<div class="ds-section" id="comp-queue">
+  <h2 class="ds-section__title">📋 队列 Queue</h2>
+  <div class="comp-preview">
+    <div class="queue-card" style="max-width:360px;">
+      <div class="queue-card__title">队列状态</div>
+      <div class="queue-item">
+        <span class="queue-item__dot queue-item__dot--urgent"></span>
+        <span class="queue-item__label">紧急 Urgent</span>
+        <span class="queue-item__count">3</span>
+      </div>
+      <div class="queue-item">
+        <span class="queue-item__dot queue-item__dot--high"></span>
+        <span class="queue-item__label">高优先级 High</span>
+        <span class="queue-item__count">18</span>
+      </div>
+      <div class="queue-item">
+        <span class="queue-item__dot queue-item__dot--normal"></span>
+        <span class="queue-item__label">普通 Normal</span>
+        <span class="queue-item__count">64</span>
+      </div>
+      <div class="queue-item">
+        <span class="queue-item__dot queue-item__dot--low"></span>
+        <span class="queue-item__label">低优先级 Low</span>
+        <span class="queue-item__count">147</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ TABLE ════════════ -->
+<div class="ds-section" id="comp-table">
+  <h2 class="ds-section__title">📑 表格 Table</h2>
+  <div class="comp-preview">
+    <div class="tasks-card" style="max-width:700px;">
+      <div class="tasks-card__header">
+        <span class="tasks-card__title">最近任务</span>
+        <a href="#" class="tasks-card__link">查看全部 →</a>
+      </div>
+      <div class="table-wrap">
+        <table class="ds-table">
+          <thead>
+            <tr><th>任务 ID</th><th>Agent</th><th>状态</th><th>优先级</th><th>耗时</th><th>时间</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="font-family:var(--font-mono);font-size:0.74rem;">task_7a3f2</td>
+              <td>code-reviewer</td>
+              <td><span class="status-badge status-badge--succeeded"><span class="status-badge__dot"></span>成功</span></td>
+              <td style="font-family:var(--font-mono);font-size:0.68rem;color:var(--accent-amber);">HIGH</td>
+              <td style="font-family:var(--font-mono);font-size:0.74rem;">12.7s</td>
+              <td style="font-size:0.76rem;color:var(--text-muted);">10:32:15</td>
+            </tr>
+            <tr>
+              <td style="font-family:var(--font-mono);font-size:0.74rem;">task_b81e9</td>
+              <td>security-scanner</td>
+              <td><span class="status-badge status-badge--running"><span class="status-badge__dot"></span>运行中</span></td>
+              <td style="font-family:var(--font-mono);font-size:0.68rem;color:var(--accent-rose);">URGENT</td>
+              <td style="font-family:var(--font-mono);font-size:0.74rem;">—</td>
+              <td style="font-size:0.76rem;color:var(--text-muted);">10:31:48</td>
+            </tr>
+            <tr>
+              <td style="font-family:var(--font-mono);font-size:0.74rem;">task_4c21a</td>
+              <td>test-generator</td>
+              <td><span class="status-badge status-badge--failed"><span class="status-badge__dot"></span>失败</span></td>
+              <td style="font-family:var(--font-mono);font-size:0.68rem;color:var(--text-secondary);">NORMAL</td>
+              <td style="font-family:var(--font-mono);font-size:0.74rem;">3.2s</td>
+              <td style="font-size:0.76rem;color:var(--text-muted);">10:29:03</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ BADGES ════════════ -->
+<div class="ds-section" id="comp-badges">
+  <h2 class="ds-section__title">🏷 状态标识 Status Badges</h2>
+  <div class="comp-preview">
+    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+      <span class="status-badge status-badge--running"><span class="status-badge__dot"></span>运行中</span>
+      <span class="status-badge status-badge--succeeded"><span class="status-badge__dot"></span>成功</span>
+      <span class="status-badge status-badge--failed"><span class="status-badge__dot"></span>失败</span>
+      <span class="status-badge status-badge--queued"><span class="status-badge__dot"></span>排队中</span>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ SYSTEM HEALTH ════════════ -->
+<div class="ds-section" id="comp-health">
+  <h2 class="ds-section__title">💚 系统健康 System Health</h2>
+  <div class="comp-preview">
+    <div class="health-row" style="max-width:700px;">
+      <div class="health-card"><span class="health-card__indicator health-card__indicator--ok"></span><div class="health-card__info"><div class="health-card__name">API Gateway</div><div class="health-card__meta">↑ 14d · 2ms</div></div></div>
+      <div class="health-card"><span class="health-card__indicator health-card__indicator--ok"></span><div class="health-card__info"><div class="health-card__name">Control Service</div><div class="health-card__meta">↑ 14d · v1.2.0</div></div></div>
+      <div class="health-card"><span class="health-card__indicator health-card__indicator--ok"></span><div class="health-card__info"><div class="health-card__name">Scheduler</div><div class="health-card__meta">↑ 7d · 12ms P50</div></div></div>
+      <div class="health-card"><span class="health-card__indicator health-card__indicator--warn"></span><div class="health-card__info"><div class="health-card__name">Redis</div><div class="health-card__meta">↑ 14d · 78% mem</div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ PAGE: DASHBOARD OVERVIEW ════════════ -->
+<div class="ds-section" id="page-dashboard">
+  <h2 class="ds-section__title">🖥 Dashboard 概览 (完整组合)</h2>
+  <p class="ds-section__desc">将所有组件组合成真实的 Dashboard 页面。</p>
+  <div class="comp-preview" style="padding:0;overflow:hidden;">
+    <iframe src="dashboard.html" style="width:100%;height:700px;border:none;border-radius:var(--radius-lg);" title="Dashboard Preview"></iframe>
+  </div>
+</div>
+
+<!-- ════════════ PAGE: DARK THEME PREVIEW ════════════ -->
+<div class="ds-section" id="page-dark">
+  <h2 class="ds-section__title">🌙 Dark 主题预览</h2>
+  <p class="ds-section__desc">Dashboard 组件在 Dark 模式下的效果。</p>
+  <div class="comp-preview comp-preview--dark">
+    <div class="stats-row">
+      <div class="stat-card" style="background:#151B2A;border-color:rgba(255,255,255,0.06);color:#F1F5F9;">
+        <div class="stat-card__header"><span class="stat-card__label" style="color:#64748B;">活跃 Agent</span><div class="stat-card__icon" style="background:rgba(168,85,247,0.15);color:#A855F7;">🤖</div></div>
+        <div class="stat-card__value">12</div>
+        <div class="stat-card__trend trend-up" style="color:#4ADE80;">↑ 2 本周新增</div>
+      </div>
+      <div class="stat-card" style="background:#151B2A;border-color:rgba(255,255,255,0.06);color:#F1F5F9;">
+        <div class="stat-card__header"><span class="stat-card__label" style="color:#64748B;">今日任务</span><div class="stat-card__icon" style="background:rgba(6,182,212,0.15);color:#06B6D4;">✓</div></div>
+        <div class="stat-card__value">1,247</div>
+        <div class="stat-card__trend trend-up" style="color:#4ADE80;">↑ 12.5% vs 昨日</div>
+      </div>
+    </div>
+    <br>
+    <div class="tasks-card" style="max-width:600px;background:#151B2A;border-color:rgba(255,255,255,0.06);color:#F1F5F9;">
+      <div class="tasks-card__header"><span class="tasks-card__title">最近任务</span></div>
+      <table class="ds-table" style="width:100%;">
+        <thead><tr><th>任务 ID</th><th>Agent</th><th>状态</th><th>耗时</th></tr></thead>
+        <tbody>
+          <tr><td style="font-family:var(--font-mono);font-size:0.74rem;color:#94A3B8;">task_7a3f2</td><td style="color:#94A3B8;">code-reviewer</td><td><span class="status-badge status-badge--succeeded"><span class="status-badge__dot"></span>成功</span></td><td style="font-family:var(--font-mono);font-size:0.74rem;color:#94A3B8;">12.7s</td></tr>
+          <tr><td style="font-family:var(--font-mono);font-size:0.74rem;color:#94A3B8;">task_b81e9</td><td style="color:#94A3B8;">security-scanner</td><td><span class="status-badge status-badge--running"><span class="status-badge__dot"></span>运行中</span></td><td style="font-family:var(--font-mono);font-size:0.74rem;color:#94A3B8;">—</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+</div>
+</main>
+
+<script>
+// ── Theme Toggle ──
+function toggleTheme() {
+  const html = document.documentElement;
+  const current = html.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+  document.getElementById('themeIcon').textContent = next === 'dark' ? '☀️' : '🌙';
+  document.getElementById('themeLabel').textContent = next === 'dark' ? 'Light' : 'Dark';
+  localStorage.setItem('agentsys-ds-theme', next);
+}
+
+// Restore theme
+const saved = localStorage.getItem('agentsys-ds-theme');
+if (saved) {
+  document.documentElement.setAttribute('data-theme', saved);
+  document.getElementById('themeIcon').textContent = saved === 'dark' ? '☀️' : '🌙';
+  document.getElementById('themeLabel').textContent = saved === 'dark' ? 'Light' : 'Dark';
+}
+
+// ── Nav Active State ──
+document.querySelectorAll('.ds-nav-item').forEach(item => {
+  item.addEventListener('click', function() {
+    document.querySelectorAll('.ds-nav-item').forEach(i => i.classList.remove('ds-nav-item--active'));
+    this.classList.add('ds-nav-item--active');
+  });
+});
+</script>
+
+</body>
+</html>

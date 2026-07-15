@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AgentSys — 产品演示</title>
+<style>
+  /* ══════════════════════════════════════════════════════════════════
+     Dark-theme preview CSS — matches the PPTX theme exactly.
+     The same HTML generates the PPT via: html2pptx this-file.html
+     ══════════════════════════════════════════════════════════════════ */
+  :root {
+    --bg:#080C1A; --card:#0F1535; --card2:#141C42; --border:#1A2555;
+    --cyan:#00C8FF; --purple:#7B5CFF; --green:#00E676; --orange:#FFAB40;
+    --white:#FFFFFF; --muted:#8892B0; --dim:#545E7A;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--white); font-family:Arial, sans-serif; }
+  slide {
+    display:block; width:100%; max-width:960px; margin:20px auto; padding:30px 40px;
+    min-height:540px; border-radius:8px; position:relative;
+    box-shadow:0 4px 24px rgba(0,0,0,.4);
+  }
+  slide:not([bg]) { background:var(--bg); }
+  slide[bg="060A18"] { background:#060A18; }
+
+  /* Title slide */
+  meta { display:block; }
+  meta[logo]::before {
+    content:attr(logo); display:block; text-align:center; font-size:22px; font-weight:bold;
+    color:var(--cyan); padding:10px 0; background:rgba(13,27,62,.4); border-radius:4px;
+    margin-bottom:30px;
+  }
+  meta[title]::after {
+    content:attr(title); display:block; text-align:center; font-size:36px; font-weight:bold;
+    color:var(--white); white-space:pre-line; margin:20px 0; line-height:1.3;
+  }
+  meta[subtitle] { display:block; text-align:center; color:var(--muted); font-size:14px; margin-top:-10px; }
+  meta[footer]::after {
+    content:attr(footer); display:block; text-align:center; color:var(--dim); font-size:11px;
+    margin-top:40px; padding-top:15px; border-top:1px solid var(--border);
+  }
+
+  /* Section title */
+  title { display:block; font-size:26px; font-weight:bold; color:var(--white); margin-bottom:20px; }
+  title::after { content:''; display:block; width:80px; height:3px; background:var(--cyan); margin-top:6px; border-radius:2px; box-shadow:0 0 8px var(--cyan); }
+  title[accent="purple"]::after { background:var(--purple); box-shadow:0 0 8px var(--purple); }
+  title[accent="green"]::after  { background:var(--green);  box-shadow:0 0 8px var(--green); }
+  title[accent="orange"]::after { background:var(--orange); box-shadow:0 0 8px var(--orange); }
+
+  /* Cards grid */
+  cards { display:grid; gap:14px; margin:10px 0; }
+  cards[cols="2"] { grid-template-columns:1fr 1fr; }
+  cards[cols="3"] { grid-template-columns:1fr 1fr 1fr; }
+  cards[cols="4"] { grid-template-columns:1fr 1fr 1fr 1fr; }
+  cards[cols="5"] { grid-template-columns:1fr 1fr 1fr 1fr 1fr; }
+
+  card {
+    display:flex; align-items:flex-start; gap:12px; padding:16px; border-radius:6px;
+    background:var(--card); border-left:4px solid var(--cyan); position:relative;
+  }
+  card[accent="purple"] { border-left-color:var(--purple); }
+  card[accent="green"]  { border-left-color:var(--green); }
+  card[accent="orange"] { border-left-color:var(--orange); }
+  card[accent="red"]    { border-left-color:var(--red); }
+
+  card icon {
+    display:flex; align-items:center; justify-content:center;
+    width:42px; height:42px; min-width:42px; border-radius:50%;
+    background:var(--card2); font-size:20px;
+  }
+  card ctitle { display:block; font-size:14px; font-weight:bold; color:var(--white); margin-bottom:4px; }
+  card cdesc  { display:block; font-size:11px; color:var(--muted); line-height:1.5; }
+
+  /* Flow */
+  flow { display:flex; align-items:center; justify-content:center; gap:8px; margin:15px 0; flex-wrap:wrap; }
+  step {
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    padding:16px 20px; border-radius:6px; background:var(--card); min-width:120px;
+    border-top:3px solid var(--cyan); text-align:center; font-size:12px; font-weight:bold;
+    color:var(--white); white-space:pre-line; line-height:1.5;
+  }
+  step[accent="purple"] { border-top-color:var(--purple); }
+  step[accent="green"]  { border-top-color:var(--green); }
+  step[accent="orange"] { border-top-color:var(--orange); }
+  flow::after { display:none; }
+  /* Arrow between steps */
+  flow step + step::before { content:'→'; position:absolute; left:-14px; color:var(--dim); font-size:16px; }
+
+  /* Metrics */
+  metrics { display:flex; gap:14px; margin:15px 0; padding:15px; background:var(--card); border-radius:6px; }
+  metrics[box="false"] { background:none; padding:0; }
+  metric { flex:1; text-align:center; }
+  metric::before { content:attr(val); display:block; font-size:28px; font-weight:bold; color:var(--cyan); margin-bottom:6px; }
+  metric[accent="purple"]::before { color:var(--purple); }
+  metric[accent="green"]::before  { color:var(--green); }
+  metric[accent="orange"]::before { color:var(--orange); }
+  metric::after { content:attr(label); display:block; font-size:11px; color:var(--muted); white-space:pre-line; }
+
+  /* Table */
+  table { width:100%; border-collapse:collapse; margin:10px 0; font-size:12px; }
+  th { background:var(--cyan); color:var(--white); padding:10px 8px; font-weight:bold; text-align:center; }
+  td { padding:10px 8px; text-align:center; color:var(--muted); }
+  tr:nth-child(even) td { background:var(--card); }
+  tr:nth-child(odd) td  { background:var(--card2); }
+  td:last-child { color:var(--green); font-weight:bold; }
+
+  /* Text */
+  text { display:block; margin:10px 0; line-height:1.6; }
+  text[align="center"] { text-align:center; }
+
+  /* Footer bar */
+  footer {
+    display:flex; align-items:center; padding:14px 20px; margin-top:20px;
+    background:var(--card); border-left:4px solid var(--cyan); border-radius:4px;
+    font-size:13px; font-weight:bold; color:var(--white);
+  }
+  footer[accent="purple"] { border-left-color:var(--purple); }
+  footer[accent="green"]  { border-left-color:var(--green); }
+  footer[accent="orange"] { border-left-color:var(--orange); }
+
+  /* List */
+  list { display:block; margin:10px 0; padding-left:20px; }
+  li { color:var(--muted); font-size:12px; line-height:1.8; }
+
+  /* Page number */
+  slide::after { content:attr(data-page); position:absolute; right:20px; bottom:12px; font-size:10px; color:var(--dim); }
+
+  /* Responsive */
+  @media (max-width:768px) {
+    slide { padding:20px; min-height:auto; }
+    cards[cols="4"], cards[cols="5"] { grid-template-columns:1fr 1fr; }
+    metrics { flex-wrap:wrap; }
+    metric { min-width:45%; }
+    flow { flex-direction:column; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 1: 封面                                                        -->
+<!-- ════════════════════════════════════════════════════════════════════ -->
+<slide bg="060A18" data-page="1">
+  <meta logo="⚡ AGENTSYS"
+        title="LLM Agent 的\nKubernetes"
+        subtitle="统一平台，编排、监控、治理您的 AI Agent 集群。"
+        footer="开源项目 · 预发布 · 2026 年 7 月" />
+</slide>
+
+<!-- ════════════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 2: Agent 管理危机                                              -->
+<!-- ════════════════════════════════════════════════════════════════════ -->
+<slide data-page="2">
+  <title>Agent 管理的四大危机</title>
+  <cards cols="2">
+    <card accent="cyan">
+      <icon>📦</icon>
+      <ctitle>Agent 无序蔓延</ctitle>
+      <cdesc>数十个 Agent 散落在代码库和服务器中，无法集中查看运行状态、版本或配置信息。</cdesc>
+    </card>
+    <card accent="green">
+      <icon>💰</icon>
+      <ctitle>成本黑洞</ctitle>
+      <cdesc>LLM 调用成本完全不可见，月底账单到手才发现哪个 Agent 烧了最多 Token。</cdesc>
+    </card>
+    <card accent="purple">
+      <icon>🔗</icon>
+      <ctitle>协作断裂</ctitle>
+      <cdesc>Agent 间数据传递靠手动复制粘贴，一环崩溃全场挂掉。</cdesc>
+    </card>
+    <card accent="orange">
+      <icon>🔍</icon>
+      <ctitle>调试黑盒</ctitle>
+      <cdesc>日志分散、缺少链路追踪、Token 用量不可见——排查全靠猜。</cdesc>
+    </card>
+  </cards>
+</slide>
+
+<!-- ════════════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 3: 市场窗口                                                    -->
+<!-- ════════════════════════════════════════════════════════════════════ -->
+<slide data-page="3">
+  <title>为什么是现在？市场窗口期</title>
+  <cards cols="2">
+    <card accent="cyan">
+      <icon>📈</icon>
+      <ctitle>LLM 采用率爆发</ctitle>
+      <cdesc>全球团队以前所未有的速度构建 AI 应用，Agent 管理需求井喷。</cdesc>
+    </card>
+    <card accent="purple">
+      <icon>🤖</icon>
+      <ctitle>单 Agent → 多 Agent</ctitle>
+      <cdesc>范式正从单次 LLM 调用转向多 Agent 协同工作。</cdesc>
+    </card>
+    <card accent="green">
+      <icon>💵</icon>
+      <ctitle>成本压力攀升</ctitle>
+      <cdesc>Token 成本需要精细化追踪——团队必须对每分开支负责。</cdesc>
+    </card>
+    <card accent="orange">
+      <icon>⚙️</icon>
+      <ctitle>工程化断层</ctitle>
+      <cdesc>Agent 从实验走向生产，却缺乏成熟的 DevOps 工具链。</cdesc>
+    </card>
+  </cards>
+  <footer accent="cyan" text="目前不存在成熟的开源 Agent 管理方案——缺口真实存在" />
+</slide>
+
+<!-- ════════════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 4: 产品愿景                                                    -->
+<!-- ════════════════════════════════════════════════════════════════════ -->
+<slide data-page="4">
+  <title>产品愿景</title>
+  <text size="18" align="center" color="FFFFFF">"让 LLM Agent 的开发、部署和管理变得简单、可靠、可扩展。"</text>
+  <cards cols="5">
+    <card accent="cyan"><icon>🖥️</icon><ctitle>统一管理</ctitle><cdesc>一站式管理所有 Agent</cdesc></card>
+    <card accent="purple"><icon>🔀</icon><ctitle>工作流编排</ctitle><cdesc>像搭积木一样组合 Agent</cdesc></card>
+    <card accent="green"><icon>📊</icon><ctitle>全栈可观测</ctitle><cdesc>实时监控与结构化日志</cdesc></card>
+    <card accent="orange"><icon>💲</icon><ctitle>成本管控</ctitle><cdesc>追踪每个 Token，配额告警</cdesc></card>
+    <card accent="cyan"><icon>🔒</icon><ctitle>团队治理</ctitle><cdesc>RBAC、审计日志、密钥管理</cdesc></card>
+  </cards>
+</slide>
+
+<!-- ════════════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 5: 目标用户                                                    -->
+<!-- ════════════════════════════════════════════════════════════════════ -->
+<slide data-page="5">
+  <title>目标用户</title>
+  <cards cols="3">
+    <card accent="cyan">
+      <icon>👤</icon>
+      <ctitle>个人开发者 & 小团队</ctitle>
+      <cdesc>低成本、快速上手，几分钟内让 Agent 跑起来。第一阶段目标用户。</cdesc>
+    </card>
+    <card accent="purple">
+      <icon>👥</icon>
+      <ctitle>开发团队 (5–50人)</ctitle>
+      <cdesc>多人协作、版本控制、审计追踪、共享看板。第二阶段目标。</cdesc>
+    </card>
+    <card accent="green">
+      <icon>🏢</icon>
+      <ctitle>企业级组织</ctitle>
+      <cdesc>私有化部署、SSO、SLA 保障、多租户。第三阶段目标。</cdesc>
+    </card>
+  </cards>
+</slide>
+
+<!-- ════════════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 6: 核心功能 P0                                                 -->
+<!-- ════════════════════════════════════════════════════════════════════ -->
+<slide data-page="6">
+  <title>核心功能 — MVP (P0)</title>
+  <cards cols="2">
+    <card accent="cyan">
+      <icon>📦</icon>
+      <ctitle>Agent 管理</ctitle>
+      <cdesc>表单或 YAML 创建/编辑/删除 | 启动/停止/暂停实例 | 版本控制与回滚 | 能力标签发现</cdesc>
+    </card>
+    <card accent="purple">
+      <icon>📋</icon>
+      <ctitle>任务调度</ctitle>
+      <cdesc>API/Web UI 提交任务 | 优先级队列(紧急→低) | 公平调度防饥饿 | 指数退避重试</cdesc>
+    </card>
+    <card accent="green">
+      <icon>📈</icon>
+      <ctitle>监控看板</ctitle>
+      <cdesc>Agent 与任务实时状态 | Token 消耗追踪 | 按优先级展示队列 | 成功率与延迟指标</cdesc>
+    </card>
+    <card accent="orange">
+      <icon>🔍</icon>
+      <ctitle>日志与链路追踪</ctitle>
+      <cdesc>结构化执行日志 | 执行时间线可视化 | 每步 Token 用量明细 | 可搜索过滤的日志查看器</cdesc>
+    </card>
+  </cards>
+</slide>
+
+<!-- ════════════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 7: 核心功能 P1                                                 -->
+<!-- ════════════════════════════════════════════════════════════════════ -->
+<slide data-page="7">
+  <title>核心功能 — 团队规模 (P1)</title>
+  <cards cols="2">
+    <card accent="cyan">
+      <icon>🔀</icon>
+      <ctitle>工作流编排</ctitle>
+      <cdesc>可视化拖拽编辑器串联多个 Agent，支持并行、条件分支和数据传递。</cdesc>
+    </card>
+    <card accent="green">
+      <icon>💰</icon>
+      <ctitle>成本管理</ctitle>
+      <cdesc>按 Agent/用户/时段追踪 Token，设置配额和预算告警，预测未来支出。</cdesc>
+    </card>
+    <card accent="purple">
+      <icon>🔒</icon>
+      <ctitle>权限与 RBAC</ctitle>
+      <cdesc>管理员/操作员/用户/查看者角色，API Key 管理，敏感操作审计日志。</cdesc>
+    </card>
+    <card accent="orange">
+      <icon>🔌</icon>
+      <ctitle>Webhook 与集成</ctitle>
+      <cdesc>任务完成触发外部系统，原生集成 Slack、钉钉、GitHub PR 联动。</cdesc>
+    </card>
+  </cards>
+</slide>
+
+<!-- ════════════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 8: 系统架构                                                    -->
+<!-- ════════════════════════════════════════════════════════════════════ -->
+<slide data-page="8">
+  <title>系统架构 — 三层结构</title>
+  <cards cols="3">
+    <card accent="green">
+      <icon>🌐</icon>
+      <ctitle>接入层</ctitle>
+      <cdesc>API 网关(Nginx/Kong) | Web UI(React) | CLI(Go) | WebSocket(Push)</cdesc>
+    </card>
+    <card accent="cyan">
+      <icon>⚡</icon>
+      <ctitle>服务层 — Go 微服务</ctitle>
+      <cdesc>Control | Scheduler | AgentRun | Coordinator | Auth | Metrics | Log | Webhook — gRPC 通信</cdesc>
+    </card>
+    <card accent="purple">
+      <icon>🗄️</icon>
+      <ctitle>存储层</ctitle>
+      <cdesc>PostgreSQL 16(配置/用户) | Redis(队列/状态) | ClickHouse(日志/分析)</cdesc>
+    </card>
+  </cards>
+</slide>
+
+<!-- ════════════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 9: 技术栈                                                      -->
+<!-- ════════════════════════════════════════════════════════════════════ -->
+<slide data-page="9">
+  <title>技术栈</title>
+  <cards cols="3">
+    <card accent="cyan"><icon>🔧</icon><ctitle>后端</ctitle><cdesc>Go (高性能并发) | gRPC (服务通信) | Gin (REST API)</cdesc></card>
+    <card accent="purple"><icon>🎨</icon><ctitle>前端</ctitle><cdesc>React (组件化UI) | TypeScript (类型安全) | Tailwind + shadcn/ui</cdesc></card>
+    <card accent="green"><icon>🏗️</icon><ctitle>数据与基础设施</ctitle><cdesc>PostgreSQL 16 | Redis | ClickHouse</cdesc></card>
+    <card accent="orange"><icon>📡</icon><ctitle>可观测性</ctitle><cdesc>Prometheus (指标) | Grafana (看板) | OpenTelemetry → Jaeger</cdesc></card>
+    <card accent="cyan"><icon>🚀</icon><ctitle>部署</ctitle><cdesc>Docker Compose (MVP) | Kubernetes (生产) | Nginx/Kong (网关)</cdesc></card>
+    <card accent="purple"><icon>🧠</icon><ctitle>LLM 提供商</ctitle><cdesc>Anthropic Claude | OpenAI GPT | Ollama/vLLM (本地)</cdesc></card>
+  </cards>
+</slide>
+
+<!-- ════════════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 10: 用户旅程 - 创建部署                                         -->
+<!-- ════════════════════════════════════════════════════════════════════ -->
+<slide data-page="10">
+  <title>用户旅程：创建与部署 Agent</title>
+  <flow>
+    <step accent="cyan" label="01&#10;定义 Agent&#10;命名、选 LLM&#10;配置工具与限制" />
+    <step accent="purple" label="02&#10;设置配额&#10;Token 上限&#10;并发数与超时" />
+    <step accent="green" label="03&#10;部署测试&#10;一键启动&#10;查看实时状态" />
+    <step accent="orange" label="04&#10;持续监控&#10;Token 用量&#10;成功率与延迟" />
+  </flow>
+  <metrics box="true" label="关键指标">
+    <metric accent="cyan" val="< 5 分钟" label="首次部署耗时" />
+    <metric accent="purple" val="3 次点击" label="提交测试任务" />
+    <metric accent="green" val="实时" label="状态与 Token 消耗" />
+  </metrics>
+</slide>
+
+<!-- ════════════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 11: 用户旅程 - 多 Agent 工作流                                  -->
+<!-- ════════════════════════════════════════════════════════════════════ -->
+<slide data-page="11">
+  <title>用户旅程：多 Agent 工作流</title>
+  <flow>
+    <step accent="green" label="PR 已创建" />
+    <step accent="cyan" label="拉取变更" />
+    <step accent="purple" label="安全扫描" />
+    <step accent="orange" label="代码风格检查" />
+    <step accent="cyan" label="生成报告" />
+  </flow>
+  <cards cols="4">
+    <card accent="cyan"><icon>🎨</icon><ctitle>可视化编辑器</ctitle><cdesc>拖拽界面构建 Agent 管道——无需编写代码。</cdesc></card>
+    <card accent="purple"><icon>⚡</icon><ctitle>并行执行</ctitle><cdesc>独立步骤并发运行，基于 DAG 拓扑排序调度。</cdesc></card>
+    <card accent="green"><icon>🔔</icon><ctitle>自动触发</ctitle><cdesc>Webhook/定时/事件驱动，PR 创建即自动启动。</cdesc></card>
+    <card accent="orange"><icon>🔄</icon><ctitle>故障恢复</ctitle><cdesc>每步重试策略、死信队列、工作流部分恢复。</cdesc></card>
+  </cards>
+</slide>
+
+<!-- ════════════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 12: 路线图                                                      -->
+<!-- ════════════════════════════════════════════════════════════════════ -->
+<slide data-page="12">
+  <title>开发路线图</title>
+  <cards cols="4">
+    <card accent="cyan"><icon>1️⃣</icon><ctitle>第一阶段：MVP</ctitle><cdesc>4–6 周 | Agent CRUD | 任务调度 | 基础监控 | 日志查看器 | Docker 部署</cdesc></card>
+    <card accent="purple"><icon>2️⃣</icon><ctitle>第二阶段：核心增强</ctitle><cdesc>4–6 周 | 工作流编排 | 成本管理 | RBAC | Webhook | 优先级队列</cdesc></card>
+    <card accent="green"><icon>3️⃣</icon><ctitle>第三阶段：生产就绪</ctitle><cdesc>4–6 周 | 高可用部署 | 审计日志 | 性能优化 | 更多 LLM | CLI 工具</cdesc></card>
+    <card accent="orange"><icon>4️⃣</icon><ctitle>第四阶段：企业级</ctitle><cdesc>按需 | 多租户 | 私有化部署 | SSO | 高级分析 | SLA 保障</cdesc></card>
+  </cards>
+</slide>
+
+<!-- ════════════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 13: 成功指标                                                    -->
+<!-- ════════════════════════════════════════════════════════════════════ -->
+<slide data-page="13">
+  <title>成功指标</title>
+  <metrics label="产品指标">
+    <metric accent="cyan" val="> 95% → 99%" label="任务成功率" />
+    <metric accent="purple" val="> 50%" label="周活跃用户" />
+    <metric accent="green" val="> 80%" label="核心功能采用率" />
+    <metric accent="orange" val="> 60%" label="30 日留存率" />
+  </metrics>
+  <metrics label="技术 KPI">
+    <metric accent="cyan" val="99.9%" label="系统可用性" />
+    <metric accent="purple" val="< 100ms" label="API P95 延迟" />
+    <metric accent="green" val="< 500ms" label="任务分发 P95" />
+    <metric accent="orange" val="100+" label="并发任务数" />
+  </metrics>
+</slide>
+
+<!-- ════════════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 14: 竞争优势                                                    -->
+<!-- ════════════════════════════════════════════════════════════════════ -->
+<slide data-page="14">
+  <title>竞争优势</title>
+  <table>
+    <tr><th>竞品</th><th>优势</th><th>劣势</th><th>我们的优势</th></tr>
+    <tr><td>LangSmith</td><td>LangChain 生态，调试工具丰富</td><td>面向开发调试，非生产级管理</td><td>生产级编排与监控</td></tr>
+    <tr><td>E2B</td><td>安全沙箱执行</td><td>功能单一，无全生命周期</td><td>端到端 Agent 生命周期管理</td></tr>
+    <tr><td>Dust</td><td>企业就绪，UX 精美</td><td>闭源商业产品</td><td>开源，社区驱动</td></tr>
+    <tr><td>PocketFlow</td><td>中文友好，入门简单</td><td>功能简单，扩展性有限</td><td>高级编排，高并发</td></tr>
+  </table>
+  <footer accent="cyan" text="策略：开源优先 → 开发者信任 → 社区增长 → 企业采用" />
+</slide>
+
+<!-- ════════════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 15: 致谢                                                        -->
+<!-- ════════════════════════════════════════════════════════════════════ -->
+<slide bg="060A18" data-page="15">
+  <meta logo="⚡ AGENTSYS"
+        title="感谢聆听"
+        subtitle="让我们一起构建 Agent 基础设施的未来。"
+        footer="开源项目 · agent-sys.dev · hello@agent-sys.dev" />
+</slide>
+
+</body>
+</html>
