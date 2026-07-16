@@ -1,0 +1,87 @@
+/* ── AgentSys 全局样式 ── */
+
+/*
+ * Mantine v7 使用 @layer mantine 包裹组件样式。
+ * 自定义样式如果放在非 layer 域或更优先的 layer，可覆盖 Mantine 默认值。
+ */
+@layer base {
+
+  /* ── CSS 变量 — 覆盖 Mantine 默认 (DESIGN_SPEC 附录 A) ── */
+  :root,
+  [data-mantine-color-scheme='light'] {
+    /* 背景层级 */
+    --mantine-color-body: #F8F9FB;
+    /* --bg-deep */
+
+    /* 文字色（Mantine 用 --mantine-color-text 作为正文色，dimmed 作为次要色） */
+    --mantine-color-text: #0F172A;
+    --mantine-color-dimmed: #475569;
+
+    /* 侧边栏 */
+    --agentsys-sidebar-bg: #FAFBFC;
+
+    /* 顶栏 */
+    --agentsys-topbar-bg: rgba(255, 255, 255, 0.85);
+    --agentsys-topbar-blur: 16px;
+
+    /* 边框 (Mantine 的 border 变量也覆盖) */
+    --mantine-color-default-border: rgba(0, 0, 0, 0.10);
+
+    /* 卡片 */
+    --agentsys-card-bg: #FFFFFF;
+    --agentsys-card-border: rgba(0, 0, 0, 0.06);
+  }
+
+  [data-mantine-color-scheme='dark'] {
+    --mantine-color-body: #060912;
+    --mantine-color-text: #F1F5F9;
+    --mantine-color-dimmed: #64748B;
+
+    --agentsys-sidebar-bg: #0D1320;
+    --agentsys-topbar-bg: rgba(17, 24, 39, 0.75);
+    --agentsys-topbar-blur: 16px;
+
+    --agentsys-card-bg: #151B2A;
+    --agentsys-card-border: rgba(255, 255, 255, 0.06);
+  }
+
+  /* ── 全局基础样式 ── */
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html,
+  body,
+  #root {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* ── 滚动条 ── */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.15);
+    border-radius: 3px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.25);
+  }
+}
