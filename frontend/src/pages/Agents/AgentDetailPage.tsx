@@ -1,12 +1,248 @@
-import { Container, Title, Text } from '@mantine/core';
-import { useParams } from 'react-router-dom';
+import { useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { Button, Tabs, Modal, Text, Tooltip } from '@mantine/core';
+import { notifications } from '@mantine/notifications';
+import { useDisclosure } from '@mantine/hooks';
+import {
+  IconPencil, IconTrash,
+  IconPlayerPlay, IconPlayerStop, IconRefresh, IconAlertTriangle,
+} from '@tabler/icons-react';
+import { StatusBadge } from '../../components/shared/StatusBadge/StatusBadge';
+import { PageHeader } from '../../components/shared/PageHeader/PageHeader';
+import type { BreadcrumbItem } from '../../components/shared/PageHeader/PageHeader';
+import type { Agent, Task } from '../../types';
+import { MOCK_AGENTS as MOCK_AGENTS_LIST } from '../../mocks/agents';
+import classes from './AgentDetail.module.css';
+
+// 数组 → id 索引，O(1) 查找
+const MOCK_AGENTS: Record<string, Agent> = Object.fromEntries(
+  MOCK_AGENTS_LIST.map((a) => [a.id, a]),
+);
+
+const MOCK_TASKS: Task[] = [
+  { id: 'task_7a3f2', agentId: '1', agentName: 'code-reviewer', status: 'succeeded', priority: 3, input: '审查 PR #234 — 新增用户认证模块', output: '发现 3 个问题', duration: 12700, tokensUsed: 1420, createdAt: '2026-07-15 10:32:15', completedAt: '2026-07-15 10:32:28' },
+  { id: 'task_9d55c', agentId: '1', agentName: 'code-reviewer', status: 'queued', priority: 2, input: '审查 PR #235', createdAt: '2026-07-15 10:33:00' },
+  { id: 'task_2a81b', agentId: '1', agentName: 'code-reviewer', status: 'succeeded', priority: 3, input: '审查 PR #233 — 修复登录页样式问题', output: '已通过', duration: 8900, tokensUsed: 980, createdAt: '2026-07-15 09:15:00', completedAt: '2026-07-15 09:15:09' },
+  { id: 'task_6c33f', agentId: '1', agentName: 'code-reviewer', status: 'failed', priority: 4, input: '审查 PR #232 (紧急) — 安全漏洞热修复', duration: 2300, tokensUsed: 340, errorMessage: '仓库不可达', createdAt: '2026-07-15 08:45:00', startedAt: '2026-07-15 08:45:00', completedAt: '2026-07-15 08:45:02' },
+  { id: 'task_1d77e', agentId: '1', agentName: 'code-reviewer', status: 'succeeded', priority: 2, input: '审查 PR #231 — 更新依赖版本', output: '有少量建议', duration: 15400, tokensUsed: 2100, createdAt: '2026-07-14 16:20:00', completedAt: '2026-07-14 16:20:15' },
+];
+
+function formatTokens(n: number): string {
+  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
+  if (n >= 1000) return `${Math.round(n / 1000)}K`;
+  return String(n);
+}
+
+function formatDuration(ms?: number): string {
+  if (ms === undefined) return '—';
+  if (ms < 1000) return `${ms}ms`;
+  return `${(ms / 1000).toFixed(1)}s`;
+}
+
+function TruncatedText({ text, maxLen = 32 }: { text: string; maxLen?: number }) {
+  if (text.length <= maxLen) return <span>{text}</span>;
+  return (
+    <Tooltip label={text} multiline maw={360} openDelay={400}>
+      <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'block' }}>
+        {text}
+      </span>
+    </Tooltip>
+  );
+}
 
 export function AgentDetailPage() {
-  const { id } = useParams();
+  const { t } = useTranslation();
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState<string | null>('overview');
+  const [deleteOpened, { open: openDelete, close: closeDelete }] = useDisclosure(false);
+
+  const baseAgent = id ? MOCK_AGENTS[id] : undefined;
+  const [agentStatus, setAgentStatus] = useState(baseAgent?.status ?? 'stopped');
+  const agent = baseAgent ? { ...baseAgent, status: agentStatus } : undefined;
+
+  if (!agent) {
+    return (
+      <div style={{ padding: 48, textAlign: 'center' }}>
+        <IconAlertTriangle size={48} style={{ color: 'var(--mantine-color-dimmed)' }} />
+        <Text mt="md" fw={500}>{t('agents:detail.notFound')}</Text>
+        <Text size="sm" c="dimmed">{t('agents:detail.notFoundDesc', { id: id ?? '' })}</Text>
+        <Button mt="lg" variant="subtle" onClick={() => navigate('/agents')}>
+          {t('agents:detail.backToList')}
+        </Button>
+      </div>
+    );
+  }
+
+  // TS won't narrow `agent` inside closures — hoist to const
+  const agentName: string = agent.name;
+
+  const breadcrumbs: BreadcrumbItem[] = [
+    { label: t('nav:pageTitles./agents'), path: '/agents' },
+    { label: agentName },
+  ];
+
+  const tabTasksLabel = `${t('agents:detail.tabs.tasks')} (${MOCK_TASKS.length})`;
+
+  function handleToggleStatus() {
+    const next = agentStatus === 'running' ? 'stopped' : 'running';
+    setAgentStatus(next);
+    notifications.show({
+      message: next === 'running' ? `"${agentName}" 已启动` : `"${agentName}" 已停止`,
+      color: next === 'running' ? 'green' : 'yellow',
+      withCloseButton: true,
+    });
+  }
+
+  function handleRestart() {
+    setAgentStatus('running');
+    notifications.show({ message: `"${agentName}" 已重启`, color: 'green', withCloseButton: true });
+  }
+
   return (
-    <Container size="xl" py="xl">
-      <Title order={1} mb="md">Agent Detail</Title>
-      <Text c="dimmed">Agent {id} detail page — coming in Session 4.</Text>
-    </Container>
+    <>
+      <PageHeader
+        breadcrumbs={breadcrumbs}
+        title={agent.name}
+      >
+        <StatusBadge status={agent.status} />
+        <span className={classes.providerBadge} style={{ marginLeft: 4, marginRight: 12 }}>
+          {agent.llmProvider} / {agent.llmModel}
+        </span>
+        {agentStatus === 'running' ? (
+          <Button variant="light" color="yellow" size="sm" leftSection={<IconPlayerStop size={14} />} onClick={handleToggleStatus}>
+            {t('common:actions.stop')}
+          </Button>
+        ) : (
+          <Button variant="light" color="agentGreen" size="sm" leftSection={<IconPlayerPlay size={14} />} onClick={handleToggleStatus}>
+            {t('common:actions.start')}
+          </Button>
+        )}
+        <Button variant="light" color="gray" size="sm" leftSection={<IconRefresh size={14} />} onClick={handleRestart}>
+          {t('common:actions.restart')}
+        </Button>
+        <Button variant="light" color="gray" size="sm" leftSection={<IconPencil size={14} />} onClick={() => navigate(`/agents/create?edit=${agent.id}`)}>
+          {t('common:actions.edit')}
+        </Button>
+        <Button variant="light" color="red" size="sm" leftSection={<IconTrash size={14} />} onClick={openDelete}>
+          {t('common:actions.delete')}
+        </Button>
+      </PageHeader>
+
+      <div className={classes.tabsCard}>
+        <Tabs value={activeTab} onChange={setActiveTab}>
+          <Tabs.List>
+            <Tabs.Tab value="overview">{t('agents:detail.tabs.overview')}</Tabs.Tab>
+            <Tabs.Tab value="tasks">{tabTasksLabel}</Tabs.Tab>
+          </Tabs.List>
+
+          {/* ── 概览 ── */}
+          <Tabs.Panel value="overview">
+            <div className={classes.tabContent}>
+              <div className={classes.statsRow}>
+                <div className={classes.statMini}>
+                  <div className={classes.statMiniValue}>{agent.todayTasks}</div>
+                  <div className={classes.statMiniLabel}>{t('agents:detail.stats.todayTasks')}</div>
+                </div>
+                <div className={classes.statMini}>
+                  <div className={classes.statMiniValue}>{formatTokens(agent.todayTokens)}</div>
+                  <div className={classes.statMiniLabel}>{t('agents:detail.stats.todayTokens')}</div>
+                </div>
+                <div className={classes.statMini}>
+                  <div className={classes.statMiniValue}>{formatTokens(agent.dailyTokenQuota)}</div>
+                  <div className={classes.statMiniLabel}>{t('agents:detail.stats.dailyQuota')}</div>
+                </div>
+              </div>
+
+              <div className={classes.infoGrid}>
+                <div>
+                  <div className={classes.infoLabel}>{t('agents:detail.info.agentId')}</div>
+                  <div className={`${classes.infoValue} ${classes.infoValueMono}`}>{agent.id}</div>
+                </div>
+                <div>
+                  <div className={classes.infoLabel}>{t('agents:detail.info.status')}</div>
+                  <div className={classes.infoValue}><StatusBadge status={agent.status} /></div>
+                </div>
+                <div>
+                  <div className={classes.infoLabel}>{t('agents:detail.info.provider')}</div>
+                  <div className={classes.infoValue}>{agent.llmProvider}</div>
+                </div>
+                <div>
+                  <div className={classes.infoLabel}>{t('agents:detail.info.model')}</div>
+                  <div className={classes.infoValue}>{agent.llmModel}</div>
+                </div>
+                <div>
+                  <div className={classes.infoLabel}>{t('agents:detail.info.created')}</div>
+                  <div className={`${classes.infoValue} ${classes.infoValueMono}`}>{agent.createdAt}</div>
+                </div>
+                <div>
+                  <div className={classes.infoLabel}>{t('agents:detail.info.updated')}</div>
+                  <div className={`${classes.infoValue} ${classes.infoValueMono}`}>{agent.updatedAt}</div>
+                </div>
+                <div className={classes.infoGridFull}>
+                  <div className={classes.infoLabel}>{t('agents:detail.info.tools')} ({agent.tools.length})</div>
+                  <div className={classes.toolsWrap}>
+                    {agent.tools.map((t) => <span key={t} className={classes.toolTag}>{t}</span>)}
+                  </div>
+                </div>
+              </div>
+
+              <div className={classes.descriptionCard}>
+                <div className={classes.descriptionTitle}>{t('agents:detail.info.description')}</div>
+                <div className={classes.descriptionText}>{agent.description}</div>
+              </div>
+            </div>
+          </Tabs.Panel>
+
+          {/* ── 任务 ── */}
+          <Tabs.Panel value="tasks">
+            <div className={classes.tabContent}>
+              <table className={classes.taskTable}>
+                <thead>
+                  <tr>
+                    <th>{t('agents:detail.tasksTable.taskId')}</th>
+                    <th>{t('agents:detail.tasksTable.status')}</th>
+                    <th>{t('agents:detail.tasksTable.priority')}</th>
+                    <th>{t('agents:detail.tasksTable.input')}</th>
+                    <th>{t('agents:detail.tasksTable.duration')}</th>
+                    <th>{t('agents:detail.tasksTable.tokens')}</th>
+                    <th>{t('agents:detail.tasksTable.time')}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {MOCK_TASKS.map((task) => (
+                    <tr key={task.id} style={{ cursor: 'pointer' }} onClick={() => navigate(`/tasks/${task.id}`)}>
+                      <td className={classes.monoCell}>{task.id}</td>
+                      <td><StatusBadge status={task.status} /></td>
+                      <td className={classes.monoCell}>{task.priority}</td>
+                      <td style={{ maxWidth: 220, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                        <TruncatedText text={task.input} maxLen={28} />
+                      </td>
+                      <td className={classes.monoCell}>{formatDuration(task.duration)}</td>
+                      <td className={classes.monoCell}>{task.tokensUsed ?? '—'}</td>
+                      <td style={{ fontSize: '0.8rem', color: 'var(--mantine-color-dimmed)' }}>{task.createdAt}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </Tabs.Panel>
+
+        </Tabs>
+      </div>
+
+      <Modal opened={deleteOpened} onClose={closeDelete} title={t('agents:detail.deleteModal.title')} centered>
+        <Text size="sm" mb="md">
+          {t('agents:detail.deleteModal.message', { name: agent.name })}
+        </Text>
+        <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
+          <Button variant="subtle" color="gray" onClick={closeDelete}>{t('common:actions.cancel')}</Button>
+          <Button color="red" onClick={() => { closeDelete(); navigate('/agents'); }}>
+            {t('agents:detail.deleteModal.confirmBtn')}
+          </Button>
+        </div>
+      </Modal>
+    </>
   );
 }

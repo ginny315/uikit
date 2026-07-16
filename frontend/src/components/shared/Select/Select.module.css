@@ -1,0 +1,106 @@
+/* ═══════════════════════════════════════════
+   Select Component Styles
+   ═══════════════════════════════════════════ */
+
+.wrapper {
+  position: relative;
+  display: inline-flex;
+}
+
+/* ── Trigger ── */
+.trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--mantine-color-dimmed);
+  padding: 4px 10px;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 6px;
+  background: none;
+  cursor: pointer;
+  transition: border-color 150ms ease;
+  white-space: nowrap;
+  user-select: none;
+}
+
+.trigger:hover {
+  border-color: rgba(0, 0, 0, 0.10);
+}
+
+.triggerOpen {
+  border-color: rgba(0, 0, 0, 0.14);
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.selectedText {
+  color: var(--mantine-color-dimmed);
+}
+
+.placeholder {
+  color: var(--mantine-color-dimmed);
+  opacity: 0.5;
+}
+
+/* ── Chevron ── */
+.chevron {
+  transition: transform 180ms ease;
+}
+
+.chevronOpen {
+  transform: rotate(180deg);
+}
+
+/* ── Dropdown ── */
+.dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  min-width: 100%;
+  z-index: 100;
+  background: var(--mantine-color-body);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  padding: 4px;
+  list-style: none;
+  margin: 0;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 10px;
+  font-size: 0.75rem;
+  color: var(--mantine-color-text);
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 120ms ease;
+  white-space: nowrap;
+}
+
+.option:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.optionActive {
+  background: rgba(168, 85, 247, 0.08);
+  color: #A855F7;
+  font-weight: 500;
+}
+
+.optionActive:hover {
+  background: rgba(168, 85, 247, 0.14);
+}
+
+/* ── Checkmark dot (active indicator) ── */
+.check {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #A855F7;
+  flex-shrink: 0;
+  margin-left: 8px;
+}

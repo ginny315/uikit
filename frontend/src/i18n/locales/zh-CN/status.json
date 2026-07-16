@@ -1,0 +1,14 @@
+{
+  "agent": {
+    "running": "运行中",
+    "stopped": "已停止",
+    "error": "异常"
+  },
+  "task": {
+    "succeeded": "成功",
+    "running": "运行中",
+    "failed": "失败",
+    "queued": "排队中",
+    "cancelled": "已取消"
+  }
+}

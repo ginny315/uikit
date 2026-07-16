@@ -1,0 +1,35 @@
+{
+  "sections": {
+    "overview": "概览",
+    "management": "管理",
+    "observability": "可观测性",
+    "settings": "设置"
+  },
+
+  "pages": {
+    "dashboard": "Dashboard",
+    "agents": "Agents",
+    "tasks": "Tasks",
+    "workflows": "Workflows",
+    "logs": "Logs",
+    "costs": "Costs",
+    "access": "Access Control",
+    "webhooks": "Webhooks"
+  },
+
+  "pageTitles": {
+    "/": "概览",
+    "/agents": "Agent 管理",
+    "/agents/create": "创建 Agent",
+    "/tasks": "任务调度",
+    "/workflows": "工作流",
+    "/logs": "日志追踪",
+    "/costs": "成本管理",
+    "/settings/access": "访问控制",
+    "/settings/webhooks": "Webhook 配置",
+    "agentDetail": "Agent 详情",
+    "taskDetail": "任务详情",
+    "workflowEditor": "工作流编辑器",
+    "notFound": "AgentSys"
+  }
+}

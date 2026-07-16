@@ -1,0 +1,346 @@
+/* ════════════════════════════════════════════════════════════
+   Dashboard Page Styles
+   ════════════════════════════════════════════════════════════ */
+
+/* ── Stats Row ── */
+.statsRow {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+  margin-bottom: 28px;
+}
+
+/* ── Charts Row ── */
+.chartsRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  margin-bottom: 28px;
+}
+
+.chartCard {
+  background: var(--mantine-color-body);
+  border: 1px solid var(--agentsys-card-border, rgba(0,0,0,0.06));
+  border-radius: var(--mantine-radius-lg);
+  padding: 22px 24px;
+}
+
+.chartHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.chartTitle {
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+/* ── CSS Bar Chart (Task Throughput) ── */
+.barChart {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  height: 160px;
+  padding: 0 4px;
+}
+
+.barCol {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  height: 100%;
+  justify-content: flex-end;
+}
+
+.bar {
+  width: 100%;
+  max-width: 48px;
+  border-radius: 6px 6px 0 0;
+  transition: filter 200ms ease;
+  cursor: pointer;
+}
+
+.bar:hover {
+  filter: brightness(1.3);
+}
+
+.barGreen {
+  background: linear-gradient(180deg, #22C55E, #16A34A);
+}
+
+.barCyan {
+  background: linear-gradient(180deg, #06B6D4, #0891B2);
+}
+
+.barPurple {
+  background: linear-gradient(180deg, #C084FC, #9333EA);
+}
+
+.barAmber {
+  background: linear-gradient(180deg, #FBBF24, #D97706);
+}
+
+.barLabel {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--mantine-color-dimmed);
+}
+
+/* ── Latency Distribution ── */
+.latencyBars {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.latencyRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.latencyLabel {
+  width: 80px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--mantine-color-dimmed);
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.latencyTrack {
+  flex: 1;
+  height: 8px;
+  background: rgba(0,0,0,0.04);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.latencyFill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 400ms ease;
+}
+
+.latencyFast {
+  background: linear-gradient(90deg, #86EFAC, #22C55E);
+}
+
+.latencyMid {
+  background: linear-gradient(90deg, #67E8F9, #06B6D4);
+}
+
+.latencySlow {
+  background: linear-gradient(90deg, #FDE68A, #F59E0B);
+}
+
+.latencyTail {
+  background: linear-gradient(90deg, #FECDD3, #F43F5E);
+}
+
+.latencyCount {
+  width: 36px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+/* ── Queue + Tasks Row ── */
+.queueTasksRow {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 18px;
+  margin-bottom: 28px;
+}
+
+/* ── Tasks Card ── */
+.tasksCard {
+  background: var(--mantine-color-body);
+  border: 1px solid var(--agentsys-card-border, rgba(0,0,0,0.06));
+  border-radius: var(--mantine-radius-lg);
+  padding: 22px 24px;
+  overflow: hidden;
+}
+
+.tasksHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.tasksTitle {
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.tasksLink {
+  font-size: 0.82rem;
+  color: var(--mantine-color-agentGreen-6);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.tasksLink:hover {
+  text-decoration: underline;
+}
+
+.tableWrap {
+  overflow-x: auto;
+}
+
+.tableWrap table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.tableWrap thead th {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--mantine-color-dimmed);
+  text-align: left;
+  padding: 8px 12px;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+  white-space: nowrap;
+}
+
+.tableWrap tbody td {
+  padding: 9px 12px;
+  border-bottom: 1px solid rgba(0,0,0,0.03);
+  white-space: nowrap;
+  font-size: 0.83rem;
+}
+
+.tableWrap tbody tr:hover {
+  background: rgba(0,0,0,0.02);
+}
+
+.monoCell {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+}
+
+.priorityHigh {
+  color: #D97706;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+
+.priorityUrgent {
+  color: #E11D48;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+
+.priorityNormal {
+  color: var(--mantine-color-dimmed);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+}
+
+.priorityLow {
+  color: var(--mantine-color-dimmed);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+}
+
+.timeCell {
+  font-size: 0.8rem;
+  color: var(--mantine-color-dimmed);
+}
+
+/* ── System Health Row ── */
+.healthSection {
+  background: var(--mantine-color-body);
+  border: 1px solid var(--agentsys-card-border, rgba(0,0,0,0.06));
+  border-radius: var(--mantine-radius-lg);
+  padding: 22px 24px;
+}
+
+.healthHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.healthTitle {
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.healthStatus {
+  font-size: 0.78rem;
+  color: var(--mantine-color-agentGreen-6);
+  font-weight: 500;
+}
+
+.healthGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+/* ════════════════════════════════════════════════════════════
+   Responsive
+   ════════════════════════════════════════════════════════════ */
+@media (max-width: 1400px) {
+  .statsRow {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 1200px) {
+  .chartsRow {
+    grid-template-columns: 1fr;
+  }
+  .queueTasksRow {
+    grid-template-columns: 1fr;
+  }
+  .healthGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .chartCard,
+  .tasksCard,
+  .healthSection {
+    padding: 16px;
+  }
+
+  .chartHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .barChart {
+    gap: 8px;
+    height: 120px;
+  }
+
+  .tableWrap thead th,
+  .tableWrap tbody td {
+    padding: 8px;
+  }
+}
+
+@media (max-width: 640px) {
+  .statsRow {
+    grid-template-columns: 1fr;
+  }
+  .healthGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

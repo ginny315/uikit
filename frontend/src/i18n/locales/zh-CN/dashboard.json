@@ -1,0 +1,48 @@
+{
+  "stats": {
+    "activeAgents": "活跃 Agent",
+    "todayTasks": "今日任务",
+    "successRate": "成功率",
+    "tokenUsage": "Token 消耗",
+    "newThisWeek": "↑ {{count}} 本周新增",
+    "vsYesterday": "↑ {{pct}}% vs 昨日",
+    "latencyImproved": "↑ {{pct}}% P99 延迟改善",
+    "quotaRemaining": "剩余配额 {{pct}}%",
+    "allHealthy": "全部正常"
+  },
+
+  "charts": {
+    "taskThroughput": "任务吞吐量 (每小时)",
+    "latencyDistribution": "任务延迟分布",
+    "p50p95p99": "P50 / P95 / P99"
+  },
+
+  "queue": {
+    "title": "队列状态",
+    "critical": "紧急",
+    "high": "高优先级",
+    "medium": "普通",
+    "low": "低优先级"
+  },
+
+  "recentTasks": {
+    "title": "最近任务",
+    "taskId": "任务 ID",
+    "agent": "Agent",
+    "status": "状态",
+    "priority": "优先级",
+    "duration": "耗时",
+    "time": "时间"
+  },
+
+  "systemHealth": {
+    "title": "系统健康"
+  },
+
+  "priority": {
+    "urgent": "紧急",
+    "high": "高",
+    "normal": "普通",
+    "low": "低"
+  }
+}

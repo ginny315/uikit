@@ -1,0 +1,39 @@
+{
+  "appName": "AgentSys",
+  "version": "AgentSys v0.1.0",
+
+  "actions": {
+    "save": "保存",
+    "cancel": "取消",
+    "delete": "删除",
+    "edit": "编辑",
+    "create": "创建",
+    "search": "搜索",
+    "confirm": "确认",
+    "back": "返回",
+    "logout": "退出登录",
+    "start": "启动",
+    "stop": "停止",
+    "restart": "重启",
+    "viewAll": "查看全部 →",
+    "confirmDelete": "确认删除",
+    "deleteWarning": "此操作不可撤销。",
+    "formErrorHint": "请先修正表单中的错误再提交。"
+  },
+
+  "pagination": {
+    "total": "共 {{count}} 个",
+    "page": "第 {{current}} / {{total}} 页"
+  },
+
+  "empty": {
+    "noResults": "没有找到匹配的结果。",
+    "notFound": "不存在或已被删除。"
+  },
+
+  "time": {
+    "today": "今日",
+    "thisWeek": "本周",
+    "thisMonth": "本月"
+  }
+}

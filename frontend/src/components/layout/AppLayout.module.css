@@ -1,0 +1,72 @@
+/* ── Layout Wrapper ── */
+.wrapper {
+  min-height: 100vh;
+}
+
+/* ── Sidebar container — handles mobile slide in/out ── */
+.sidebarContainer {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 100;
+}
+
+/* ── Main content area ── */
+.main {
+  margin-left: var(--agentsys-sidebar-width, 240px);
+  padding-top: var(--agentsys-topbar-height, 64px);
+  min-height: 100vh;
+  background: var(--agentsys-page-bg, var(--mantine-color-body));
+  /* 平滑过渡：侧边栏折叠时主区域跟随移动 */
+  transition: margin-left 250ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.content {
+  padding: 28px;
+}
+
+/* ── Mobile overlay ── */
+.overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 99;
+  animation: fadeIn 200ms ease;
+}
+
+.overlayVisible {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* ── Responsive: tablet — 保持侧边栏可见但折叠态 ── */
+@media (max-width: 1024px) {
+  .content {
+    padding: 20px;
+  }
+}
+
+/* ── Responsive: mobile — 侧边栏变为 overlay ── */
+@media (max-width: 768px) {
+  .sidebarContainer {
+    transform: translateX(-100%);
+    transition: transform 200ms ease;
+  }
+
+  .sidebarContainerOpen {
+    transform: translateX(0);
+  }
+
+  .main {
+    margin-left: 0;
+  }
+
+  .content {
+    padding: 16px;
+  }
+}

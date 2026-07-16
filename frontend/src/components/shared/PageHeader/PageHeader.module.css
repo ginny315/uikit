@@ -1,0 +1,77 @@
+/* ── PageHeader ── */
+.wrapper {
+  margin-bottom: 24px;
+}
+
+/* Breadcrumbs */
+.breadcrumbs {
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.breadcrumbLink {
+  font-size: 0.82rem;
+  color: var(--mantine-color-dimmed);
+  text-decoration: none;
+}
+
+.breadcrumbLink:hover {
+  color: var(--mantine-color-agentGreen-6);
+  text-decoration: underline;
+}
+
+.breadcrumbText {
+  font-size: 0.82rem;
+  color: var(--mantine-color-dimmed);
+}
+
+.breadcrumbCurrent {
+  font-size: 0.82rem;
+  color: var(--mantine-color-text);
+  font-weight: 500;
+}
+
+/* Title row */
+.titleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: var(--mantine-color-text);
+  margin: 0;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .wrapper {
+    margin-bottom: 16px;
+  }
+
+  .title {
+    font-size: 1.35rem;
+  }
+
+  .titleRow {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .actions {
+    width: 100%;
+  }
+}

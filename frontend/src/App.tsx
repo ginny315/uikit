@@ -1,6 +1,7 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { AuthGuard } from './components/guard/AuthGuard';
 import { ErrorBoundary } from './components/guard/ErrorBoundary';
+import { AppLayout } from './components/layout/AppLayout';
 import { LoginPage } from './pages/Login/LoginPage';
 import { DashboardPage } from './pages/Dashboard/DashboardPage';
 import { AgentListPage } from './pages/Agents/AgentListPage';
@@ -22,20 +23,22 @@ export function App() {
         {/* Login — 不受 AuthGuard 保护 */}
         <Route path="/login" element={<LoginPage />} />
 
-        {/* 受保护的路由 */}
+        {/* 受保护的路由 — AppLayout 提供 Sidebar + Topbar 布局 */}
         <Route element={<AuthGuard />}>
-          <Route path="/" element={<DashboardPage />} />
-          <Route path="/agents" element={<AgentListPage />} />
-          <Route path="/agents/create" element={<AgentCreatePage />} />
-          <Route path="/agents/:id" element={<AgentDetailPage />} />
-          <Route path="/tasks" element={<TaskListPage />} />
-          <Route path="/tasks/:id" element={<TaskDetailPage />} />
-          <Route path="/workflows" element={<WorkflowListPage />} />
-          <Route path="/workflows/:id" element={<WorkflowEditorPage />} />
-          <Route path="/logs" element={<LogsPage />} />
-          <Route path="/costs" element={<CostsPage />} />
-          <Route path="/settings/access" element={<AccessSettingsPage />} />
-          <Route path="/settings/webhooks" element={<WebhookSettingsPage />} />
+          <Route element={<AppLayout />}>
+            <Route path="/" element={<DashboardPage />} />
+            <Route path="/agents" element={<AgentListPage />} />
+            <Route path="/agents/create" element={<AgentCreatePage />} />
+            <Route path="/agents/:id" element={<AgentDetailPage />} />
+            <Route path="/tasks" element={<TaskListPage />} />
+            <Route path="/tasks/:id" element={<TaskDetailPage />} />
+            <Route path="/workflows" element={<WorkflowListPage />} />
+            <Route path="/workflows/:id" element={<WorkflowEditorPage />} />
+            <Route path="/logs" element={<LogsPage />} />
+            <Route path="/costs" element={<CostsPage />} />
+            <Route path="/settings/access" element={<AccessSettingsPage />} />
+            <Route path="/settings/webhooks" element={<WebhookSettingsPage />} />
+          </Route>
         </Route>
 
         {/* 兜底 → 首页 */}

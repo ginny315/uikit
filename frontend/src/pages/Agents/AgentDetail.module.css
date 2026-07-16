@@ -1,0 +1,311 @@
+/* ── AgentDetailPage ── */
+
+/* Header */
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.headerRight {
+  display: flex;
+  gap: 8px;
+}
+
+.titleRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.name {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--mantine-color-text);
+}
+
+.providerBadge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--mantine-color-dimmed);
+  margin-top: 4px;
+}
+
+/* Tabs wrapper */
+.tabsCard {
+  background: var(--mantine-color-body);
+  border: 1px solid var(--agentsys-card-border, rgba(0,0,0,0.06));
+  border-radius: var(--mantine-radius-lg);
+  overflow: hidden;
+}
+
+/* ── Tab 列表样式 ── */
+.tabsCard :global(.mantine-Tabs-list) {
+  padding: 0 16px;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+  gap: 4px;
+}
+
+.tabsCard :global(.mantine-Tabs-tab) {
+  font-size: 0.88rem;
+  font-weight: 500;
+  padding: 14px 20px;
+  color: var(--mantine-color-dimmed);
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  transition: color 150ms ease, border-color 150ms ease;
+}
+
+.tabsCard :global(.mantine-Tabs-tab:hover) {
+  color: var(--mantine-color-text);
+  background: transparent;
+}
+
+.tabsCard :global(.mantine-Tabs-tab[data-active]) {
+  color: var(--mantine-color-agentGreen-6);
+  border-bottom-color: var(--mantine-color-agentGreen-6);
+}
+
+.tabContent {
+  padding: 24px;
+}
+
+/* ── Overview Tab ── */
+.infoGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px 24px;
+  margin-bottom: 28px;
+}
+
+.infoGridFull {
+  grid-column: 1 / -1;
+}
+
+.infoLabel {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--mantine-color-dimmed);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 4px;
+}
+
+.infoValue {
+  font-size: 0.92rem;
+  font-weight: 500;
+  color: var(--mantine-color-text);
+}
+
+.infoValueMono {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+}
+
+/* Stats mini cards */
+.statsRow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.statMini {
+  background: var(--agentsys-page-bg, #F8F9FB);
+  border: 1px solid rgba(0,0,0,0.04);
+  border-radius: var(--mantine-radius-md);
+  padding: 18px 20px;
+  text-align: center;
+}
+
+.statMiniValue {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.statMiniLabel {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--mantine-color-dimmed);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* Description card */
+.descriptionCard {
+  background: var(--agentsys-page-bg, #F8F9FB);
+  border: 1px solid rgba(0,0,0,0.04);
+  border-radius: var(--mantine-radius-md);
+  padding: 20px;
+}
+
+.descriptionTitle {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--mantine-color-dimmed);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 8px;
+}
+
+.descriptionText {
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: var(--mantine-color-text);
+}
+
+/* ── Tasks Tab ── */
+.taskFilterBar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.taskTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.taskTable thead th {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--mantine-color-dimmed);
+  text-align: left;
+  padding: 10px 14px;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+  white-space: nowrap;
+}
+
+.taskTable tbody td {
+  padding: 9px 14px;
+  border-bottom: 1px solid rgba(0,0,0,0.03);
+  white-space: nowrap;
+  font-size: 0.83rem;
+}
+
+.taskTable tbody tr:hover {
+  background: rgba(0,0,0,0.02);
+}
+
+.monoCell {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+}
+
+/* ── Settings Tab ── */
+.settingsGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px 24px;
+  margin-bottom: 28px;
+}
+
+.settingsGridFull {
+  grid-column: 1 / -1;
+}
+
+.settingsSection {
+  margin-bottom: 28px;
+}
+
+.settingsSectionTitle {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--mantine-color-dimmed);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 12px;
+}
+
+.dangerZone {
+  border: 1px solid #FECDD3;
+  border-radius: var(--mantine-radius-md);
+  padding: 20px;
+  background: #FFF5F5;
+}
+
+.dangerZoneTitle {
+  font-weight: 600;
+  color: #E11D48;
+  margin-bottom: 8px;
+}
+
+.dangerZoneDesc {
+  font-size: 0.85rem;
+  color: var(--mantine-color-dimmed);
+  margin-bottom: 16px;
+}
+
+/* Tools tags */
+.toolsWrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.toolTag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  padding: 3px 10px;
+  border-radius: 16px;
+  background: rgba(6, 182, 212, 0.08);
+  color: #0891B2;
+  border: 1px solid rgba(6, 182, 212, 0.15);
+}
+
+/* ── Responsive ── */
+@media (max-width: 1024px) {
+  .statsRow {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+}
+
+@media (max-width: 768px) {
+  .infoGrid,
+  .settingsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .statsRow {
+    grid-template-columns: 1fr;
+  }
+
+  .tabContent {
+    padding: 16px;
+  }
+
+  /* 任务表格横向滚动 */
+  .taskTable {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .statMini {
+    padding: 14px 16px;
+  }
+
+  .statMiniValue {
+    font-size: 1.3rem;
+  }
+}

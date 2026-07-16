@@ -1,0 +1,58 @@
+/* ── SystemHealthCard ── */
+.card {
+  background: var(--mantine-color-body);
+  border: 1px solid var(--agentsys-card-border, rgba(0,0,0,0.06));
+  border-radius: var(--mantine-radius-md);
+  padding: 16px 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: all 150ms ease;
+  cursor: pointer;
+}
+
+.card:hover {
+  border-color: rgba(0,0,0,0.10);
+  background: #F4F6FA;
+}
+
+/* ── Indicator dot ── */
+.indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.healthy {
+  background: #16A34A;
+  box-shadow: 0 0 8px rgba(22,163,74,0.3);
+}
+
+.degraded {
+  background: #F59E0B;
+  box-shadow: 0 0 8px rgba(245,158,11,0.3);
+}
+
+.down {
+  background: #F43F5E;
+  box-shadow: 0 0 8px rgba(244,63,94,0.3);
+}
+
+/* ── Info ── */
+.info {
+  flex: 1;
+  min-width: 0;
+}
+
+.name {
+  font-size: 0.82rem;
+  font-weight: 600;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.meta {
+  font-size: 0.72rem;
+  color: var(--mantine-color-dimmed);
+  margin-top: 2px;
+}

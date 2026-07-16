@@ -1,0 +1,104 @@
+{
+  "list": {
+    "title": "Agent 管理",
+    "createBtn": "创建 Agent",
+    "searchPlaceholder": "搜索 Agent 名称或描述…",
+    "columns": {
+      "name": "名称",
+      "description": "描述",
+      "status": "状态",
+      "providerModel": "模型 / 供应商",
+      "todayTasks": "今日任务",
+      "todayTokens": "今日 Token",
+      "actions": "操作"
+    },
+    "filterAll": "全部",
+    "filterRunning": "运行中",
+    "filterStopped": "已停止",
+    "filterError": "异常",
+    "totalAgents": "共 {{count}} 个 Agent",
+    "empty": "没有找到匹配的 Agent。"
+  },
+
+  "create": {
+    "title": "创建 Agent",
+    "nameLabel": "Agent 名称",
+    "namePlaceholder": "例如：code-reviewer",
+    "nameDesc": "唯一标识符 — 仅限小写字母、数字、连字符和下划线",
+    "providerLabel": "LLM 供应商",
+    "providerPlaceholder": "选择供应商",
+    "descriptionLabel": "描述",
+    "descriptionPlaceholder": "描述该 Agent 的功能与用途…",
+    "modelLabel": "模型",
+    "modelPlaceholder": "选择或输入模型名称",
+    "modelNotFound": "输入自定义模型名称",
+    "quotaLabel": "每日 Token 配额",
+    "quotaDesc": "该 Agent 每日最大 Token 消耗量",
+    "toolsLabel": "工具 / 集成",
+    "toolsPlaceholder": "选择 Agent 可使用的工具",
+    "toolsDesc": "选择该 Agent 可以调用的工具和集成服务",
+    "submitBtn": "创建 Agent",
+    "cancelBtn": "取消",
+    "providerOptions": {
+      "anthropic": "Anthropic (Claude)",
+      "openai": "OpenAI (GPT)",
+      "ollama": "Ollama (本地)",
+      "vllm": "vLLM (本地)"
+    }
+  },
+
+  "detail": {
+    "notFound": "Agent 不存在",
+    "notFoundDesc": "ID 为 \"{{id}}\" 的 Agent 不存在或已被删除。",
+    "backToList": "← 返回 Agent 列表",
+    "tabs": {
+      "overview": "概览",
+      "tasks": "任务",
+      "settings": "设置"
+    },
+    "stats": {
+      "todayTasks": "今日任务",
+      "todayTokens": "今日 Token",
+      "dailyQuota": "每日配额"
+    },
+    "info": {
+      "agentId": "Agent ID",
+      "status": "状态",
+      "provider": "LLM 供应商",
+      "model": "模型",
+      "created": "创建时间",
+      "updated": "更新时间",
+      "tools": "工具",
+      "description": "描述"
+    },
+    "settings": {
+      "general": "基本信息",
+      "agentName": "Agent 名称",
+      "agentId": "Agent ID",
+      "description": "描述",
+      "llmConfig": "LLM 配置",
+      "provider": "供应商",
+      "model": "模型",
+      "dailyQuota": "每日 Token 配额",
+      "toolsIntegrations": "工具与集成",
+      "dangerZone": "危险操作",
+      "deleteTitle": "删除此 Agent",
+      "deleteDesc": "删除后，所有关联数据（包括任务历史、日志和配置）将被永久移除，且无法恢复。",
+      "deleteBtn": "删除 Agent"
+    },
+    "deleteModal": {
+      "title": "确认删除",
+      "message": "确定要删除 {{name}} 吗？此操作不可撤销。",
+      "confirmBtn": "确认删除"
+    },
+    "tasksTable": {
+      "taskId": "任务 ID",
+      "status": "状态",
+      "priority": "优先级",
+      "input": "输入",
+      "duration": "耗时",
+      "tokens": "Token",
+      "time": "时间"
+    }
+  }
+}

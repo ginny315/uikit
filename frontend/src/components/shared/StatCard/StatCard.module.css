@@ -1,0 +1,79 @@
+/* ── StatCard ── */
+.card {
+  background: var(--mantine-color-body);
+  border: 1px solid var(--agentsys-card-border, rgba(0,0,0,0.06));
+  border-radius: var(--mantine-radius-lg);
+  padding: 22px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  position: relative;
+  overflow: hidden;
+  transition: all 200ms ease;
+  cursor: pointer;
+}
+
+.card:hover {
+  border-color: rgba(22, 163, 74, 0.35);
+  background: #F4F6FA;
+  transform: translateY(-2px);
+  box-shadow: var(--mantine-shadow-lg);
+}
+
+/* ── Header: label + icon ── */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.label {
+  font-size: 0.82rem;
+  color: var(--mantine-color-dimmed);
+  font-weight: 500;
+}
+
+.iconWrap {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--mantine-radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* ── Value ── */
+.value {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--mantine-color-text);
+}
+
+.unit {
+  font-size: 1rem;
+  color: var(--mantine-color-dimmed);
+  font-weight: 400;
+}
+
+/* ── Trend ── */
+.trend {
+  font-size: 0.78rem;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.trendUp {
+  color: var(--mantine-color-agentGreen-6);
+}
+
+.trendDown {
+  color: #E11D48;
+}
+
+.trendNeutral {
+  color: var(--mantine-color-dimmed);
+}

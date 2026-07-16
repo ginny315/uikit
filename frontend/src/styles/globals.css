@@ -4,6 +4,14 @@
  * Mantine v7 使用 @layer mantine 包裹组件样式。
  * 自定义样式如果放在非 layer 域或更优先的 layer，可覆盖 Mantine 默认值。
  */
+
+/* 注册 CSS 自定义属性以便浏览器插值过渡动画 */
+@property --agentsys-sidebar-width {
+  syntax: '<length>';
+  initial-value: 240px;
+  inherits: true;
+}
+
 @layer base {
 
   /* ── CSS 变量 — 覆盖 Mantine 默认 (DESIGN_SPEC 附录 A) ── */
@@ -30,6 +38,12 @@
     /* 卡片 */
     --agentsys-card-bg: #FFFFFF;
     --agentsys-card-border: rgba(0, 0, 0, 0.06);
+
+    /* 布局 */
+    --agentsys-sidebar-width: 240px;
+    --agentsys-sidebar-collapsed-width: 64px;
+    --agentsys-topbar-height: 64px;
+    --agentsys-page-bg: #F8F9FB;
   }
 
   [data-mantine-color-scheme='dark'] {
@@ -43,6 +57,12 @@
 
     --agentsys-card-bg: #151B2A;
     --agentsys-card-border: rgba(255, 255, 255, 0.06);
+
+    /* 布局 */
+    --agentsys-sidebar-width: 240px;
+    --agentsys-sidebar-collapsed-width: 64px;
+    --agentsys-topbar-height: 64px;
+    --agentsys-page-bg: #060912;
   }
 
   /* ── 全局基础样式 ── */
@@ -83,5 +103,14 @@
 
   ::-webkit-scrollbar-thumb:hover {
     background: rgba(0, 0, 0, 0.25);
+  }
+
+  /* 暗色模式滚动条 */
+  [data-mantine-color-scheme='dark'] ::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.12);
+  }
+
+  [data-mantine-color-scheme='dark'] ::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.22);
   }
 }

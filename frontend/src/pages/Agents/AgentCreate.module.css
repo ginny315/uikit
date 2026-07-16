@@ -1,0 +1,67 @@
+/* ── AgentCreatePage ── */
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+
+.title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: var(--mantine-color-text);
+}
+
+.formCard {
+  background: var(--mantine-color-body);
+  border: 1px solid var(--agentsys-card-border, rgba(0,0,0,0.06));
+  border-radius: var(--mantine-radius-lg);
+  padding: 28px 32px;
+  max-width: 720px;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px 24px;
+  align-items: start;
+}
+
+.formGridFull {
+  grid-column: 1 / -1;
+}
+
+/*
+ * 表单对齐策略：
+ * align-items: start 确保同行左右两个字段顶部对齐。
+ * 当其中一个出现 error 时，error 消息向下扩展，不会影响对方字段的垂直位置。
+ *
+ * Mantine 只在有错误时才渲染 .mantine-InputWrapper-error 元素。
+ * 下面的规则确保 error 出现时也保持紧凑，不会撑大行高。
+ */
+.formGrid :global(.mantine-InputWrapper-error) {
+  margin-top: 4px;
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+
+.formActions {
+  display: flex;
+  gap: 12px;
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(0,0,0,0.06);
+}
+
+/* ── Responsive ── */
+@media (max-width: 640px) {
+  .formGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .formCard {
+    padding: 20px;
+  }
+}
