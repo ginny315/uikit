@@ -1,4 +1,4 @@
-/* ── AgentListPage ── */
+/* ── TaskListPage ── */
 
 /* Header */
 .header {
@@ -63,10 +63,13 @@
   border-bottom: 1px solid rgba(0,0,0,0.06);
   white-space: nowrap;
   user-select: none;
+}
+
+.tableWrap thead th.sortable {
   cursor: pointer;
 }
 
-.tableWrap thead th:hover {
+.tableWrap thead th.sortable:hover {
   color: var(--mantine-color-text);
 }
 
@@ -78,13 +81,13 @@
   color: var(--mantine-color-text);
 }
 
-.tableWrap tbody tr:hover {
-  background: rgba(0,0,0,0.02);
-}
-
 .tableWrap tbody tr {
   cursor: pointer;
   transition: background 100ms ease;
+}
+
+.tableWrap tbody tr:hover {
+  background: rgba(0,0,0,0.02);
 }
 
 .monoCell {
@@ -96,14 +99,13 @@
   color: var(--mantine-color-dimmed);
 }
 
-.agentName {
-  font-weight: 600;
-  color: var(--mantine-color-text);
+.agentCell {
+  font-weight: 500;
 }
 
-/* ── 描述列：固定最大宽度 + 省略 ── */
-.descCell {
-  max-width: 280px;
+/* ── 输入列：固定最大宽度 + 省略 ── */
+.inputCell {
+  max-width: 260px;
 }
 
 .truncatedCell {
@@ -113,6 +115,12 @@
   white-space: nowrap;
   color: var(--mantine-color-dimmed);
   font-size: 0.83rem;
+}
+
+.timeCell {
+  font-size: 0.8rem;
+  color: var(--mantine-color-dimmed);
+  font-family: 'JetBrains Mono', monospace;
 }
 
 /* Actions */
@@ -166,7 +174,6 @@
   background: var(--mantine-color-body);
 }
 
-/* thead 需要更高的 z-index 防止 tbody 滚动时穿透 */
 .tableWrap thead .stickyLeft,
 .tableWrap thead .stickyRight {
   z-index: 3;
@@ -180,7 +187,6 @@
   background: color-mix(in srgb, var(--mantine-color-body) 98%, black);
 }
 
-/* 固定列右侧阴影分隔线 */
 .stickyLeft::after {
   content: '';
   position: absolute;
@@ -205,7 +211,7 @@
 
 /* colgroup hints for column widths */
 .colStickyLeft {
-  width: 18%;
+  width: 11%;
 }
 
 .colStickyRight {
@@ -218,7 +224,6 @@
     font-size: 1.4rem;
   }
 
-  /* 表格在平板端改为可滚动的卡片式 */
   .tableWrap table {
     font-size: 0.82rem;
   }

@@ -10,5 +10,11 @@
     "failed": "失败",
     "queued": "排队中",
     "cancelled": "已取消"
+  },
+  "priority": {
+    "critical": "紧急",
+    "high": "高",
+    "medium": "中",
+    "low": "低"
   }
 }

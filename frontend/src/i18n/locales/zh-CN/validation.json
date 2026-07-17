@@ -6,5 +6,8 @@
   "descriptionMinLength": "描述至少需要 10 个字符",
   "modelRequired": "请选择或输入模型",
   "quotaMin": "每日配额至少 {{min}} tokens",
-  "quotaMax": "每日配额不能超过 {{max}} tokens"
+  "quotaMax": "每日配额不能超过 {{max}} tokens",
+  "taskAgentRequired": "请选择执行 Agent",
+  "taskInputRequired": "请输入任务内容",
+  "taskInputMinLength": "任务内容至少需要 {{min}} 个字符"
 }

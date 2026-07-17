@@ -83,7 +83,7 @@ export interface CreateTaskRequest {
 
 export interface TaskTimelineEvent {
   timestamp: string;
-  type: 'enqueued' | 'assigned' | 'llm_call' | 'tool_call' | 'retry' | 'completed' | 'failed';
+  type: 'enqueued' | 'assigned' | 'llm_call' | 'tool_call' | 'retry' | 'completed' | 'failed' | 'cancelled';
   detail: string;
   duration?: number;
 }

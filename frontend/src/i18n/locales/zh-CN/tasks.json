@@ -1,0 +1,83 @@
+{
+  "list": {
+    "title": "任务调度",
+    "createBtn": "创建任务",
+    "searchPlaceholder": "搜索任务 ID、输入内容或 Agent…",
+    "columns": {
+      "taskId": "任务 ID",
+      "agent": "Agent",
+      "status": "状态",
+      "priority": "优先级",
+      "input": "输入",
+      "duration": "耗时",
+      "tokens": "Token",
+      "createdAt": "创建时间",
+      "actions": "操作"
+    },
+    "filterAll": "全部",
+    "priorityAll": "全部优先级",
+    "totalTasks": "共 {{count}} 个任务",
+    "empty": "没有找到匹配的任务。",
+    "viewAction": "查看详情",
+    "cancelAction": "取消任务"
+  },
+
+  "create": {
+    "title": "创建任务",
+    "agentLabel": "执行 Agent",
+    "agentPlaceholder": "选择 Agent",
+    "agentDesc": "仅可选择运行中的 Agent",
+    "inputLabel": "任务输入",
+    "inputPlaceholder": "描述任务内容，例如：审查 PR #236 的代码变更…",
+    "priorityLabel": "优先级",
+    "submitBtn": "提交任务",
+    "successMsg": "任务 {{id}} 已提交至队列"
+  },
+
+  "cancelModal": {
+    "title": "取消任务",
+    "message": "确定要取消任务 {{id}} 吗？运行中的任务将被中断，此操作不可撤销。",
+    "confirmBtn": "确认取消",
+    "keepBtn": "保留任务",
+    "successMsg": "任务 {{id}} 已取消"
+  },
+
+  "detail": {
+    "notFound": "任务不存在",
+    "notFoundDesc": "ID 为 \"{{id}}\" 的任务不存在或已被删除。",
+    "backToList": "← 返回任务列表",
+    "retryBtn": "重新执行",
+    "retryMsg": "任务 {{id}} 已重新加入队列",
+    "stats": {
+      "duration": "执行耗时",
+      "tokens": "Token 消耗",
+      "events": "时间线事件"
+    },
+    "info": {
+      "taskId": "任务 ID",
+      "agent": "执行 Agent",
+      "status": "状态",
+      "priority": "优先级",
+      "createdAt": "创建时间",
+      "startedAt": "开始时间",
+      "completedAt": "完成时间"
+    },
+    "input": "任务输入",
+    "output": "执行输出",
+    "noOutput": "任务尚未产生输出。",
+    "error": "错误信息",
+    "timeline": "执行时间线",
+    "timelineEvents": {
+      "enqueued": "进入队列",
+      "assigned": "分配 Agent",
+      "llm_call": "LLM 调用",
+      "tool_call": "工具调用",
+      "retry": "重试",
+      "completed": "执行完成",
+      "failed": "执行失败",
+      "cancelled": "已取消"
+    },
+    "cancelledDetail": "用户手动取消任务",
+    "requeuedDetail": "用户触发重新执行，任务重新加入队列"
+  }
+}

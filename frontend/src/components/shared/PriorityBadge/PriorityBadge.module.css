@@ -1,0 +1,63 @@
+/* ── PriorityBadge ── */
+/* Linear 风格信号格：填充格数表达优先级高低，与 StatusBadge 的 pill 视觉区分 */
+.wrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* 信号格容器：底部对齐，高度递增 */
+.bars {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 12px;
+}
+
+.bar {
+  width: 3px;
+  border-radius: 1px;
+  background: rgba(148, 163, 184, 0.25);
+}
+
+.bar:nth-child(1) { height: 4px; }
+.bar:nth-child(2) { height: 7px; }
+.bar:nth-child(3) { height: 10px; }
+.bar:nth-child(4) { height: 12px; }
+
+/* ── Priority variants ── */
+.critical {
+  color: #E11D48;
+}
+
+.critical .barFilled {
+  background: #F43F5E;
+}
+
+.high {
+  color: #D97706;
+}
+
+.high .barFilled {
+  background: #F59E0B;
+}
+
+.medium {
+  color: #0891B2;
+}
+
+.medium .barFilled {
+  background: #06B6D4;
+}
+
+.low {
+  color: #64748B;
+}
+
+.low .barFilled {
+  background: #94A3B8;
+}

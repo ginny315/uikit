@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Button, Tabs, Modal, Text, Tooltip } from '@mantine/core';
@@ -9,36 +9,19 @@ import {
   IconPlayerPlay, IconPlayerStop, IconRefresh, IconAlertTriangle,
 } from '@tabler/icons-react';
 import { StatusBadge } from '../../components/shared/StatusBadge/StatusBadge';
+import { PriorityBadge } from '../../components/shared/PriorityBadge/PriorityBadge';
 import { PageHeader } from '../../components/shared/PageHeader/PageHeader';
 import type { BreadcrumbItem } from '../../components/shared/PageHeader/PageHeader';
-import type { Agent, Task } from '../../types';
+import type { Agent } from '../../types';
 import { MOCK_AGENTS as MOCK_AGENTS_LIST } from '../../mocks/agents';
+import { MOCK_TASKS } from '../../mocks/tasks';
+import { formatTokens, formatDuration } from '../../lib/format';
 import classes from './AgentDetail.module.css';
 
 // 数组 → id 索引，O(1) 查找
 const MOCK_AGENTS: Record<string, Agent> = Object.fromEntries(
   MOCK_AGENTS_LIST.map((a) => [a.id, a]),
 );
-
-const MOCK_TASKS: Task[] = [
-  { id: 'task_7a3f2', agentId: '1', agentName: 'code-reviewer', status: 'succeeded', priority: 3, input: '审查 PR #234 — 新增用户认证模块', output: '发现 3 个问题', duration: 12700, tokensUsed: 1420, createdAt: '2026-07-15 10:32:15', completedAt: '2026-07-15 10:32:28' },
-  { id: 'task_9d55c', agentId: '1', agentName: 'code-reviewer', status: 'queued', priority: 2, input: '审查 PR #235', createdAt: '2026-07-15 10:33:00' },
-  { id: 'task_2a81b', agentId: '1', agentName: 'code-reviewer', status: 'succeeded', priority: 3, input: '审查 PR #233 — 修复登录页样式问题', output: '已通过', duration: 8900, tokensUsed: 980, createdAt: '2026-07-15 09:15:00', completedAt: '2026-07-15 09:15:09' },
-  { id: 'task_6c33f', agentId: '1', agentName: 'code-reviewer', status: 'failed', priority: 4, input: '审查 PR #232 (紧急) — 安全漏洞热修复', duration: 2300, tokensUsed: 340, errorMessage: '仓库不可达', createdAt: '2026-07-15 08:45:00', startedAt: '2026-07-15 08:45:00', completedAt: '2026-07-15 08:45:02' },
-  { id: 'task_1d77e', agentId: '1', agentName: 'code-reviewer', status: 'succeeded', priority: 2, input: '审查 PR #231 — 更新依赖版本', output: '有少量建议', duration: 15400, tokensUsed: 2100, createdAt: '2026-07-14 16:20:00', completedAt: '2026-07-14 16:20:15' },
-];
-
-function formatTokens(n: number): string {
-  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
-  if (n >= 1000) return `${Math.round(n / 1000)}K`;
-  return String(n);
-}
-
-function formatDuration(ms?: number): string {
-  if (ms === undefined) return '—';
-  if (ms < 1000) return `${ms}ms`;
-  return `${(ms / 1000).toFixed(1)}s`;
-}
 
 function TruncatedText({ text, maxLen = 32 }: { text: string; maxLen?: number }) {
   if (text.length <= maxLen) return <span>{text}</span>;
@@ -57,6 +40,9 @@ export function AgentDetailPage() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<string | null>('overview');
   const [deleteOpened, { open: openDelete, close: closeDelete }] = useDisclosure(false);
+
+  // 该 Agent 的任务（共享 mock 数据源，与任务调度页一致）
+  const agentTasks = useMemo(() => MOCK_TASKS.filter((task) => task.agentId === id), [id]);
 
   const baseAgent = id ? MOCK_AGENTS[id] : undefined;
   const [agentStatus, setAgentStatus] = useState(baseAgent?.status ?? 'stopped');
@@ -83,7 +69,7 @@ export function AgentDetailPage() {
     { label: agentName },
   ];
 
-  const tabTasksLabel = `${t('agents:detail.tabs.tasks')} (${MOCK_TASKS.length})`;
+  const tabTasksLabel = `${t('agents:detail.tabs.tasks')} (${agentTasks.length})`;
 
   function handleToggleStatus() {
     const next = agentStatus === 'running' ? 'stopped' : 'running';
@@ -211,11 +197,11 @@ export function AgentDetailPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {MOCK_TASKS.map((task) => (
+                  {agentTasks.map((task) => (
                     <tr key={task.id} style={{ cursor: 'pointer' }} onClick={() => navigate(`/tasks/${task.id}`)}>
                       <td className={classes.monoCell}>{task.id}</td>
                       <td><StatusBadge status={task.status} /></td>
-                      <td className={classes.monoCell}>{task.priority}</td>
+                      <td><PriorityBadge priority={task.priority} /></td>
                       <td style={{ maxWidth: 220, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                         <TruncatedText text={task.input} maxLen={28} />
                       </td>

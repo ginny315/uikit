@@ -1,0 +1,219 @@
+/* ── TaskDetailPage ── */
+
+/* 内容卡片 */
+.card {
+  background: var(--mantine-color-body);
+  border: 1px solid var(--agentsys-card-border, rgba(0,0,0,0.06));
+  border-radius: var(--mantine-radius-lg);
+  padding: 24px;
+}
+
+.card + .card {
+  margin-top: 16px;
+}
+
+/* Stats mini cards（与 AgentDetail 一致） */
+.statsRow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.statMini {
+  background: var(--agentsys-page-bg, #F8F9FB);
+  border: 1px solid rgba(0,0,0,0.04);
+  border-radius: var(--mantine-radius-md);
+  padding: 18px 20px;
+  text-align: center;
+}
+
+.statMiniValue {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.statMiniLabel {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--mantine-color-dimmed);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* Info grid（与 AgentDetail 一致） */
+.infoGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px 24px;
+}
+
+.infoLabel {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--mantine-color-dimmed);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 4px;
+}
+
+.infoValue {
+  font-size: 0.92rem;
+  font-weight: 500;
+  color: var(--mantine-color-text);
+}
+
+.infoValueMono {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+}
+
+.agentLink {
+  color: var(--mantine-color-agentGreen-6);
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.agentLink:hover {
+  text-decoration: underline;
+}
+
+/* 区块标题 */
+.sectionTitle {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--mantine-color-dimmed);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 12px;
+}
+
+/* 输入 / 输出内容块 */
+.contentBlock {
+  background: var(--agentsys-page-bg, #F8F9FB);
+  border: 1px solid rgba(0,0,0,0.04);
+  border-radius: var(--mantine-radius-md);
+  padding: 16px 18px;
+  font-size: 0.88rem;
+  line-height: 1.7;
+  color: var(--mantine-color-text);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.contentBlockEmpty {
+  color: var(--mantine-color-dimmed);
+  font-style: italic;
+}
+
+/* 错误信息块 */
+.errorBlock {
+  background: #FFF5F5;
+  border: 1px solid #FECDD3;
+  border-radius: var(--mantine-radius-md);
+  padding: 16px 18px;
+  font-size: 0.88rem;
+  line-height: 1.7;
+  color: #E11D48;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* ── 执行时间线 ── */
+.timeline {
+  padding: 4px 0 0 6px;
+}
+
+.timelineItem {
+  position: relative;
+  padding: 0 0 22px 22px;
+  border-left: 2px solid rgba(0,0,0,0.06);
+}
+
+.timelineItem:last-child {
+  border-left-color: transparent;
+  padding-bottom: 0;
+}
+
+.timelineDot {
+  position: absolute;
+  left: -7px;
+  top: 2px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid var(--mantine-color-body);
+  box-sizing: border-box;
+}
+
+.dotEnqueued { background: #94A3B8; }
+.dotAssigned { background: #06B6D4; }
+.dotLlmCall { background: #8B5CF6; }
+.dotToolCall { background: #F59E0B; }
+.dotRetry { background: #F59E0B; }
+.dotCompleted { background: #16A34A; }
+.dotFailed { background: #F43F5E; }
+.dotCancelled { background: #94A3B8; }
+
+.timelineHead {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 2px;
+}
+
+.timelineType {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--mantine-color-text);
+}
+
+.timelineTime {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--mantine-color-dimmed);
+}
+
+.timelineDuration {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  padding: 1px 8px;
+  border-radius: 10px;
+  background: rgba(148, 163, 184, 0.12);
+  color: #64748B;
+}
+
+.timelineDetail {
+  font-size: 0.84rem;
+  line-height: 1.6;
+  color: var(--mantine-color-dimmed);
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .card {
+    padding: 16px;
+  }
+
+  .statsRow {
+    grid-template-columns: 1fr;
+  }
+
+  .statMini {
+    padding: 14px 16px;
+  }
+
+  .statMiniValue {
+    font-size: 1.3rem;
+  }
+
+  .infoGrid {
+    grid-template-columns: 1fr;
+  }
+}

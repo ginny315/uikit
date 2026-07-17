@@ -15,12 +15,13 @@ import { useAuthStore } from '../../stores/authStore';
  *   </Route>
  */
 export function AuthGuard() {
+  // Hook 必须无条件调用（rules-of-hooks），是否启用 auth 在其后判断
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+
   // auth 未启用时直接放行
   if (!config.auth.enabled) {
     return <Outlet />;
   }
-
-  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
 
   if (!isAuthenticated) {
     return <Navigate to={config.auth.loginPath} replace />;
