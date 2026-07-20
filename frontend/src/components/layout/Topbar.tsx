@@ -1,9 +1,11 @@
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Button, ActionIcon } from '@mantine/core';
+import { notifications } from '@mantine/notifications';
 import { useMediaQuery } from '@mantine/hooks';
-import { IconMenu2, IconLogout } from '@tabler/icons-react';
+import { IconMenu2, IconLogout, IconCheck } from '@tabler/icons-react';
 import { useAuthStore } from '../../stores/authStore';
+import { config } from '../../config';
 import classes from './Topbar.module.css';
 
 function resolvePageTitle(pathname: string, t: (key: string) => string): string {
@@ -32,8 +34,22 @@ interface TopbarProps {
 export function Topbar({ onMenuClick }: TopbarProps) {
   const { t } = useTranslation();
   const location = useLocation();
+  const navigate = useNavigate();
   const { logout } = useAuthStore();
   const pageTitle = resolvePageTitle(location.pathname, t);
+
+  const handleLogout = () => {
+    logout();
+    navigate(config.auth.loginPath, { replace: true });
+    notifications.show({
+      title: t('auth:brandName'),
+      message: t('auth:loggedOut'),
+      color: 'green',
+      icon: <IconCheck size={16} />,
+      autoClose: 3000,
+      withBorder: true,
+    });
+  };
 
   // 仅在手机端 (≤768px) 显示汉堡菜单，侧边栏在此断点下隐藏为 overlay
   const isMobile = useMediaQuery('(max-width: 768px)');
@@ -65,7 +81,7 @@ export function Topbar({ onMenuClick }: TopbarProps) {
           color="gray"
           size="sm"
           leftSection={<IconLogout size={16} />}
-          onClick={logout}
+          onClick={handleLogout}
         >
           {t('common:actions.logout')}
         </Button>

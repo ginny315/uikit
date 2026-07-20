@@ -13,7 +13,7 @@ export const config = {
   // ── 认证 ──
   auth: {
     /** 是否启用认证。false 时 AuthGuard 直通，API 请求不带 token */
-    enabled: false,
+    enabled: true,
     /** token 在 localStorage 中的 key */
     storageKey: 'agentsys-token',
     /** 登录页路径 */

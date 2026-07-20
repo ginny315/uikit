@@ -1,4 +1,6 @@
+import { useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
+import { LoadingOverlay } from '@mantine/core';
 import { AuthGuard } from './components/guard/AuthGuard';
 import { ErrorBoundary } from './components/guard/ErrorBoundary';
 import { AppLayout } from './components/layout/AppLayout';
@@ -15,8 +17,21 @@ import { LogsPage } from './pages/Traces/LogsPage';
 import { CostsPage } from './pages/Costs/CostsPage';
 import { AccessSettingsPage } from './pages/Settings/AccessSettingsPage';
 import { WebhookSettingsPage } from './pages/Settings/WebhookSettingsPage';
+import { useAuthStore } from './stores/authStore';
 
 export function App() {
+  const { isLoading } = useAuthStore();
+
+  // ── 应用启动时恢复登录态 ──
+  useEffect(() => {
+    useAuthStore.getState().initialize();
+  }, []);
+
+  // 登录态恢复期间展示全屏 loading，避免闪烁
+  if (isLoading) {
+    return <LoadingOverlay visible />;
+  }
+
   return (
     <ErrorBoundary>
       <Routes>
