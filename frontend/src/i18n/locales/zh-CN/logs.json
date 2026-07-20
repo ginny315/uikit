@@ -1,0 +1,43 @@
+{
+  "list": {
+    "title": "日志追踪",
+    "searchPlaceholder": "搜索消息、任务 ID、Trace ID 或实例…",
+    "filterAll": "全部",
+    "sourceAll": "全部来源",
+    "sourceSystem": "系统服务",
+    "timePreset15m": "15 分钟",
+    "timePreset1h": "1 小时",
+    "timePreset4h": "4 小时",
+    "timePreset24h": "24 小时",
+    "timePreset7d": "7 天",
+    "timePresetAll": "全部",
+    "timeCustom": "自定义",
+    "timeCustomStart": "开始时间",
+    "timeCustomEnd": "结束时间",
+    "timeCustomApply": "应用",
+    "timeCustomClear": "清空",
+    "timeCustomStartPlaceholder": "不限",
+    "timeCustomEndPlaceholder": "不限",
+    "columns": {
+      "time": "时间",
+      "level": "级别",
+      "source": "来源",
+      "message": "消息",
+      "task": "任务"
+    },
+    "totalLogs": "共 {{count}} 条日志",
+    "empty": "没有找到匹配的日志。"
+  },
+
+  "detail": {
+    "traceId": "Trace ID",
+    "spanId": "Span ID",
+    "instanceId": "实例",
+    "taskId": "任务 ID",
+    "message": "完整消息",
+    "fields": "结构化字段",
+    "noFields": "无结构化字段",
+    "viewTask": "查看任务 →",
+    "viewAgent": "查看 Agent →"
+  }
+}

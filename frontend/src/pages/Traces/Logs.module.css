@@ -1,0 +1,313 @@
+/* ── LogsPage ── */
+
+/* Header */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: var(--mantine-color-text);
+}
+
+/* Toolbar */
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.searchInput {
+  width: 300px;
+}
+
+.filterChip {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+}
+
+/* Table card */
+.tableCard {
+  background: var(--mantine-color-body);
+  border: 1px solid var(--agentsys-card-border, rgba(0,0,0,0.06));
+  border-radius: var(--mantine-radius-lg);
+  overflow: hidden;
+}
+
+.tableWrap {
+  overflow-x: auto;
+}
+
+.tableWrap table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.tableWrap thead th {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--mantine-color-dimmed);
+  text-align: left;
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+  white-space: nowrap;
+  user-select: none;
+}
+
+.tableWrap tbody td {
+  padding: 10px 16px;
+  border-bottom: 1px solid rgba(0,0,0,0.03);
+  white-space: nowrap;
+  font-size: 0.83rem;
+  color: var(--mantine-color-text);
+  vertical-align: top;
+}
+
+.logRow {
+  cursor: pointer;
+  transition: background 100ms ease;
+}
+
+.logRow:hover {
+  background: rgba(0,0,0,0.02);
+}
+
+.logRowExpanded {
+  background: rgba(0,0,0,0.02);
+}
+
+/* 时间列：毫秒精度等宽 */
+.timeCell {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.76rem;
+  color: var(--mantine-color-dimmed);
+}
+
+/* 级别列：终端惯例 — 彩色等宽大写文本（刻意区别于 pill / 信号格） */
+.levelCell {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.levelDebug { color: #94A3B8; }
+.levelInfo { color: #0891B2; }
+.levelWarn { color: #D97706; }
+.levelError { color: #E11D48; }
+
+/* 来源列 */
+.sourceCell {
+  font-weight: 500;
+}
+
+.sourceSystem {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+  color: var(--mantine-color-dimmed);
+}
+
+/* 消息列：占满剩余宽度 + 省略 */
+.messageCell {
+  max-width: 0;
+  width: 100%;
+}
+
+.messageText {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 任务链接 */
+.taskLink {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.76rem;
+  color: var(--mantine-color-agentGreen-6);
+  cursor: pointer;
+}
+
+.taskLink:hover {
+  text-decoration: underline;
+}
+
+/* 展开指示箭头 */
+.chevron {
+  display: inline-flex;
+  color: var(--mantine-color-dimmed);
+  transition: transform 150ms ease;
+}
+
+.chevronOpen {
+  transform: rotate(90deg);
+}
+
+/* ── 展开的详情行 ── */
+.expandCell {
+  padding: 0 !important;
+}
+
+.expandPanel {
+  background: var(--agentsys-page-bg, #F8F9FB);
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+  padding: 16px 20px 16px 44px;
+  white-space: normal;
+}
+
+.expandGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px 24px;
+  margin-bottom: 14px;
+}
+
+.expandLabel {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.66rem;
+  font-weight: 500;
+  color: var(--mantine-color-dimmed);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 3px;
+}
+
+.expandValue {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+  color: var(--mantine-color-text);
+  word-break: break-all;
+}
+
+.expandMessage {
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: var(--mantine-color-text);
+  margin-bottom: 14px;
+  word-break: break-word;
+}
+
+/* 结构化字段标签 */
+.fieldsWrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.fieldTag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  padding: 3px 10px;
+  border-radius: 6px;
+  background: rgba(148, 163, 184, 0.1);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  color: var(--mantine-color-text);
+}
+
+.fieldTag b {
+  color: var(--mantine-color-dimmed);
+  font-weight: 500;
+}
+
+.expandActions {
+  display: flex;
+  gap: 16px;
+  margin-top: 14px;
+}
+
+.expandLink {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--mantine-color-agentGreen-6);
+  cursor: pointer;
+}
+
+.expandLink:hover {
+  text-decoration: underline;
+}
+
+/* Empty state */
+.empty {
+  padding: 48px 24px;
+  text-align: center;
+  color: var(--mantine-color-dimmed);
+}
+
+/* Pagination row */
+.paginationRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-top: 1px solid rgba(0,0,0,0.06);
+  font-size: 0.82rem;
+  color: var(--mantine-color-dimmed);
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.pageSizeWrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.totalText {
+  white-space: nowrap;
+}
+
+/* ── Responsive ── */
+@media (max-width: 1024px) {
+  .title {
+    font-size: 1.4rem;
+  }
+
+  .tableWrap thead th,
+  .tableWrap tbody td {
+    padding: 10px 12px;
+  }
+}
+
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .title {
+    font-size: 1.25rem;
+  }
+
+  .searchInput {
+    width: 100%;
+  }
+
+  .toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .expandPanel {
+    padding: 14px 16px;
+  }
+
+  .paginationRow {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .pageSizeWrap {
+    justify-content: space-between;
+  }
+}

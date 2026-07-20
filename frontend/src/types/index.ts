@@ -115,6 +115,29 @@ export interface WorkflowEdge {
   target: string; // step id
 }
 
+// ── 日志 ──
+export type LogLevel = 'debug' | 'info' | 'warn' | 'error';
+
+/** 对应 ClickHouse agent_logs 表（TECH_DESIGN.md §3.3），camelCase 命名 */
+export interface LogEntry {
+  /** 前端展示用 key（后端由 timestamp + span_id 唯一确定） */
+  id: string;
+  /** 毫秒精度：YYYY-MM-DD HH:mm:ss.SSS */
+  timestamp: string;
+  level: LogLevel;
+  /** 关联 Agent；系统级日志可为空 */
+  agentId?: string;
+  agentName?: string;
+  /** 关联任务；Agent 生命周期日志可为空 */
+  taskId?: string;
+  instanceId: string;
+  traceId: string;
+  spanId: string;
+  message: string;
+  /** 结构化字段（fields JSON） */
+  fields?: Record<string, string | number | boolean>;
+}
+
 // ── 监控指标 ──
 export interface DashboardMetrics {
   todayTasks: number;
