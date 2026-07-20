@@ -1,0 +1,192 @@
+/* ── WorkflowListPage ── */
+
+/* Header */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: var(--mantine-color-text);
+  display: flex;
+  align-items: center;
+}
+
+/* Toolbar */
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.searchInput {
+  width: 280px;
+}
+
+.filterChip {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+}
+
+/* Card grid */
+.cardGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 16px;
+}
+
+.workflowCard {
+  cursor: pointer;
+  transition: border-color 0.12s ease, box-shadow 0.12s ease;
+  border: 1px solid var(--agentsys-card-border, rgba(0, 0, 0, 0.06));
+}
+
+.workflowCard:hover {
+  border-color: var(--mantine-color-agentGreen-3);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* Card header row */
+.cardHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.cardTitleWrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  flex: 1;
+}
+
+.cardIcon {
+  color: var(--mantine-color-agentGreen-5);
+  flex-shrink: 0;
+}
+
+.cardName {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--mantine-color-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cardActions {
+  display: flex;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.cardDesc {
+  line-height: 1.5;
+}
+
+/* Card footer */
+.cardMeta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.stepCount {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--mantine-color-dimmed);
+}
+
+.updatedAt {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--mantine-color-dimmed);
+  margin-left: auto;
+}
+
+/* Empty */
+.empty {
+  padding: 48px 24px;
+  text-align: center;
+  color: var(--mantine-color-dimmed);
+}
+
+/* Pagination */
+.paginationRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 24px;
+  font-size: 0.82rem;
+  color: var(--mantine-color-dimmed);
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.pageSizeWrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.totalText {
+  white-space: nowrap;
+}
+
+/* ── Responsive ── */
+@media (max-width: 1024px) {
+  .title {
+    font-size: 1.4rem;
+  }
+
+  .cardGrid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .title {
+    font-size: 1.25rem;
+  }
+
+  .searchInput {
+    width: 100%;
+  }
+
+  .toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .cardGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .paginationRow {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .pageSizeWrap {
+    justify-content: space-between;
+  }
+}

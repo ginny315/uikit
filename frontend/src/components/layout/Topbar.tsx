@@ -7,12 +7,21 @@ import { useAuthStore } from '../../stores/authStore';
 import classes from './Topbar.module.css';
 
 function resolvePageTitle(pathname: string, t: (key: string) => string): string {
-  const key = `nav:pageTitles.${pathname}`;
-  const translated = t(key);
-  if (translated !== key) return translated;
+  // 动态路由优先匹配，避免 i18next 未找到 key 时返回原始路径字符串
   if (pathname.startsWith('/agents/')) return t('nav:pageTitles.agentDetail');
   if (pathname.startsWith('/tasks/')) return t('nav:pageTitles.taskDetail');
   if (pathname.startsWith('/workflows/')) return t('nav:pageTitles.workflowEditor');
+
+  // 精确匹配的静态路由
+  const staticRoutes = [
+    '/', '/agents', '/agents/create', '/tasks',
+    '/workflows', '/logs', '/costs',
+    '/settings/access', '/settings/webhooks',
+  ];
+  if (staticRoutes.includes(pathname)) {
+    return t(`nav:pageTitles.${pathname}`);
+  }
+
   return t('nav:pageTitles.notFound');
 }
 

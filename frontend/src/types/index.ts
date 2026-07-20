@@ -91,29 +91,70 @@ export interface TaskTimelineEvent {
 // ── 工作流 ──
 export type WorkflowStatus = 'active' | 'paused' | 'draft';
 
-export interface Workflow {
+/** 工作流摘要 — 列表页用 */
+export interface WorkflowSummary {
   id: string;
   name: string;
   description: string;
   status: WorkflowStatus;
-  steps: WorkflowStep[];
+  stepCount: number;
   createdAt: string;
   updatedAt: string;
 }
 
-export interface WorkflowStep {
-  id: string;
-  agentId: string;
-  agentName: string;
-  position: { x: number; y: number };
-  config?: Record<string, unknown>;
+/** ReactFlow 节点 data — Agent 步骤 */
+export interface WorkflowNodeData {
+  label: string;
+  agentId?: string;
+  agentName?: string;
+  /** 传给 Agent 的输入模板（支持 {{output.prev}} 等占位符） */
+  inputTemplate?: string;
 }
 
-export interface WorkflowEdge {
-  id: string;
-  source: string; // step id
-  target: string; // step id
+/** ReactFlow 边 data */
+export interface WorkflowEdgeData {
+  condition?: string;
 }
+
+/**
+ * 工作流详情 — 编辑器用。
+ * nodes / edges 为 ReactFlow 原生结构，直接用于 <ReactFlow> 的受控 props。
+ * 序列化存储时只保留 id、type、position、data（ReactFlow 运行时字段由框架管理）。
+ */
+export interface WorkflowDetail extends WorkflowSummary {
+  nodes: WorkflowNode[];
+  edges: WorkflowEdgeType[];
+}
+
+/**
+ * ReactFlow 节点 — 序列化友好的子集。
+ * 不包含 ReactFlow 运行时字段（measured、internals 等），
+ * 用于 mock 数据和 API 传输。
+ */
+export interface WorkflowNode {
+  id: string;
+  type: 'start' | 'agent' | 'end';
+  position: { x: number; y: number };
+  data: WorkflowNodeData;
+}
+
+/** ReactFlow 边 — 序列化友好的子集 */
+export interface WorkflowEdgeType {
+  id: string;
+  source: string;
+  target: string;
+  sourceHandle?: string;
+  targetHandle?: string;
+  data?: WorkflowEdgeData;
+}
+
+// ── 保留旧类型别名，向下兼容已有引用 ──
+/** @deprecated 使用 WorkflowSummary */
+export type Workflow = WorkflowSummary;
+/** @deprecated 使用 WorkflowNode */
+export type WorkflowStep = WorkflowNode;
+/** @deprecated 使用 WorkflowEdgeType */
+export type WorkflowEdge = WorkflowEdgeType;
 
 // ── 日志 ──
 export type LogLevel = 'debug' | 'info' | 'warn' | 'error';

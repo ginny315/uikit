@@ -1,0 +1,187 @@
+/* ── WorkflowEditorPage ── */
+
+/* 全高布局：topBar + body 填满视口 */
+.root {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 64px - 56px); /* topbar(64) + content padding(28×2) */
+  max-height: calc(100vh - 64px - 56px);
+  margin: -28px; /* 抵消 AppLayout .content 的 padding，让编辑器撑满 */
+  outline: none;
+  position: relative;
+}
+
+/* ── Top bar ── */
+.topBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--agentsys-card-border, rgba(0, 0, 0, 0.08));
+  background: var(--mantine-color-body);
+  gap: 12px;
+  flex-shrink: 0;
+  z-index: 10;
+}
+
+.topLeft {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.topRight {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.nameInput {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--mantine-color-text);
+  border: 1px solid transparent;
+  background: transparent;
+  padding: 4px 8px;
+  border-radius: var(--mantine-radius-sm);
+  min-width: 200px;
+  max-width: 360px;
+  transition: border-color 0.12s ease, background 0.12s ease;
+}
+
+.nameInput:hover {
+  border-color: var(--agentsys-card-border, rgba(0, 0, 0, 0.12));
+}
+
+.nameInput:focus {
+  outline: none;
+  border-color: var(--mantine-color-agentGreen-4);
+  background: var(--mantine-color-body);
+}
+
+.dirtyDot {
+  color: var(--mantine-color-yellow-5);
+  font-size: 0.7rem;
+  margin-left: 2px;
+  cursor: default;
+}
+
+/* ── Body: left panel + canvas + right panel ── */
+.body {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+
+/* ── Left panel ── */
+.leftPanel {
+  width: 190px;
+  flex-shrink: 0;
+  border-right: 1px solid var(--agentsys-card-border, rgba(0, 0, 0, 0.08));
+  background: var(--mantine-color-body);
+  padding: 14px 12px;
+  overflow-y: auto;
+}
+
+.panelSection {
+  margin-bottom: 4px;
+}
+
+/* ── Canvas ── */
+.canvasWrap {
+  flex: 1;
+  position: relative;
+  min-width: 0;
+}
+
+.reactFlow {
+  background: var(--agentsys-canvas-bg, var(--mantine-color-gray-0));
+}
+
+/* ReactFlow controls 样式覆盖 */
+.controls {
+  /* Mantine 风格的圆角按钮 */
+}
+
+.controls :global(.react-flow__controls-button) {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--mantine-radius-sm);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: var(--mantine-color-body);
+}
+
+/* 空画布提示 */
+.emptyOverlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* ── Not found ── */
+.notFound {
+  padding: 48px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ── Edge delete visual ── */
+:global(.react-flow__edge.selected .react-flow__edge-path) {
+  stroke: var(--mantine-color-red-5) !important;
+  stroke-width: 2px !important;
+}
+
+/* ── Node selection ring ── */
+:global(.react-flow__node.selected) {
+  /* handled by AgentNode.module.css .selected */;
+}
+
+/* ── Responsive ── */
+@media (max-width: 1024px) {
+  .leftPanel {
+    width: 150px;
+    padding: 10px 8px;
+  }
+
+  .nameInput {
+    max-width: 220px;
+  }
+}
+
+@media (max-width: 768px) {
+  .root {
+    height: calc(100vh - 56px);
+    max-height: calc(100vh - 56px);
+    margin: -12px -10px;
+  }
+
+  .topBar {
+    padding: 8px 10px;
+    flex-wrap: wrap;
+  }
+
+  .leftPanel {
+    display: none; /* 移动端隐藏左侧面板 */
+  }
+
+  .body {
+    flex-direction: column;
+  }
+
+  .nameInput {
+    min-width: 140px;
+    max-width: 200px;
+    font-size: 0.9rem;
+  }
+}

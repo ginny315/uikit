@@ -1,0 +1,60 @@
+{
+  "list": {
+    "title": "工作流",
+    "createBtn": "创建工作流",
+    "searchPlaceholder": "搜索工作流名称或描述…",
+    "filterAll": "全部",
+    "empty": "暂无工作流，点击上方按钮创建第一个。",
+    "stepCount": "{{count}} 个步骤",
+    "confirmDeleteTitle": "确认删除",
+    "confirmDeleteMsg": "确定要删除工作流「{{name}}」吗？此操作不可撤销。"
+  },
+
+  "create": {
+    "title": "创建工作流",
+    "nameLabel": "工作流名称",
+    "namePlaceholder": "例如：PR Review Pipeline",
+    "descLabel": "描述",
+    "descPlaceholder": "描述这个工作流做什么…",
+    "submitBtn": "创建"
+  },
+
+  "editor": {
+    "title": "工作流编辑器",
+    "notFound": "工作流不存在",
+    "notFoundDesc": "工作流 {{id}} 不存在或已被删除。",
+    "saveDraft": "保存草稿",
+    "enable": "启用",
+    "pause": "暂停",
+    "savedMsg": "工作流已保存",
+    "enabledMsg": "工作流已启用",
+    "pausedMsg": "工作流已暂停",
+    "addStep": "添加步骤",
+    "deleteStep": "删除步骤",
+    "stepConfig": "步骤配置",
+    "selectAgent": "选择 Agent",
+    "selectAgentPlaceholder": "搜索 Agent…",
+    "agentLabel": "Agent",
+    "inputTemplateLabel": "输入模板",
+    "inputTemplatePlaceholder": "输入内容，可用 {{prev.output}} 引用上一步输出…",
+    "inputTemplateDesc": "支持占位符: {{prev.output}}, {{workflow.input}} 等",
+    "noAgentSelected": "未选择 Agent",
+    "unsavedChanges": "有未保存的更改，确定离开吗？",
+    "startNode": "开始",
+    "endNode": "结束",
+    "dagInvalid": "工作流包含环路，请检查步骤连接后重试。",
+    "emptyCanvas": "画布为空，点击左侧「添加步骤」开始构建工作流。",
+    "availableAgents": "可用 Agent",
+    "toolbar": {
+      "add": "添加步骤",
+      "layout": "自动布局",
+      "fitView": "适应画布"
+    }
+  },
+
+  "status": {
+    "active": "活跃",
+    "paused": "已暂停",
+    "draft": "草稿"
+  }
+}

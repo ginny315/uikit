@@ -88,7 +88,7 @@ export function TaskDetailPage() {
 
   return (
     <>
-      <PageHeader breadcrumbs={breadcrumbs} title={task.id}>
+      <PageHeader breadcrumbs={breadcrumbs} title={task.input}>
         <StatusBadge status={task.status} />
         <span style={{ marginRight: 12 }}><PriorityBadge priority={task.priority} /></span>
         {isCancellable && (
