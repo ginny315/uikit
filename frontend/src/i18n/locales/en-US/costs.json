@@ -1,0 +1,49 @@
+{
+  "title": "Cost Management",
+
+  "stats": {
+    "todayCost": "Today's Cost",
+    "weekCost": "Weekly Cost",
+    "monthCost": "Monthly Cost",
+    "todayTokens": "Today's Tokens",
+    "avgCostPerTask": "Avg Cost / Task",
+    "projectedMonth": "Projected Monthly"
+  },
+
+  "breakdown": {
+    "title": "Cost Breakdown",
+    "byAgent": "By Agent",
+    "byUser": "By User",
+    "byDay": "By Day",
+    "agent": "Agent",
+    "user": "User",
+    "cost": "Cost",
+    "tokens": "Tokens",
+    "tasks": "Tasks",
+    "percentage": "Share"
+  },
+
+  "quota": {
+    "title": "Quota Management",
+    "agent": "Agent",
+    "dailyLimit": "Daily Limit (Tokens)",
+    "used": "Used",
+    "remaining": "Remaining",
+    "usage": "Usage",
+    "editQuota": "Edit Quota",
+    "quotaSaved": "Quota updated",
+    "unlimited": "Unlimited"
+  },
+
+  "alerts": {
+    "title": "Cost Alerts",
+    "enabled": "Enabled",
+    "disabled": "Disabled",
+    "threshold": "Alert Threshold",
+    "dailyThreshold": "Daily cost threshold ($)",
+    "weeklyThreshold": "Weekly cost threshold ($)",
+    "email": "Notification Email",
+    "saveAlert": "Save Alert Rules",
+    "alertSaved": "Alert rules saved"
+  }
+}

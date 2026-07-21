@@ -43,7 +43,10 @@ async function bootstrap() {
   createRoot(root).render(
     <StrictMode>
       <QueryClientProvider client={queryClient}>
-        <MantineProvider theme={theme} defaultColorScheme="light">
+        <MantineProvider
+          theme={theme}
+          defaultColorScheme={(localStorage.getItem('agentsys-theme') as 'light' | 'dark' | null) ?? 'light'}
+        >
           <Notifications position="top-right" />
           <BrowserRouter>
             <App />

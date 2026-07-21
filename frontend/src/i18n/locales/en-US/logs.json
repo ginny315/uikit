@@ -1,0 +1,43 @@
+{
+  "list": {
+    "title": "Log Tracing",
+    "searchPlaceholder": "Search message, task ID, trace ID, or instance…",
+    "filterAll": "All",
+    "sourceAll": "All Sources",
+    "sourceSystem": "System Services",
+    "timePreset15m": "15 min",
+    "timePreset1h": "1 hour",
+    "timePreset4h": "4 hours",
+    "timePreset24h": "24 hours",
+    "timePreset7d": "7 days",
+    "timePresetAll": "All",
+    "timeCustom": "Custom",
+    "timeCustomStart": "Start",
+    "timeCustomEnd": "End",
+    "timeCustomApply": "Apply",
+    "timeCustomClear": "Clear",
+    "timeCustomStartPlaceholder": "Any",
+    "timeCustomEndPlaceholder": "Any",
+    "columns": {
+      "time": "Time",
+      "level": "Level",
+      "source": "Source",
+      "message": "Message",
+      "task": "Task"
+    },
+    "totalLogs": "{{count}} logs total",
+    "empty": "No matching logs found."
+  },
+
+  "detail": {
+    "traceId": "Trace ID",
+    "spanId": "Span ID",
+    "instanceId": "Instance",
+    "taskId": "Task ID",
+    "message": "Full Message",
+    "fields": "Structured Fields",
+    "noFields": "No structured fields",
+    "viewTask": "View task →",
+    "viewAgent": "View agent →"
+  }
+}

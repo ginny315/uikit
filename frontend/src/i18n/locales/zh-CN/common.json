@@ -12,6 +12,8 @@
     "confirm": "确认",
     "back": "返回",
     "logout": "退出登录",
+    "lightMode": "切换到浅色模式",
+    "darkMode": "切换到深色模式",
     "start": "启动",
     "stop": "停止",
     "restart": "重启",

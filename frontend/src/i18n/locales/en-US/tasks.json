@@ -1,0 +1,83 @@
+{
+  "list": {
+    "title": "Task Scheduling",
+    "createBtn": "Create Task",
+    "searchPlaceholder": "Search task ID, input, or agent…",
+    "columns": {
+      "taskId": "Task ID",
+      "agent": "Agent",
+      "status": "Status",
+      "priority": "Priority",
+      "input": "Input",
+      "duration": "Duration",
+      "tokens": "Tokens",
+      "createdAt": "Created",
+      "actions": "Actions"
+    },
+    "filterAll": "All",
+    "priorityAll": "All Priorities",
+    "totalTasks": "{{count}} tasks total",
+    "empty": "No matching tasks found.",
+    "viewAction": "View details",
+    "cancelAction": "Cancel task"
+  },
+
+  "create": {
+    "title": "Create Task",
+    "agentLabel": "Agent",
+    "agentPlaceholder": "Select an agent",
+    "agentDesc": "Only running agents can be selected",
+    "inputLabel": "Task Input",
+    "inputPlaceholder": "Describe the task, e.g.: Review code changes in PR #236…",
+    "priorityLabel": "Priority",
+    "submitBtn": "Submit Task",
+    "successMsg": "Task {{id}} has been queued"
+  },
+
+  "cancelModal": {
+    "title": "Cancel Task",
+    "message": "Are you sure you want to cancel task {{id}}? Running tasks will be interrupted. This action cannot be undone.",
+    "confirmBtn": "Confirm Cancel",
+    "keepBtn": "Keep Task",
+    "successMsg": "Task {{id}} has been cancelled"
+  },
+
+  "detail": {
+    "notFound": "Task not found",
+    "notFoundDesc": "Task with ID \"{{id}}\" does not exist or has been deleted.",
+    "backToList": "← Back to task list",
+    "retryBtn": "Retry",
+    "retryMsg": "Task {{id}} has been re-queued",
+    "stats": {
+      "duration": "Duration",
+      "tokens": "Tokens",
+      "events": "Timeline Events"
+    },
+    "info": {
+      "taskId": "Task ID",
+      "agent": "Agent",
+      "status": "Status",
+      "priority": "Priority",
+      "createdAt": "Created",
+      "startedAt": "Started",
+      "completedAt": "Completed"
+    },
+    "input": "Task Input",
+    "output": "Output",
+    "noOutput": "No output produced yet.",
+    "error": "Error",
+    "timeline": "Execution Timeline",
+    "timelineEvents": {
+      "enqueued": "Enqueued",
+      "assigned": "Agent Assigned",
+      "llm_call": "LLM Call",
+      "tool_call": "Tool Call",
+      "retry": "Retry",
+      "completed": "Completed",
+      "failed": "Failed",
+      "cancelled": "Cancelled"
+    },
+    "cancelledDetail": "Task cancelled by user",
+    "requeuedDetail": "Task re-queued by user"
+  }
+}

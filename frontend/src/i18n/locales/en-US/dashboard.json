@@ -1,0 +1,48 @@
+{
+  "stats": {
+    "activeAgents": "Active Agents",
+    "todayTasks": "Today's Tasks",
+    "successRate": "Success Rate",
+    "tokenUsage": "Token Usage",
+    "newThisWeek": "↑ {{count}} new this week",
+    "vsYesterday": "↑ {{pct}}% vs yesterday",
+    "latencyImproved": "↑ {{pct}}% P99 latency improved",
+    "quotaRemaining": "{{pct}}% quota remaining",
+    "allHealthy": "All healthy"
+  },
+
+  "charts": {
+    "taskThroughput": "Task Throughput (per hour)",
+    "latencyDistribution": "Task Latency Distribution",
+    "p50p95p99": "P50 / P95 / P99"
+  },
+
+  "queue": {
+    "title": "Queue Status",
+    "critical": "Critical",
+    "high": "High",
+    "medium": "Medium",
+    "low": "Low"
+  },
+
+  "recentTasks": {
+    "title": "Recent Tasks",
+    "taskId": "Task ID",
+    "agent": "Agent",
+    "status": "Status",
+    "priority": "Priority",
+    "duration": "Duration",
+    "time": "Time"
+  },
+
+  "systemHealth": {
+    "title": "System Health"
+  },
+
+  "priority": {
+    "urgent": "Urgent",
+    "high": "High",
+    "normal": "Normal",
+    "low": "Low"
+  }
+}

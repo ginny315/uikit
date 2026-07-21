@@ -1,0 +1,104 @@
+{
+  "list": {
+    "title": "Agent Management",
+    "createBtn": "Create Agent",
+    "searchPlaceholder": "Search agent name or description…",
+    "columns": {
+      "name": "Name",
+      "description": "Description",
+      "status": "Status",
+      "providerModel": "Model / Provider",
+      "todayTasks": "Today's Tasks",
+      "todayTokens": "Today's Tokens",
+      "actions": "Actions"
+    },
+    "filterAll": "All",
+    "filterRunning": "Running",
+    "filterStopped": "Stopped",
+    "filterError": "Error",
+    "totalAgents": "{{count}} agents total",
+    "empty": "No matching agents found."
+  },
+
+  "create": {
+    "title": "Create Agent",
+    "nameLabel": "Agent Name",
+    "namePlaceholder": "e.g. code-reviewer",
+    "nameDesc": "Unique identifier — lowercase letters, numbers, hyphens, and underscores only",
+    "providerLabel": "LLM Provider",
+    "providerPlaceholder": "Select a provider",
+    "descriptionLabel": "Description",
+    "descriptionPlaceholder": "Describe what this agent does…",
+    "modelLabel": "Model",
+    "modelPlaceholder": "Select or type a model name",
+    "modelNotFound": "Enter custom model name",
+    "quotaLabel": "Daily Token Quota",
+    "quotaDesc": "Maximum daily token consumption for this agent",
+    "toolsLabel": "Tools / Integrations",
+    "toolsPlaceholder": "Select tools the agent can use",
+    "toolsDesc": "Choose which tools and integrations this agent can invoke",
+    "submitBtn": "Create Agent",
+    "cancelBtn": "Cancel",
+    "providerOptions": {
+      "anthropic": "Anthropic (Claude)",
+      "openai": "OpenAI (GPT)",
+      "ollama": "Ollama (Local)",
+      "vllm": "vLLM (Local)"
+    }
+  },
+
+  "detail": {
+    "notFound": "Agent not found",
+    "notFoundDesc": "Agent with ID \"{{id}}\" does not exist or has been deleted.",
+    "backToList": "← Back to agent list",
+    "tabs": {
+      "overview": "Overview",
+      "tasks": "Tasks",
+      "settings": "Settings"
+    },
+    "stats": {
+      "todayTasks": "Today's Tasks",
+      "todayTokens": "Today's Tokens",
+      "dailyQuota": "Daily Quota"
+    },
+    "info": {
+      "agentId": "Agent ID",
+      "status": "Status",
+      "provider": "LLM Provider",
+      "model": "Model",
+      "created": "Created",
+      "updated": "Updated",
+      "tools": "Tools",
+      "description": "Description"
+    },
+    "settings": {
+      "general": "General",
+      "agentName": "Agent Name",
+      "agentId": "Agent ID",
+      "description": "Description",
+      "llmConfig": "LLM Configuration",
+      "provider": "Provider",
+      "model": "Model",
+      "dailyQuota": "Daily Token Quota",
+      "toolsIntegrations": "Tools & Integrations",
+      "dangerZone": "Danger Zone",
+      "deleteTitle": "Delete this agent",
+      "deleteDesc": "Once deleted, all associated data including task history, logs, and configuration will be permanently removed and cannot be recovered.",
+      "deleteBtn": "Delete Agent"
+    },
+    "deleteModal": {
+      "title": "Confirm Delete",
+      "message": "Are you sure you want to delete {{name}}? This action cannot be undone.",
+      "confirmBtn": "Confirm Delete"
+    },
+    "tasksTable": {
+      "taskId": "Task ID",
+      "status": "Status",
+      "priority": "Priority",
+      "input": "Input",
+      "duration": "Duration",
+      "tokens": "Tokens",
+      "time": "Time"
+    }
+  }
+}

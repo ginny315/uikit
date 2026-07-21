@@ -1,0 +1,60 @@
+{
+  "list": {
+    "title": "Workflows",
+    "createBtn": "Create Workflow",
+    "searchPlaceholder": "Search workflow name or description…",
+    "filterAll": "All",
+    "empty": "No workflows yet. Click the button above to create your first one.",
+    "stepCount": "{{count}} steps",
+    "confirmDeleteTitle": "Confirm Delete",
+    "confirmDeleteMsg": "Are you sure you want to delete \"{{name}}\"? This action cannot be undone."
+  },
+
+  "create": {
+    "title": "Create Workflow",
+    "nameLabel": "Workflow Name",
+    "namePlaceholder": "e.g. PR Review Pipeline",
+    "descLabel": "Description",
+    "descPlaceholder": "Describe what this workflow does…",
+    "submitBtn": "Create"
+  },
+
+  "editor": {
+    "title": "Workflow Editor",
+    "notFound": "Workflow not found",
+    "notFoundDesc": "Workflow {{id}} does not exist or has been deleted.",
+    "saveDraft": "Save Draft",
+    "enable": "Enable",
+    "pause": "Pause",
+    "savedMsg": "Workflow saved",
+    "enabledMsg": "Workflow enabled",
+    "pausedMsg": "Workflow paused",
+    "addStep": "Add Step",
+    "deleteStep": "Delete Step",
+    "stepConfig": "Step Config",
+    "selectAgent": "Select Agent",
+    "selectAgentPlaceholder": "Search agent…",
+    "agentLabel": "Agent",
+    "inputTemplateLabel": "Input Template",
+    "inputTemplatePlaceholder": "Enter content. Use {{prev.output}} to reference previous step output…",
+    "inputTemplateDesc": "Supports placeholders: {{prev.output}}, {{workflow.input}}, etc.",
+    "noAgentSelected": "No agent selected",
+    "unsavedChanges": "You have unsaved changes. Are you sure you want to leave?",
+    "startNode": "Start",
+    "endNode": "End",
+    "dagInvalid": "Workflow contains a cycle. Please check step connections and try again.",
+    "emptyCanvas": "Canvas is empty. Click \"Add Step\" on the left to start building.",
+    "availableAgents": "Available Agents",
+    "toolbar": {
+      "add": "Add Step",
+      "layout": "Auto Layout",
+      "fitView": "Fit View"
+    }
+  },
+
+  "status": {
+    "active": "Active",
+    "paused": "Paused",
+    "draft": "Draft"
+  }
+}

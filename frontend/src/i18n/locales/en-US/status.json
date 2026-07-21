@@ -1,0 +1,20 @@
+{
+  "agent": {
+    "running": "Running",
+    "stopped": "Stopped",
+    "error": "Error"
+  },
+  "task": {
+    "succeeded": "Succeeded",
+    "running": "Running",
+    "failed": "Failed",
+    "queued": "Queued",
+    "cancelled": "Cancelled"
+  },
+  "priority": {
+    "critical": "Critical",
+    "high": "High",
+    "medium": "Medium",
+    "low": "Low"
+  }
+}

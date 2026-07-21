@@ -1,0 +1,13 @@
+{
+  "nameRequired": "Please enter the agent name",
+  "nameMinLength": "Name must be at least 2 characters",
+  "nameFormat": "Only letters, numbers, hyphens, and underscores are allowed",
+  "descriptionRequired": "Please enter a description",
+  "descriptionMinLength": "Description must be at least 10 characters",
+  "modelRequired": "Please select or enter a model",
+  "quotaMin": "Daily quota must be at least {{min}} tokens",
+  "quotaMax": "Daily quota cannot exceed {{max}} tokens",
+  "taskAgentRequired": "Please select an agent",
+  "taskInputRequired": "Please enter the task content",
+  "taskInputMinLength": "Task content must be at least {{min}} characters"
+}

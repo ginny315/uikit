@@ -74,6 +74,30 @@
   border-color: var(--mantine-color-default-border);
 }
 
+.langBtn {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  border: 1px solid var(--agentsys-card-border);
+  background: var(--agentsys-card-bg);
+  color: var(--mantine-color-dimmed);
+  font-size: 0.7rem;
+  font-weight: 700;
+  font-family: var(--mantine-font-family-monospace);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 150ms ease, color 150ms ease;
+  line-height: 1;
+  padding: 0;
+}
+
+.langBtn:hover {
+  border-color: var(--mantine-color-default-border);
+  color: var(--mantine-color-text);
+}
+
 /* ── 手机端 ── */
 @media (max-width: 768px) {
   .topbar {

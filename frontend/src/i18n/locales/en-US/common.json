@@ -1,0 +1,41 @@
+{
+  "appName": "AgentSys",
+  "version": "AgentSys v0.1.0",
+
+  "actions": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "search": "Search",
+    "confirm": "Confirm",
+    "back": "Back",
+    "logout": "Log out",
+    "lightMode": "Switch to light mode",
+    "darkMode": "Switch to dark mode",
+    "start": "Start",
+    "stop": "Stop",
+    "restart": "Restart",
+    "viewAll": "View all →",
+    "confirmDelete": "Confirm delete",
+    "deleteWarning": "This action cannot be undone.",
+    "formErrorHint": "Please fix the errors in the form before submitting."
+  },
+
+  "pagination": {
+    "total": "{{count}} total",
+    "page": "Page {{current}} / {{total}}"
+  },
+
+  "empty": {
+    "noResults": "No matching results found.",
+    "notFound": "Not found or has been deleted."
+  },
+
+  "time": {
+    "today": "Today",
+    "thisWeek": "This week",
+    "thisMonth": "This month"
+  }
+}

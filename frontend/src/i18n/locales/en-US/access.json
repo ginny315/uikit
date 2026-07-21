@@ -1,0 +1,83 @@
+{
+  "title": "Access Control",
+
+  "users": {
+    "title": "User Management",
+    "inviteBtn": "Invite User",
+    "columns": {
+      "name": "Name",
+      "email": "Email",
+      "role": "Role",
+      "joinedAt": "Joined",
+      "actions": "Actions"
+    },
+    "roles": {
+      "admin": "Admin",
+      "member": "Member",
+      "viewer": "Viewer"
+    },
+    "roleDesc": {
+      "admin": "Full read/write access. Can manage users and settings.",
+      "member": "Can create and manage agents, tasks, and workflows.",
+      "viewer": "Read-only access. Cannot make changes."
+    },
+    "changeRole": "Change Role",
+    "roleChanged": "User role updated",
+    "removeUser": "Remove User",
+    "removeConfirm": "Are you sure you want to remove {{name}}? They will lose all project access.",
+    "userRemoved": "User removed"
+  },
+
+  "apiKeys": {
+    "title": "API Keys",
+    "createBtn": "Create API Key",
+    "columns": {
+      "name": "Name",
+      "prefix": "Key Prefix",
+      "createdAt": "Created",
+      "lastUsed": "Last Used",
+      "actions": "Actions"
+    },
+    "create": {
+      "title": "Create API Key",
+      "nameLabel": "Key Name",
+      "namePlaceholder": "e.g. Production, Local Dev",
+      "submitBtn": "Generate Key",
+      "successMsg": "API key created",
+      "copyWarning": "Copy this key now. You won't be able to see it again.",
+      "copied": "Copied to clipboard"
+    },
+    "revoke": "Revoke",
+    "revokeConfirm": "Are you sure you want to revoke key \"{{name}}\"? All services using this key will stop working immediately.",
+    "revoked": "API key revoked",
+    "never": "Never",
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "daysAgo": "{{count}} days ago"
+  },
+
+  "auditLog": {
+    "title": "Audit Log",
+    "columns": {
+      "timestamp": "Time",
+      "user": "User",
+      "action": "Action",
+      "resource": "Resource",
+      "detail": "Detail",
+      "ip": "IP Address"
+    },
+    "actions": {
+      "user_invited": "Invited user",
+      "user_removed": "Removed user",
+      "role_changed": "Changed role",
+      "api_key_created": "Created API key",
+      "api_key_revoked": "Revoked API key",
+      "webhook_created": "Created webhook",
+      "webhook_deleted": "Deleted webhook",
+      "agent_created": "Created agent",
+      "agent_deleted": "Deleted agent",
+      "task_created": "Created task",
+      "task_cancelled": "Cancelled task"
+    }
+  }
+}

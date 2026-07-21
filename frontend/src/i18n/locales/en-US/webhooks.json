@@ -1,0 +1,61 @@
+{
+  "title": "Webhook Configuration",
+
+  "list": {
+    "createBtn": "Create Webhook",
+    "empty": "No webhooks yet. Click the button above to create your first one.",
+    "columns": {
+      "url": "URL",
+      "events": "Subscribed Events",
+      "status": "Status",
+      "createdAt": "Created",
+      "actions": "Actions"
+    },
+    "enabled": "Enabled",
+    "disabled": "Disabled",
+    "toggleOn": "Webhook enabled",
+    "toggleOff": "Webhook disabled"
+  },
+
+  "create": {
+    "title": "Create Webhook",
+    "urlLabel": "Webhook URL",
+    "urlPlaceholder": "https://example.com/webhook",
+    "urlDesc": "A POST request will be sent to this URL when task events occur.",
+    "eventsLabel": "Event Subscriptions",
+    "eventsDesc": "Select the event types you want to receive notifications for.",
+    "secretLabel": "Signing Secret (optional)",
+    "secretPlaceholder": "Secret key to verify request origin",
+    "secretDesc": "When set, each request will include an X-AgentSys-Signature header for verification.",
+    "submitBtn": "Create Webhook",
+    "successMsg": "Webhook created",
+    "noEventsFound": "No matching events"
+  },
+
+  "edit": {
+    "title": "Edit Webhook",
+    "saveBtn": "Save Changes",
+    "savedMsg": "Webhook updated"
+  },
+
+  "events": {
+    "task.completed": "Task Completed",
+    "task.failed": "Task Failed",
+    "agent.started": "Agent Started",
+    "agent.stopped": "Agent Stopped"
+  },
+
+  "delete": {
+    "confirmTitle": "Delete Webhook",
+    "confirmMsg": "Are you sure you want to delete this webhook? This action cannot be undone.",
+    "successMsg": "Webhook deleted"
+  },
+
+  "test": {
+    "btn": "Test",
+    "title": "Send Test Request",
+    "desc": "A mock event payload will be sent to the webhook URL.",
+    "successMsg": "Test request sent",
+    "errorMsg": "Test request failed. Please check if the URL is correct."
+  }
+}

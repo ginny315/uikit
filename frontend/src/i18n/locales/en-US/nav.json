@@ -1,0 +1,35 @@
+{
+  "sections": {
+    "overview": "Overview",
+    "management": "Management",
+    "observability": "Observability",
+    "settings": "Settings"
+  },
+
+  "pages": {
+    "dashboard": "Dashboard",
+    "agents": "Agents",
+    "tasks": "Tasks",
+    "workflows": "Workflows",
+    "logs": "Logs",
+    "costs": "Costs",
+    "access": "Access Control",
+    "webhooks": "Webhooks"
+  },
+
+  "pageTitles": {
+    "/": "Overview",
+    "/agents": "Agent Management",
+    "/agents/create": "Create Agent",
+    "/tasks": "Task Scheduling",
+    "/workflows": "Workflows",
+    "/logs": "Log Tracing",
+    "/costs": "Cost Management",
+    "/settings/access": "Access Control",
+    "/settings/webhooks": "Webhook Config",
+    "agentDetail": "Agent Detail",
+    "taskDetail": "Task Detail",
+    "workflowEditor": "Workflow Editor",
+    "notFound": "AgentSys"
+  }
+}

@@ -1,10 +1,12 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Button, ActionIcon } from '@mantine/core';
+import { Button, ActionIcon, Tooltip } from '@mantine/core';
+import { useMantineColorScheme } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { useMediaQuery } from '@mantine/hooks';
-import { IconMenu2, IconLogout, IconCheck } from '@tabler/icons-react';
+import { IconMenu2, IconLogout, IconCheck, IconSun, IconMoon } from '@tabler/icons-react';
 import { useAuthStore } from '../../stores/authStore';
+import { useThemeStore } from '../../stores/themeStore';
 import { config } from '../../config';
 import classes from './Topbar.module.css';
 
@@ -32,11 +34,26 @@ interface TopbarProps {
 }
 
 export function Topbar({ onMenuClick }: TopbarProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const location = useLocation();
   const navigate = useNavigate();
   const { logout } = useAuthStore();
+  const { setTheme } = useThemeStore();
+  const { colorScheme, setColorScheme } = useMantineColorScheme();
   const pageTitle = resolvePageTitle(location.pathname, t);
+  const isDark = colorScheme === 'dark';
+  const currentLang = i18n.language?.startsWith('en') ? 'en-US' : 'zh-CN';
+
+  const handleToggleTheme = () => {
+    const next = isDark ? 'light' : 'dark';
+    setColorScheme(next);
+    setTheme(next);
+  };
+
+  const handleToggleLang = () => {
+    const next = currentLang === 'zh-CN' ? 'en-US' : 'zh-CN';
+    i18n.changeLanguage(next);
+  };
 
   const handleLogout = () => {
     logout();
@@ -72,6 +89,28 @@ export function Topbar({ onMenuClick }: TopbarProps) {
       </div>
 
       <div className={classes.right}>
+        <Tooltip label={isDark ? t('common:actions.lightMode') : t('common:actions.darkMode')} openDelay={400}>
+          <ActionIcon
+            variant="subtle"
+            color="gray"
+            onClick={handleToggleTheme}
+            aria-label={isDark ? '切换到浅色模式' : '切换到深色模式'}
+          >
+            {isDark ? <IconSun size={18} /> : <IconMoon size={18} />}
+          </ActionIcon>
+        </Tooltip>
+
+        <Tooltip label={currentLang === 'zh-CN' ? 'Switch to English' : '切换到中文'} openDelay={400}>
+          <button
+            className={classes.langBtn}
+            onClick={handleToggleLang}
+            type="button"
+            aria-label={currentLang === 'zh-CN' ? 'Switch to English' : '切换到中文'}
+          >
+            {currentLang === 'zh-CN' ? 'EN' : '中'}
+          </button>
+        </Tooltip>
+
         <button className={classes.userBtn} type="button" aria-label="用户菜单">
           <div className={classes.avatar}>A</div>
           <span className={classes.avatarName}>Admin</span>
