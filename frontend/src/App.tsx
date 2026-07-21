@@ -1,23 +1,39 @@
-import { useEffect } from 'react';
+import { useEffect, Suspense, lazy } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { LoadingOverlay } from '@mantine/core';
+import { LoadingOverlay, Center, Loader } from '@mantine/core';
 import { AuthGuard } from './components/guard/AuthGuard';
 import { ErrorBoundary } from './components/guard/ErrorBoundary';
 import { AppLayout } from './components/layout/AppLayout';
-import { LoginPage } from './pages/Login/LoginPage';
-import { DashboardPage } from './pages/Dashboard/DashboardPage';
-import { AgentListPage } from './pages/Agents/AgentListPage';
-import { AgentDetailPage } from './pages/Agents/AgentDetailPage';
-import { AgentCreatePage } from './pages/Agents/AgentCreatePage';
-import { TaskListPage } from './pages/Tasks/TaskListPage';
-import { TaskDetailPage } from './pages/Tasks/TaskDetailPage';
-import { WorkflowListPage } from './pages/Workflows/WorkflowListPage';
-import { WorkflowEditorPage } from './pages/Workflows/WorkflowEditorPage';
-import { LogsPage } from './pages/Traces/LogsPage';
-import { CostsPage } from './pages/Costs/CostsPage';
-import { AccessSettingsPage } from './pages/Settings/AccessSettingsPage';
-import { WebhookSettingsPage } from './pages/Settings/WebhookSettingsPage';
 import { useAuthStore } from './stores/authStore';
+
+// ── Session 11: Code Splitting — 页面级 React.lazy ──
+// Login 保持同步加载（用户首先看到的就是登录页）
+import { LoginPage } from './pages/Login/LoginPage';
+
+const DashboardPage = lazy(() => import('./pages/Dashboard/DashboardPage').then((m) => ({ default: m.DashboardPage })));
+const AgentListPage = lazy(() => import('./pages/Agents/AgentListPage').then((m) => ({ default: m.AgentListPage })));
+const AgentDetailPage = lazy(() => import('./pages/Agents/AgentDetailPage').then((m) => ({ default: m.AgentDetailPage })));
+const AgentCreatePage = lazy(() => import('./pages/Agents/AgentCreatePage').then((m) => ({ default: m.AgentCreatePage })));
+const TaskListPage = lazy(() => import('./pages/Tasks/TaskListPage').then((m) => ({ default: m.TaskListPage })));
+const TaskDetailPage = lazy(() => import('./pages/Tasks/TaskDetailPage').then((m) => ({ default: m.TaskDetailPage })));
+const WorkflowListPage = lazy(() => import('./pages/Workflows/WorkflowListPage').then((m) => ({ default: m.WorkflowListPage })));
+const WorkflowEditorPage = lazy(() => import('./pages/Workflows/WorkflowEditorPage').then((m) => ({ default: m.WorkflowEditorPage })));
+const LogsPage = lazy(() => import('./pages/Traces/LogsPage').then((m) => ({ default: m.LogsPage })));
+const CostsPage = lazy(() => import('./pages/Costs/CostsPage').then((m) => ({ default: m.CostsPage })));
+const AccessSettingsPage = lazy(() => import('./pages/Settings/AccessSettingsPage').then((m) => ({ default: m.AccessSettingsPage })));
+const WebhookSettingsPage = lazy(() => import('./pages/Settings/WebhookSettingsPage').then((m) => ({ default: m.WebhookSettingsPage })));
+
+function PageLoader() {
+  return (
+    <Center h="60vh">
+      <Loader size="md" />
+    </Center>
+  );
+}
+
+function SuspensePage({ children }: { children: React.ReactNode }) {
+  return <Suspense fallback={<PageLoader />}>{children}</Suspense>;
+}
 
 export function App() {
   const { isLoading } = useAuthStore();
@@ -35,24 +51,24 @@ export function App() {
   return (
     <ErrorBoundary>
       <Routes>
-        {/* Login — 不受 AuthGuard 保护 */}
+        {/* Login — 同步加载，不受 AuthGuard 保护 */}
         <Route path="/login" element={<LoginPage />} />
 
         {/* 受保护的路由 — AppLayout 提供 Sidebar + Topbar 布局 */}
         <Route element={<AuthGuard />}>
           <Route element={<AppLayout />}>
-            <Route path="/" element={<DashboardPage />} />
-            <Route path="/agents" element={<AgentListPage />} />
-            <Route path="/agents/create" element={<AgentCreatePage />} />
-            <Route path="/agents/:id" element={<AgentDetailPage />} />
-            <Route path="/tasks" element={<TaskListPage />} />
-            <Route path="/tasks/:id" element={<TaskDetailPage />} />
-            <Route path="/workflows" element={<WorkflowListPage />} />
-            <Route path="/workflows/:id" element={<WorkflowEditorPage />} />
-            <Route path="/logs" element={<LogsPage />} />
-            <Route path="/costs" element={<CostsPage />} />
-            <Route path="/settings/access" element={<AccessSettingsPage />} />
-            <Route path="/settings/webhooks" element={<WebhookSettingsPage />} />
+            <Route path="/" element={<SuspensePage><DashboardPage /></SuspensePage>} />
+            <Route path="/agents" element={<SuspensePage><AgentListPage /></SuspensePage>} />
+            <Route path="/agents/create" element={<SuspensePage><AgentCreatePage /></SuspensePage>} />
+            <Route path="/agents/:id" element={<SuspensePage><AgentDetailPage /></SuspensePage>} />
+            <Route path="/tasks" element={<SuspensePage><TaskListPage /></SuspensePage>} />
+            <Route path="/tasks/:id" element={<SuspensePage><TaskDetailPage /></SuspensePage>} />
+            <Route path="/workflows" element={<SuspensePage><WorkflowListPage /></SuspensePage>} />
+            <Route path="/workflows/:id" element={<SuspensePage><WorkflowEditorPage /></SuspensePage>} />
+            <Route path="/logs" element={<SuspensePage><LogsPage /></SuspensePage>} />
+            <Route path="/costs" element={<SuspensePage><CostsPage /></SuspensePage>} />
+            <Route path="/settings/access" element={<SuspensePage><AccessSettingsPage /></SuspensePage>} />
+            <Route path="/settings/webhooks" element={<SuspensePage><WebhookSettingsPage /></SuspensePage>} />
           </Route>
         </Route>
 

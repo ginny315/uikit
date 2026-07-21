@@ -72,7 +72,7 @@ export function Topbar({ onMenuClick }: TopbarProps) {
       </div>
 
       <div className={classes.right}>
-        <button className={classes.userBtn} type="button">
+        <button className={classes.userBtn} type="button" aria-label="用户菜单">
           <div className={classes.avatar}>A</div>
           <span className={classes.avatarName}>Admin</span>
         </button>
