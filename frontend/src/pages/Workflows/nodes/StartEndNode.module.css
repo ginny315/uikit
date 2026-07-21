@@ -9,7 +9,7 @@
 }
 
 .capsule:hover {
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 2px 10px var(--agentsys-border-subtle);
 }
 
 .start {

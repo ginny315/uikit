@@ -36,7 +36,7 @@
 
 .chartCard {
   background: var(--mantine-color-body);
-  border: 1px solid var(--agentsys-card-border, rgba(0,0,0,0.06));
+  border: 1px solid var(--agentsys-card-border, var(--agentsys-border-subtle));
   border-radius: var(--mantine-radius-lg);
   padding: 22px 24px;
   overflow: hidden;
@@ -72,19 +72,19 @@
   color: var(--mantine-color-dimmed);
   text-align: left;
   padding: 8px 12px;
-  border-bottom: 1px solid rgba(0,0,0,0.06);
+  border-bottom: 1px solid var(--agentsys-border-subtle);
   white-space: nowrap;
 }
 
 .tableWrap tbody td {
   padding: 9px 12px;
-  border-bottom: 1px solid rgba(0,0,0,0.03);
+  border-bottom: 1px solid var(--agentsys-border-lighter);
   white-space: nowrap;
   font-size: 0.83rem;
 }
 
 .tableWrap tbody tr:hover {
-  background: rgba(0,0,0,0.02);
+  background: var(--agentsys-row-hover);
 }
 
 .nameCell {
@@ -167,7 +167,7 @@
 /* ── Section (Quota / Alerts) ── */
 .section {
   background: var(--mantine-color-body);
-  border: 1px solid var(--agentsys-card-border, rgba(0,0,0,0.06));
+  border: 1px solid var(--agentsys-card-border, var(--agentsys-border-subtle));
   border-radius: var(--mantine-radius-lg);
   padding: 22px 24px;
   margin-bottom: 28px;
@@ -189,7 +189,7 @@
 .usageBar {
   position: relative;
   height: 22px;
-  background: rgba(0,0,0,0.04);
+  background: var(--agentsys-muted-fill);
   border-radius: 4px;
   overflow: hidden;
   min-width: 120px;
@@ -225,6 +225,28 @@
   color: #991B1B;
 }
 
+/* ── Dark Mode Overrides ── */
+[data-mantine-color-scheme='dark'] .chartCard,
+[data-mantine-color-scheme='dark'] .section {
+  background: var(--agentsys-card-bg);
+}
+
+[data-mantine-color-scheme='dark'] .usageText {
+  color: #D1D5DB;
+}
+
+[data-mantine-color-scheme='dark'] .usageTextHigh {
+  color: #FCA5A5;
+}
+
+[data-mantine-color-scheme='dark'] .alertOn {
+  color: #4ADE80;
+}
+
+[data-mantine-color-scheme='dark'] .alertOff {
+  background: var(--agentsys-muted-fill);
+}
+
 /* ── Quota Modal ── */
 .quotaTarget {
   display: flex;
@@ -232,7 +254,7 @@
   gap: 12px;
   padding: 14px 16px;
   background: var(--agentsys-page-bg, #F8F9FB);
-  border: 1px solid rgba(0,0,0,0.06);
+  border: 1px solid var(--agentsys-border-subtle);
   border-radius: var(--mantine-radius-md);
 }
 
@@ -263,7 +285,7 @@
 
 .alertOff {
   color: var(--mantine-color-dimmed);
-  background: rgba(0,0,0,0.04);
+  background: var(--agentsys-muted-fill);
 }
 
 .alertForm {

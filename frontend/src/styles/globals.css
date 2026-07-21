@@ -44,6 +44,13 @@
     --agentsys-sidebar-collapsed-width: 64px;
     --agentsys-topbar-height: 64px;
     --agentsys-page-bg: #F8F9FB;
+
+    /* Session 10: 共享边框/悬停/填充色（暗色模式适配） */
+    --agentsys-border-subtle: rgba(0, 0, 0, 0.06);
+    --agentsys-border-lighter: rgba(0, 0, 0, 0.03);
+    --agentsys-row-hover: rgba(0, 0, 0, 0.02);
+    --agentsys-muted-fill: rgba(0, 0, 0, 0.04);
+    --agentsys-text-on-dark-bg: #F1F5F9;
   }
 
   [data-mantine-color-scheme='dark'] {
@@ -63,6 +70,13 @@
     --agentsys-sidebar-collapsed-width: 64px;
     --agentsys-topbar-height: 64px;
     --agentsys-page-bg: #060912;
+
+    /* Session 10: 共享边框/悬停/填充色（暗色模式适配） */
+    --agentsys-border-subtle: rgba(255, 255, 255, 0.08);
+    --agentsys-border-lighter: rgba(255, 255, 255, 0.04);
+    --agentsys-row-hover: rgba(255, 255, 255, 0.03);
+    --agentsys-muted-fill: rgba(255, 255, 255, 0.05);
+    --agentsys-text-on-dark-bg: #F1F5F9;
   }
 
   /* ── 全局基础样式 ── */
@@ -97,12 +111,12 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    background: rgba(0, 0, 0, 0.15);
+    background: rgba(127, 127, 127, 0.35);
     border-radius: 3px;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: rgba(0, 0, 0, 0.25);
+    background: rgba(127, 127, 127, 0.50);
   }
 
   /* 暗色模式滚动条 */
@@ -125,19 +139,26 @@
   }
 
   .mantine-Modal-content {
-    border: 1px solid var(--agentsys-card-border, rgba(0,0,0,0.06));
+    border: 1px solid var(--agentsys-card-border, var(--agentsys-border-subtle));
     box-shadow:
-      0 0 0 1px rgba(0,0,0,0.03),
+      0 0 0 1px var(--agentsys-border-lighter),
       0 4px 24px rgba(0,0,0,0.08),
       0 8px 48px rgba(0,0,0,0.04);
     border-radius: var(--mantine-radius-lg);
     overflow: hidden;
   }
 
+  [data-mantine-color-scheme='dark'] .mantine-Modal-content {
+    box-shadow:
+      0 0 0 1px var(--agentsys-border-lighter),
+      0 4px 24px rgba(0,0,0,0.40),
+      0 8px 48px rgba(0,0,0,0.30);
+  }
+
   .mantine-Modal-header {
     padding: 20px 24px 16px;
-    border-bottom: 1px solid rgba(0,0,0,0.05);
-    background: var(--agentsys-page-bg, #F8F9FB);
+    border-bottom: 1px solid var(--agentsys-border-subtle);
+    background: var(--agentsys-page-bg);
   }
 
   .mantine-Modal-title {
@@ -155,7 +176,7 @@
 
   .mantine-Modal-close:hover {
     color: var(--mantine-color-text);
-    background: rgba(0,0,0,0.06);
+    background: var(--agentsys-muted-fill);
   }
 
   .mantine-Modal-body {
@@ -170,5 +191,9 @@
 
   .modal-danger .mantine-Modal-title {
     color: #DC2626;
+  }
+
+  [data-mantine-color-scheme='dark'] .modal-danger .mantine-Modal-header {
+    background: rgba(239,68,68,0.06);
   }
 }

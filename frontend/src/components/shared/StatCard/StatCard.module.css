@@ -1,7 +1,7 @@
 /* ── StatCard ── */
 .card {
   background: var(--mantine-color-body);
-  border: 1px solid var(--agentsys-card-border, rgba(0,0,0,0.06));
+  border: 1px solid var(--agentsys-card-border, var(--agentsys-border-subtle));
   border-radius: var(--mantine-radius-lg);
   padding: 22px 24px;
   display: flex;

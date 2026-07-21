@@ -44,7 +44,7 @@
 /* Tabs wrapper */
 .tabsCard {
   background: var(--mantine-color-body);
-  border: 1px solid var(--agentsys-card-border, rgba(0,0,0,0.06));
+  border: 1px solid var(--agentsys-card-border, var(--agentsys-border-subtle));
   border-radius: var(--mantine-radius-lg);
   overflow: hidden;
 }
@@ -52,7 +52,7 @@
 /* ── Tab 列表样式 ── */
 .tabsCard :global(.mantine-Tabs-list) {
   padding: 0 16px;
-  border-bottom: 1px solid rgba(0,0,0,0.06);
+  border-bottom: 1px solid var(--agentsys-border-subtle);
   gap: 4px;
 }
 
@@ -123,7 +123,7 @@
 
 .statMini {
   background: var(--agentsys-page-bg, #F8F9FB);
-  border: 1px solid rgba(0,0,0,0.04);
+  border: 1px solid var(--agentsys-muted-fill);
   border-radius: var(--mantine-radius-md);
   padding: 18px 20px;
   text-align: center;
@@ -148,7 +148,7 @@
 /* Description card */
 .descriptionCard {
   background: var(--agentsys-page-bg, #F8F9FB);
-  border: 1px solid rgba(0,0,0,0.04);
+  border: 1px solid var(--agentsys-muted-fill);
   border-radius: var(--mantine-radius-md);
   padding: 20px;
 }
@@ -190,19 +190,19 @@
   color: var(--mantine-color-dimmed);
   text-align: left;
   padding: 10px 14px;
-  border-bottom: 1px solid rgba(0,0,0,0.06);
+  border-bottom: 1px solid var(--agentsys-border-subtle);
   white-space: nowrap;
 }
 
 .taskTable tbody td {
   padding: 9px 14px;
-  border-bottom: 1px solid rgba(0,0,0,0.03);
+  border-bottom: 1px solid var(--agentsys-border-lighter);
   white-space: nowrap;
   font-size: 0.83rem;
 }
 
 .taskTable tbody tr:hover {
-  background: rgba(0,0,0,0.02);
+  background: var(--agentsys-row-hover);
 }
 
 .monoCell {

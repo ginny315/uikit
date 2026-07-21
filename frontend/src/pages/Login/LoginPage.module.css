@@ -58,7 +58,7 @@
   inset: 0;
   pointer-events: none;
   z-index: 0;
-  background-image: radial-gradient(rgba(0, 0, 0, 0.04) 1px, transparent 1px);
+  background-image: radial-gradient(var(--agentsys-muted-fill) 1px, transparent 1px);
   background-size: 32px 32px;
   mask-image: radial-gradient(ellipse 60% 50% at 50% 50%, black 20%, transparent 70%);
   -webkit-mask-image: radial-gradient(ellipse 60% 50% at 50% 50%, black 20%, transparent 70%);
@@ -85,12 +85,12 @@
   width: 100%;
   max-width: 420px;
   background: var(--agentsys-card-bg, #FFFFFF);
-  border: 1px solid var(--agentsys-card-border, rgba(0, 0, 0, 0.06));
+  border: 1px solid var(--agentsys-card-border, var(--agentsys-border-subtle));
   border-radius: 20px;
   padding: 44px 40px 40px;
   box-shadow:
-    0 4px 24px rgba(0, 0, 0, 0.04),
-    0 1px 3px rgba(0, 0, 0, 0.03);
+    0 4px 24px var(--agentsys-muted-fill),
+    0 1px 3px var(--agentsys-border-lighter);
   animation: cardEnter 450ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -184,7 +184,7 @@
   font-family: 'DM Sans', sans-serif;
   color: var(--mantine-color-text, #0F172A);
   background: var(--agentsys-page-bg, #F8F9FB);
-  border: 1.5px solid var(--agentsys-card-border, rgba(0, 0, 0, 0.06));
+  border: 1.5px solid var(--agentsys-card-border, var(--agentsys-border-subtle));
   border-radius: 12px;
   outline: none;
   transition:

@@ -16,7 +16,7 @@
 
 .formCard {
   background: var(--mantine-color-body);
-  border: 1px solid var(--agentsys-card-border, rgba(0,0,0,0.06));
+  border: 1px solid var(--agentsys-card-border, var(--agentsys-border-subtle));
   border-radius: var(--mantine-radius-lg);
   padding: 28px 32px;
   max-width: 720px;
@@ -52,7 +52,7 @@
   gap: 12px;
   margin-top: 28px;
   padding-top: 20px;
-  border-top: 1px solid rgba(0,0,0,0.06);
+  border-top: 1px solid var(--agentsys-border-subtle);
 }
 
 /* ── Responsive ── */

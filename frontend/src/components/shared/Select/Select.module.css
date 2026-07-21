@@ -16,7 +16,7 @@
   font-size: 0.7rem;
   color: var(--mantine-color-dimmed);
   padding: 4px 10px;
-  border: 1px solid rgba(0, 0, 0, 0.06);
+  border: 1px solid var(--agentsys-border-subtle);
   border-radius: 6px;
   background: none;
   cursor: pointer;
@@ -31,7 +31,7 @@
 
 .triggerOpen {
   border-color: rgba(0, 0, 0, 0.14);
-  background: rgba(0, 0, 0, 0.02);
+  background: var(--agentsys-row-hover);
 }
 
 .selectedText {
@@ -82,7 +82,7 @@
 }
 
 .option:hover {
-  background: rgba(0, 0, 0, 0.04);
+  background: var(--agentsys-muted-fill);
 }
 
 .optionActive {

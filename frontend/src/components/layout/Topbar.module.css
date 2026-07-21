@@ -14,7 +14,7 @@
   justify-content: space-between;
   padding: 0 28px;
   z-index: 90;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 1px 2px var(--agentsys-muted-fill);
   transition: left 250ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 

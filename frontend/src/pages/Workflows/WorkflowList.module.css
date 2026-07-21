@@ -47,7 +47,7 @@
 .workflowCard {
   cursor: pointer;
   transition: border-color 0.12s ease, box-shadow 0.12s ease;
-  border: 1px solid var(--agentsys-card-border, rgba(0, 0, 0, 0.06));
+  border: 1px solid var(--agentsys-card-border, var(--agentsys-border-subtle));
 }
 
 .workflowCard:hover {

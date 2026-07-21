@@ -1,7 +1,7 @@
 /* ── SystemHealthCard ── */
 .card {
   background: var(--mantine-color-body);
-  border: 1px solid var(--agentsys-card-border, rgba(0,0,0,0.06));
+  border: 1px solid var(--agentsys-card-border, var(--agentsys-border-subtle));
   border-radius: var(--mantine-radius-md);
   padding: 16px 18px;
   display: flex;

@@ -38,7 +38,7 @@
 /* Table card */
 .tableCard {
   background: var(--mantine-color-body);
-  border: 1px solid var(--agentsys-card-border, rgba(0,0,0,0.06));
+  border: 1px solid var(--agentsys-card-border, var(--agentsys-border-subtle));
   border-radius: var(--mantine-radius-lg);
   overflow: hidden;
 }
@@ -60,7 +60,7 @@
   color: var(--mantine-color-dimmed);
   text-align: left;
   padding: 12px 16px;
-  border-bottom: 1px solid rgba(0,0,0,0.06);
+  border-bottom: 1px solid var(--agentsys-border-subtle);
   white-space: nowrap;
   user-select: none;
 }
@@ -75,7 +75,7 @@
 
 .tableWrap tbody td {
   padding: 12px 16px;
-  border-bottom: 1px solid rgba(0,0,0,0.03);
+  border-bottom: 1px solid var(--agentsys-border-lighter);
   white-space: nowrap;
   font-size: 0.85rem;
   color: var(--mantine-color-text);
@@ -87,7 +87,7 @@
 }
 
 .tableWrap tbody tr:hover {
-  background: rgba(0,0,0,0.02);
+  background: var(--agentsys-row-hover);
 }
 
 .monoCell {
@@ -142,7 +142,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 12px 16px;
-  border-top: 1px solid rgba(0,0,0,0.06);
+  border-top: 1px solid var(--agentsys-border-subtle);
   font-size: 0.82rem;
   color: var(--mantine-color-dimmed);
   gap: 16px;
@@ -194,7 +194,7 @@
   right: -6px;
   width: 6px;
   height: 100%;
-  background: linear-gradient(90deg, rgba(0,0,0,0.04), transparent);
+  background: linear-gradient(90deg, var(--agentsys-muted-fill), transparent);
   pointer-events: none;
 }
 
@@ -205,7 +205,7 @@
   left: -6px;
   width: 6px;
   height: 100%;
-  background: linear-gradient(270deg, rgba(0,0,0,0.04), transparent);
+  background: linear-gradient(270deg, var(--agentsys-muted-fill), transparent);
   pointer-events: none;
 }
 

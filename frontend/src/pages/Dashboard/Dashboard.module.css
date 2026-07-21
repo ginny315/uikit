@@ -20,7 +20,7 @@
 
 .chartCard {
   background: var(--mantine-color-body);
-  border: 1px solid var(--agentsys-card-border, rgba(0,0,0,0.06));
+  border: 1px solid var(--agentsys-card-border, var(--agentsys-border-subtle));
   border-radius: var(--mantine-radius-lg);
   padding: 22px 24px;
 }
@@ -115,7 +115,7 @@
 .latencyTrack {
   flex: 1;
   height: 8px;
-  background: rgba(0,0,0,0.04);
+  background: var(--agentsys-muted-fill);
   border-radius: 4px;
   overflow: hidden;
 }
@@ -162,7 +162,7 @@
 /* ── Tasks Card ── */
 .tasksCard {
   background: var(--mantine-color-body);
-  border: 1px solid var(--agentsys-card-border, rgba(0,0,0,0.06));
+  border: 1px solid var(--agentsys-card-border, var(--agentsys-border-subtle));
   border-radius: var(--mantine-radius-lg);
   padding: 22px 24px;
   overflow: hidden;
@@ -208,19 +208,19 @@
   color: var(--mantine-color-dimmed);
   text-align: left;
   padding: 8px 12px;
-  border-bottom: 1px solid rgba(0,0,0,0.06);
+  border-bottom: 1px solid var(--agentsys-border-subtle);
   white-space: nowrap;
 }
 
 .tableWrap tbody td {
   padding: 9px 12px;
-  border-bottom: 1px solid rgba(0,0,0,0.03);
+  border-bottom: 1px solid var(--agentsys-border-lighter);
   white-space: nowrap;
   font-size: 0.83rem;
 }
 
 .tableWrap tbody tr:hover {
-  background: rgba(0,0,0,0.02);
+  background: var(--agentsys-row-hover);
 }
 
 .monoCell {
@@ -262,7 +262,7 @@
 /* ── System Health Row ── */
 .healthSection {
   background: var(--mantine-color-body);
-  border: 1px solid var(--agentsys-card-border, rgba(0,0,0,0.06));
+  border: 1px solid var(--agentsys-card-border, var(--agentsys-border-subtle));
   border-radius: var(--mantine-radius-lg);
   padding: 22px 24px;
 }

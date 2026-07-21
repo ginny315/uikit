@@ -3,7 +3,7 @@
 /* 内容卡片 */
 .card {
   background: var(--mantine-color-body);
-  border: 1px solid var(--agentsys-card-border, rgba(0,0,0,0.06));
+  border: 1px solid var(--agentsys-card-border, var(--agentsys-border-subtle));
   border-radius: var(--mantine-radius-lg);
   padding: 24px;
 }
@@ -22,7 +22,7 @@
 
 .statMini {
   background: var(--agentsys-page-bg, #F8F9FB);
-  border: 1px solid rgba(0,0,0,0.04);
+  border: 1px solid var(--agentsys-muted-fill);
   border-radius: var(--mantine-radius-md);
   padding: 18px 20px;
   text-align: center;
@@ -96,7 +96,7 @@
 /* 输入 / 输出内容块 */
 .contentBlock {
   background: var(--agentsys-page-bg, #F8F9FB);
-  border: 1px solid rgba(0,0,0,0.04);
+  border: 1px solid var(--agentsys-muted-fill);
   border-radius: var(--mantine-radius-md);
   padding: 16px 18px;
   font-size: 0.88rem;
@@ -132,7 +132,7 @@
 .timelineItem {
   position: relative;
   padding: 0 0 22px 22px;
-  border-left: 2px solid rgba(0,0,0,0.06);
+  border-left: 2px solid var(--agentsys-border-subtle);
 }
 
 .timelineItem:last-child {

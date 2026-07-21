@@ -38,7 +38,7 @@
 /* Table card */
 .tableCard {
   background: var(--mantine-color-body);
-  border: 1px solid var(--agentsys-card-border, rgba(0,0,0,0.06));
+  border: 1px solid var(--agentsys-card-border, var(--agentsys-border-subtle));
   border-radius: var(--mantine-radius-lg);
   overflow: hidden;
 }
@@ -60,14 +60,14 @@
   color: var(--mantine-color-dimmed);
   text-align: left;
   padding: 12px 16px;
-  border-bottom: 1px solid rgba(0,0,0,0.06);
+  border-bottom: 1px solid var(--agentsys-border-subtle);
   white-space: nowrap;
   user-select: none;
 }
 
 .tableWrap tbody td {
   padding: 10px 16px;
-  border-bottom: 1px solid rgba(0,0,0,0.03);
+  border-bottom: 1px solid var(--agentsys-border-lighter);
   white-space: nowrap;
   font-size: 0.83rem;
   color: var(--mantine-color-text);
@@ -80,11 +80,11 @@
 }
 
 .logRow:hover {
-  background: rgba(0,0,0,0.02);
+  background: var(--agentsys-row-hover);
 }
 
 .logRowExpanded {
-  background: rgba(0,0,0,0.02);
+  background: var(--agentsys-row-hover);
 }
 
 /* 时间列：毫秒精度等宽 */
@@ -161,7 +161,7 @@
 
 .expandPanel {
   background: var(--agentsys-page-bg, #F8F9FB);
-  border-bottom: 1px solid rgba(0,0,0,0.06);
+  border-bottom: 1px solid var(--agentsys-border-subtle);
   padding: 16px 20px 16px 44px;
   white-space: normal;
 }
@@ -250,7 +250,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 12px 16px;
-  border-top: 1px solid rgba(0,0,0,0.06);
+  border-top: 1px solid var(--agentsys-border-subtle);
   font-size: 0.82rem;
   color: var(--mantine-color-dimmed);
   gap: 16px;

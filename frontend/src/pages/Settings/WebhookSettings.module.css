@@ -21,7 +21,7 @@
 /* ── Section ── */
 .section {
   background: var(--mantine-color-body);
-  border: 1px solid var(--agentsys-card-border, rgba(0,0,0,0.06));
+  border: 1px solid var(--agentsys-card-border, var(--agentsys-border-subtle));
   border-radius: var(--mantine-radius-lg);
   padding: 22px 24px;
   overflow: hidden;
@@ -57,20 +57,20 @@
   color: var(--mantine-color-dimmed);
   text-align: left;
   padding: 8px 12px;
-  border-bottom: 1px solid rgba(0,0,0,0.06);
+  border-bottom: 1px solid var(--agentsys-border-subtle);
   white-space: nowrap;
 }
 
 .tableWrap tbody td {
   padding: 10px 12px;
-  border-bottom: 1px solid rgba(0,0,0,0.03);
+  border-bottom: 1px solid var(--agentsys-border-lighter);
   white-space: nowrap;
   font-size: 0.83rem;
   vertical-align: middle;
 }
 
 .tableWrap tbody tr:hover {
-  background: rgba(0,0,0,0.02);
+  background: var(--agentsys-row-hover);
 }
 
 .emptyCell {
@@ -127,6 +127,15 @@
 
 .disabledLabel {
   color: var(--mantine-color-dimmed);
+}
+
+/* ── Dark Mode Overrides ── */
+[data-mantine-color-scheme='dark'] .section {
+  background: var(--agentsys-card-bg);
+}
+
+[data-mantine-color-scheme='dark'] .enabledLabel {
+  color: #4ADE80;
 }
 
 /* ── Action Buttons ── */
