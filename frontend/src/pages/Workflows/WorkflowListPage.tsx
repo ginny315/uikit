@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
-  TextInput, Button, ActionIcon, Tooltip, Badge, Pagination, Select, Modal, Text, Card, Center, Loader,
+  TextInput, Button, ActionIcon, Tooltip, Badge, Pagination, Select, Text, Card, Center, Loader,
 } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { useDisclosure } from '@mantine/hooks';
@@ -12,6 +12,8 @@ import {
   IconPlayerPlay, IconPlayerPause, IconGitBranch,
 } from '@tabler/icons-react';
 import type { WorkflowSummary, WorkflowStatus } from '../../types';
+import { AppModal } from '../../components/shared/AppModal/AppModal';
+import { ConfirmModal } from '../../components/shared/ConfirmModal/ConfirmModal';
 import { useApiQuery, useApiMutation, queryKeys } from '../../hooks/useApi';
 import { fetchWorkflows, createWorkflow, updateWorkflow, deleteWorkflow } from '../../services/workflows';
 import classes from './WorkflowList.module.css';
@@ -244,13 +246,22 @@ export function WorkflowListPage() {
         </>
       )}
 
-      <Modal
+      <AppModal
         opened={createOpened}
         onClose={() => { closeCreate(); createForm.reset(); }}
         title={t('workflows:create.title')}
-        centered
+        footer={
+          <>
+            <Button variant="default" onClick={() => { closeCreate(); createForm.reset(); }}>
+              {t('common:actions.cancel')}
+            </Button>
+            <Button type="submit" form="create-workflow-form" loading={createMutation.isPending}>
+              {t('workflows:create.submitBtn')}
+            </Button>
+          </>
+        }
       >
-        <form onSubmit={createForm.onSubmit(handleCreate)}>
+        <form id="create-workflow-form" onSubmit={createForm.onSubmit(handleCreate)}>
           <TextInput
             label={t('workflows:create.nameLabel')}
             placeholder={t('workflows:create.namePlaceholder')}
@@ -261,30 +272,23 @@ export function WorkflowListPage() {
           <TextInput
             label={t('workflows:create.descLabel')}
             placeholder={t('workflows:create.descPlaceholder')}
-            mb="lg"
             withAsterisk
             {...createForm.getInputProps('description')}
           />
-          <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
-            <Button variant="subtle" color="gray" onClick={() => { closeCreate(); createForm.reset(); }}>
-              {t('common:actions.cancel')}
-            </Button>
-            <Button type="submit" loading={createMutation.isPending}>{t('workflows:create.submitBtn')}</Button>
-          </div>
         </form>
-      </Modal>
+      </AppModal>
 
-      <Modal opened={deleteOpened} onClose={closeDelete} title={t('workflows:list.confirmDeleteTitle')} centered>
-        <Text size="sm" mb="md">
-          {t('workflows:list.confirmDeleteMsg', { name: deleteTarget?.name ?? '' })}
-        </Text>
-        <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
-          <Button variant="subtle" color="gray" onClick={closeDelete}>{t('common:actions.cancel')}</Button>
-          <Button color="red" loading={deleteMutation.isPending} onClick={handleDeleteConfirm}>
-            {t('common:actions.confirmDelete')}
-          </Button>
-        </div>
-      </Modal>
+      <ConfirmModal
+        opened={deleteOpened}
+        onClose={closeDelete}
+        title={t('workflows:list.confirmDeleteTitle')}
+        message={t('workflows:list.confirmDeleteMsg', { name: deleteTarget?.name ?? '' })}
+        target={deleteTarget ? { icon: <IconGitBranch size={14} />, label: deleteTarget.name } : undefined}
+        confirmLabel={t('common:actions.confirmDelete')}
+        cancelLabel={t('common:actions.cancel')}
+        confirmLoading={deleteMutation.isPending}
+        onConfirm={handleDeleteConfirm}
+      />
     </>
   );
 }

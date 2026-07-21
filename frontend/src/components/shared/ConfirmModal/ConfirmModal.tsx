@@ -1,4 +1,5 @@
-import { Modal, Button, Text } from '@mantine/core';
+import { Button, Text } from '@mantine/core';
+import { AppModal } from '../AppModal/AppModal';
 import classes from './ConfirmModal.module.css';
 
 interface ConfirmModalTarget {
@@ -13,7 +14,7 @@ interface ConfirmModalTarget {
 export interface ConfirmModalProps {
   opened: boolean;
   onClose: () => void;
-  /** Modal title (defaults to "确认删除") */
+  /** Modal title */
   title: string;
   /** Warning / confirmation message */
   message: string;
@@ -23,6 +24,8 @@ export interface ConfirmModalProps {
   confirmLabel: string;
   /** Cancel button text */
   cancelLabel?: string;
+  /** Confirm button loading state */
+  confirmLoading?: boolean;
   onConfirm: () => void;
 }
 
@@ -34,12 +37,14 @@ export function ConfirmModal({
   target,
   confirmLabel,
   cancelLabel = '取消',
+  confirmLoading,
   onConfirm,
 }: ConfirmModalProps) {
   return (
-    <Modal
+    <AppModal
       opened={opened}
       onClose={onClose}
+      variant="danger"
       title={
         <span className={classes.titleInner}>
           <svg
@@ -47,7 +52,7 @@ export function ConfirmModal({
             height="18"
             viewBox="0 0 24 24"
             fill="none"
-            stroke="#DC2626"
+            stroke="currentColor"
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -59,8 +64,16 @@ export function ConfirmModal({
           {title}
         </span>
       }
-      centered
-      className={classes.root}
+      footer={
+        <>
+          <Button variant="default" onClick={onClose}>
+            {cancelLabel}
+          </Button>
+          <Button color="red" onClick={onConfirm} loading={confirmLoading}>
+            {confirmLabel}
+          </Button>
+        </>
+      }
     >
       {target && (
         <div className={classes.target}>
@@ -71,17 +84,9 @@ export function ConfirmModal({
           </div>
         </div>
       )}
-      <Text size="sm" c="dimmed" mt={target ? 'sm' : undefined} mb="sm">
+      <Text size="sm" c="dimmed">
         {message}
       </Text>
-      <div className={classes.actions}>
-        <Button variant="default" onClick={onClose}>
-          {cancelLabel}
-        </Button>
-        <Button color="red" onClick={onConfirm}>
-          {confirmLabel}
-        </Button>
-      </div>
-    </Modal>
+    </AppModal>
   );
 }

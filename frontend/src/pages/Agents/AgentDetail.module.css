@@ -41,41 +41,7 @@
   margin-top: 4px;
 }
 
-/* Tabs wrapper */
-.tabsCard {
-  background: var(--mantine-color-body);
-  border: 1px solid var(--agentsys-card-border, var(--agentsys-border-subtle));
-  border-radius: var(--mantine-radius-lg);
-  overflow: hidden;
-}
-
-/* ── Tab 列表样式 ── */
-.tabsCard :global(.mantine-Tabs-list) {
-  padding: 0 16px;
-  border-bottom: 1px solid var(--agentsys-border-subtle);
-  gap: 4px;
-}
-
-.tabsCard :global(.mantine-Tabs-tab) {
-  font-size: 0.88rem;
-  font-weight: 500;
-  padding: 14px 20px;
-  color: var(--mantine-color-dimmed);
-  border-bottom: 2px solid transparent;
-  border-radius: 0;
-  transition: color 150ms ease, border-color 150ms ease;
-}
-
-.tabsCard :global(.mantine-Tabs-tab:hover) {
-  color: var(--mantine-color-text);
-  background: transparent;
-}
-
-.tabsCard :global(.mantine-Tabs-tab[data-active]) {
-  color: var(--mantine-color-agentGreen-6);
-  border-bottom-color: var(--mantine-color-agentGreen-6);
-}
-
+/* ── Tab panel content ── */
 .tabContent {
   padding: 24px;
 }

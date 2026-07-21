@@ -128,47 +128,60 @@
     background: rgba(255, 255, 255, 0.22);
   }
 
-  /* ── Modal 全局美化 ── */
+  /* ── Modal 全局美化（未使用 AppModal 的页面也受益）── */
   .mantine-Modal-overlay {
-    backdrop-filter: blur(4px);
+    backdrop-filter: blur(6px);
   }
 
-  .mantine-Modal-root .mantine-Modal-inner {
-    /* 确保弹窗垂直居中时有呼吸感 */
+  .mantine-Modal-inner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     padding: 24px;
   }
 
   .mantine-Modal-content {
+    width: 100%;
+    max-width: 440px;
+    flex: 0 0 auto;
+    max-height: min(85vh, 640px);
     border: 1px solid var(--agentsys-card-border, var(--agentsys-border-subtle));
+    background: var(--agentsys-card-bg, var(--mantine-color-body));
     box-shadow:
       0 0 0 1px var(--agentsys-border-lighter),
-      0 4px 24px rgba(0,0,0,0.08),
-      0 8px 48px rgba(0,0,0,0.04);
+      0 8px 32px rgba(15, 23, 42, 0.12),
+      0 24px 64px rgba(15, 23, 42, 0.08);
     border-radius: var(--mantine-radius-lg);
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
   }
 
   [data-mantine-color-scheme='dark'] .mantine-Modal-content {
     box-shadow:
-      0 0 0 1px var(--agentsys-border-lighter),
-      0 4px 24px rgba(0,0,0,0.40),
-      0 8px 48px rgba(0,0,0,0.30);
+      0 0 0 1px rgba(255, 255, 255, 0.06),
+      0 8px 32px rgba(0, 0, 0, 0.45),
+      0 24px 64px rgba(0, 0, 0, 0.35);
   }
 
   .mantine-Modal-header {
-    padding: 20px 24px 16px;
+    flex-shrink: 0;
+    padding: 16px 20px;
     border-bottom: 1px solid var(--agentsys-border-subtle);
     background: var(--agentsys-page-bg);
   }
 
   .mantine-Modal-title {
     font-family: 'Space Grotesk', sans-serif;
-    font-size: 1.15rem;
+    font-size: 1.0625rem;
     font-weight: 600;
+    letter-spacing: -0.01em;
     color: var(--mantine-color-text);
   }
 
   .mantine-Modal-close {
+    width: 32px;
+    height: 32px;
     color: var(--mantine-color-dimmed);
     border-radius: var(--mantine-radius-sm);
     transition: color 150ms ease, background 150ms ease;
@@ -180,20 +193,11 @@
   }
 
   .mantine-Modal-body {
-    padding: 24px;
-  }
-
-  /* Danger variant — confirmation dialogs */
-  .modal-danger .mantine-Modal-header {
-    border-bottom-color: rgba(239,68,68,0.15);
-    background: rgba(239,68,68,0.03);
-  }
-
-  .modal-danger .mantine-Modal-title {
-    color: #DC2626;
-  }
-
-  [data-mantine-color-scheme='dark'] .modal-danger .mantine-Modal-header {
-    background: rgba(239,68,68,0.06);
+    flex: 1 1 auto;
+    overflow-y: auto;
+    padding: 20px;
+    font-size: 0.875rem;
+    line-height: 1.65;
+    min-height: 0;
   }
 }

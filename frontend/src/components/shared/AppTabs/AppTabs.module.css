@@ -1,0 +1,144 @@
+/* ── AppTabs — 对齐 ui-kit.html Tabs 规范 ── */
+
+.card {
+  background: var(--agentsys-card-bg, var(--mantine-color-body));
+  border: 1px solid var(--agentsys-card-border, var(--agentsys-border-subtle));
+  border-radius: var(--mantine-radius-lg);
+  overflow: hidden;
+}
+
+.root {
+  /* Mantine Tabs root */
+}
+
+.panel {
+  /* 内容由页面 tabContent 控制 padding */
+}
+
+.tabSection {
+  margin-right: 6px;
+  display: flex;
+  align-items: center;
+}
+
+.tabSection[data-position='right'] {
+  margin-right: 0;
+  margin-left: 6px;
+}
+
+/* ── Pills variant (segmented control) ── */
+.pillList {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 5px;
+  margin: 16px 16px 0;
+  width: fit-content;
+  max-width: calc(100% - 32px);
+  background: var(--agentsys-muted-fill);
+  border: 1px solid var(--agentsys-border-subtle);
+  border-radius: var(--mantine-radius-xl);
+  border-bottom: none;
+}
+
+.pillList::before {
+  display: none;
+}
+
+.pillTab {
+  padding: 8px 16px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--mantine-color-dimmed);
+  border-radius: calc(var(--mantine-radius-xl) - 2px);
+  border: none;
+  background: transparent;
+  transition: color 150ms ease, background 150ms ease, box-shadow 150ms ease;
+}
+
+.pillTab:hover {
+  color: var(--mantine-color-text);
+  background: rgba(255, 255, 255, 0.5);
+}
+
+[data-mantine-color-scheme='dark'] .pillTab:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.pillTab[data-active] {
+  color: var(--mantine-color-text);
+  background: var(--agentsys-card-bg, #fff);
+  box-shadow:
+    0 1px 2px rgba(15, 23, 42, 0.06),
+    0 1px 3px rgba(15, 23, 42, 0.08);
+}
+
+[data-mantine-color-scheme='dark'] .pillTab[data-active] {
+  background: var(--agentsys-card-bg, #151B2A);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+}
+
+.pillTab[data-active] .tabSection {
+  color: var(--mantine-color-agentGreen-6);
+}
+
+/* ── Underline variant ── */
+.underlineList {
+  padding: 0 20px;
+  gap: 4px;
+  border-bottom: 1px solid var(--agentsys-border-subtle);
+}
+
+.underlineList::before {
+  display: none;
+}
+
+.underlineTab {
+  position: relative;
+  padding: 14px 18px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--mantine-color-dimmed);
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  transition: color 150ms ease;
+}
+
+.underlineTab:hover {
+  color: var(--mantine-color-text);
+  background: transparent;
+}
+
+.underlineTab[data-active] {
+  color: var(--mantine-color-agentGreen-6);
+  background: transparent;
+  border-bottom: 2px solid var(--mantine-color-agentGreen-6);
+  margin-bottom: -1px;
+}
+
+.underlineTab[data-active] .tabSection {
+  color: var(--mantine-color-agentGreen-6);
+}
+
+@media (max-width: 768px) {
+  .pillList {
+    margin: 12px 12px 0;
+    max-width: calc(100% - 24px);
+  }
+
+  .pillTab {
+    padding: 7px 12px;
+    font-size: 0.8125rem;
+  }
+
+  .underlineList {
+    padding: 0 12px;
+    overflow-x: auto;
+  }
+
+  .underlineTab {
+    padding: 12px 14px;
+    white-space: nowrap;
+  }
+}

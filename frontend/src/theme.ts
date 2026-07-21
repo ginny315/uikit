@@ -158,6 +158,25 @@ export const theme = createTheme({
         fw: 500,
       },
     },
+
+    // Modal: 统一弹窗基准（AppModal 在此基础上扩展）
+    Modal: {
+      defaultProps: {
+        centered: true,
+        radius: 'lg',
+        padding: 0,
+        size: '440px',
+        overlayProps: { backgroundOpacity: 0.45, blur: 6 },
+        transitionProps: { transition: 'pop', duration: 180 },
+      },
+    },
+
+    // Tabs: 默认 pills 风格
+    Tabs: {
+      defaultProps: {
+        variant: 'pills',
+      },
+    },
   },
 
   // ── Mantine 未知 Token 放入 other (供 CSS Module 或 runtime 引用) ──

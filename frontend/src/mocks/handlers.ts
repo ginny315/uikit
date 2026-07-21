@@ -26,9 +26,7 @@ import {
   dbLatencyDistribution,
 } from './data';
 
-const BASE = config.api.baseUrl; // http://localhost:8080
-
-// 模拟网络延迟
+// 使用路径匹配（不含 host），避免 localhost vs 127.0.0.1 等导致 MSW 漏拦截
 async function mockDelay(): Promise<void> {
   if (config.mock.enabled && config.mock.delay > 0) {
     await delay(config.mock.delay);
@@ -39,11 +37,11 @@ export const handlers = [
   // ═══════════════════════════════════════════════════════════
   // Dashboard
   // ═══════════════════════════════════════════════════════════
-  http.get(`${BASE}/api/v1/metrics/dashboard`, async () => {
+  http.get(`/api/v1/metrics/dashboard`, async () => {
     await mockDelay();
     return HttpResponse.json(dbDashboardMetrics);
   }),
-  http.get(`${BASE}/api/v1/metrics/queue`, async () => {
+  http.get(`/api/v1/metrics/queue`, async () => {
     await mockDelay();
     return HttpResponse.json({
       high: dbDashboardMetrics.queueHigh,
@@ -51,21 +49,21 @@ export const handlers = [
       low: dbDashboardMetrics.queueLow,
     });
   }),
-  http.get(`${BASE}/api/v1/metrics/health`, async () => {
+  http.get(`/api/v1/metrics/health`, async () => {
     await mockDelay();
     return HttpResponse.json(dbSystemHealth);
   }),
-  http.get(`${BASE}/api/v1/metrics/services`, async () => {
+  http.get(`/api/v1/metrics/services`, async () => {
     await mockDelay();
     return HttpResponse.json(dbServiceHealth);
   }),
-  http.get(`${BASE}/api/v1/metrics/throughput`, async ({ request }) => {
+  http.get(`/api/v1/metrics/throughput`, async ({ request }) => {
     await mockDelay();
     const url = new URL(request.url);
     const range = url.searchParams.get('range') ?? 'today';
     return HttpResponse.json(dbThroughputByRange[range] ?? dbThroughputByRange.today);
   }),
-  http.get(`${BASE}/api/v1/metrics/latency`, async () => {
+  http.get(`/api/v1/metrics/latency`, async () => {
     await mockDelay();
     return HttpResponse.json(dbLatencyDistribution);
   }),
@@ -73,7 +71,7 @@ export const handlers = [
   // ═══════════════════════════════════════════════════════════
   // Audit Logs
   // ═══════════════════════════════════════════════════════════
-  http.get(`${BASE}/api/v1/audit-logs`, async () => {
+  http.get(`/api/v1/audit-logs`, async () => {
     await mockDelay();
     return HttpResponse.json(dbAuditLogs);
   }),
@@ -81,7 +79,7 @@ export const handlers = [
   // ═══════════════════════════════════════════════════════════
   // Agents
   // ═══════════════════════════════════════════════════════════
-  http.get(`${BASE}/api/v1/agents`, async ({ request }) => {
+  http.get(`/api/v1/agents`, async ({ request }) => {
     await mockDelay();
     const url = new URL(request.url);
     const search = url.searchParams.get('search')?.toLowerCase();
@@ -113,14 +111,14 @@ export const handlers = [
     return HttpResponse.json({ data, total, page, pageSize });
   }),
 
-  http.get(`${BASE}/api/v1/agents/:id`, async ({ params }) => {
+  http.get(`/api/v1/agents/:id`, async ({ params }) => {
     await mockDelay();
     const agent = dbAgents.find((a) => a.id === params.id);
     if (!agent) return new HttpResponse(null, { status: 404 });
     return HttpResponse.json(agent);
   }),
 
-  http.post(`${BASE}/api/v1/agents`, async ({ request }) => {
+  http.post(`/api/v1/agents`, async ({ request }) => {
     await mockDelay();
     const body = (await request.json()) as Record<string, unknown>;
     const newAgent = {
@@ -141,7 +139,7 @@ export const handlers = [
     return HttpResponse.json(newAgent, { status: 201 });
   }),
 
-  http.put(`${BASE}/api/v1/agents/:id`, async ({ params, request }) => {
+  http.put(`/api/v1/agents/:id`, async ({ params, request }) => {
     await mockDelay();
     const idx = dbAgents.findIndex((a) => a.id === params.id);
     if (idx === -1) return new HttpResponse(null, { status: 404 });
@@ -150,7 +148,7 @@ export const handlers = [
     return HttpResponse.json(dbAgents[idx]);
   }),
 
-  http.delete(`${BASE}/api/v1/agents/:id`, async ({ params }) => {
+  http.delete(`/api/v1/agents/:id`, async ({ params }) => {
     await mockDelay();
     const idx = dbAgents.findIndex((a) => a.id === params.id);
     if (idx === -1) return new HttpResponse(null, { status: 404 });
@@ -161,7 +159,7 @@ export const handlers = [
   // ═══════════════════════════════════════════════════════════
   // Tasks
   // ═══════════════════════════════════════════════════════════
-  http.get(`${BASE}/api/v1/tasks`, async ({ request }) => {
+  http.get(`/api/v1/tasks`, async ({ request }) => {
     await mockDelay();
     const url = new URL(request.url);
     const search = url.searchParams.get('search')?.toLowerCase();
@@ -195,21 +193,21 @@ export const handlers = [
     return HttpResponse.json({ data, total, page, pageSize });
   }),
 
-  http.get(`${BASE}/api/v1/tasks/:id`, async ({ params }) => {
+  http.get(`/api/v1/tasks/:id`, async ({ params }) => {
     await mockDelay();
     const task = dbTasks.find((t) => t.id === params.id);
     if (!task) return new HttpResponse(null, { status: 404 });
     return HttpResponse.json(task);
   }),
 
-  http.get(`${BASE}/api/v1/tasks/:id/timeline`, async ({ params }) => {
+  http.get(`/api/v1/tasks/:id/timeline`, async ({ params }) => {
     await mockDelay();
     const task = dbTasks.find((t) => t.id === params.id);
     if (!task) return new HttpResponse(null, { status: 404 });
     return HttpResponse.json(deriveTimeline(task));
   }),
 
-  http.post(`${BASE}/api/v1/tasks`, async ({ request }) => {
+  http.post(`/api/v1/tasks`, async ({ request }) => {
     await mockDelay();
     const body = (await request.json()) as Record<string, unknown>;
     const newTask = {
@@ -225,7 +223,7 @@ export const handlers = [
     return HttpResponse.json(newTask, { status: 201 });
   }),
 
-  http.post(`${BASE}/api/v1/tasks/:id/cancel`, async ({ params }) => {
+  http.post(`/api/v1/tasks/:id/cancel`, async ({ params }) => {
     await mockDelay();
     const task = dbTasks.find((t) => t.id === params.id);
     if (!task) return new HttpResponse(null, { status: 404 });
@@ -234,7 +232,7 @@ export const handlers = [
     return HttpResponse.json(task);
   }),
 
-  http.post(`${BASE}/api/v1/tasks/:id/retry`, async ({ params }) => {
+  http.post(`/api/v1/tasks/:id/retry`, async ({ params }) => {
     await mockDelay();
     const task = dbTasks.find((t) => t.id === params.id);
     if (!task) return new HttpResponse(null, { status: 404 });
@@ -254,7 +252,7 @@ export const handlers = [
   // ═══════════════════════════════════════════════════════════
   // Logs
   // ═══════════════════════════════════════════════════════════
-  http.get(`${BASE}/api/v1/logs`, async ({ request }) => {
+  http.get(`/api/v1/logs`, async ({ request }) => {
     await mockDelay();
     const url = new URL(request.url);
     const search = url.searchParams.get('search')?.toLowerCase();
@@ -296,7 +294,7 @@ export const handlers = [
   // ═══════════════════════════════════════════════════════════
   // Workflows
   // ═══════════════════════════════════════════════════════════
-  http.get(`${BASE}/api/v1/workflows`, async ({ request }) => {
+  http.get(`/api/v1/workflows`, async ({ request }) => {
     await mockDelay();
     const url = new URL(request.url);
     const search = url.searchParams.get('search')?.toLowerCase();
@@ -311,14 +309,14 @@ export const handlers = [
     return HttpResponse.json(filtered);
   }),
 
-  http.get(`${BASE}/api/v1/workflows/:id`, async ({ params }) => {
+  http.get(`/api/v1/workflows/:id`, async ({ params }) => {
     await mockDelay();
     const detail = dbWorkflowDetails[params.id as string];
     if (!detail) return new HttpResponse(null, { status: 404 });
     return HttpResponse.json(detail);
   }),
 
-  http.post(`${BASE}/api/v1/workflows`, async ({ request }) => {
+  http.post(`/api/v1/workflows`, async ({ request }) => {
     await mockDelay();
     const body = (await request.json()) as Record<string, unknown>;
     const summary = {
@@ -334,7 +332,7 @@ export const handlers = [
     return HttpResponse.json(summary, { status: 201 });
   }),
 
-  http.put(`${BASE}/api/v1/workflows/:id`, async ({ params, request }) => {
+  http.put(`/api/v1/workflows/:id`, async ({ params, request }) => {
     await mockDelay();
     const body = (await request.json()) as Record<string, unknown>;
     const idx = dbWorkflowSummaries.findIndex((w) => w.id === params.id);
@@ -347,7 +345,7 @@ export const handlers = [
     return HttpResponse.json(dbWorkflowSummaries[idx] ?? dbWorkflowDetails[params.id as string]);
   }),
 
-  http.delete(`${BASE}/api/v1/workflows/:id`, async ({ params }) => {
+  http.delete(`/api/v1/workflows/:id`, async ({ params }) => {
     await mockDelay();
     const idx = dbWorkflowSummaries.findIndex((w) => w.id === params.id);
     if (idx !== -1) dbWorkflowSummaries.splice(idx, 1);
@@ -358,7 +356,7 @@ export const handlers = [
   // ═══════════════════════════════════════════════════════════
   // Costs
   // ═══════════════════════════════════════════════════════════
-  http.get(`${BASE}/api/v1/costs/report`, async ({ request }) => {
+  http.get(`/api/v1/costs/report`, async ({ request }) => {
     await mockDelay();
     const url = new URL(request.url);
     const groupBy = url.searchParams.get('groupBy') ?? 'agent';
@@ -408,12 +406,12 @@ export const handlers = [
     });
   }),
 
-  http.put(`${BASE}/api/v1/costs/quotas/:agentId`, async () => {
+  http.put(`/api/v1/costs/quotas/:agentId`, async () => {
     await mockDelay();
     return HttpResponse.json({ success: true });
   }),
 
-  http.put(`${BASE}/api/v1/costs/alerts`, async () => {
+  http.put(`/api/v1/costs/alerts`, async () => {
     await mockDelay();
     return HttpResponse.json({ success: true });
   }),
@@ -421,12 +419,12 @@ export const handlers = [
   // ═══════════════════════════════════════════════════════════
   // Users & Access
   // ═══════════════════════════════════════════════════════════
-  http.get(`${BASE}/api/v1/users`, async () => {
+  http.get(`/api/v1/users`, async () => {
     await mockDelay();
     return HttpResponse.json(dbUsers);
   }),
 
-  http.put(`${BASE}/api/v1/users/:id/role`, async ({ params, request }) => {
+  http.put(`/api/v1/users/:id/role`, async ({ params, request }) => {
     await mockDelay();
     const body = (await request.json()) as { role: string };
     const user = dbUsers.find((u) => u.id === params.id);
@@ -435,7 +433,7 @@ export const handlers = [
     return HttpResponse.json(user);
   }),
 
-  http.delete(`${BASE}/api/v1/users/:id`, async ({ params }) => {
+  http.delete(`/api/v1/users/:id`, async ({ params }) => {
     await mockDelay();
     const idx = dbUsers.findIndex((u) => u.id === params.id);
     if (idx === -1) return new HttpResponse(null, { status: 404 });
@@ -443,7 +441,7 @@ export const handlers = [
     return new HttpResponse(null, { status: 204 });
   }),
 
-  http.post(`${BASE}/api/v1/users/invite`, async ({ request }) => {
+  http.post(`/api/v1/users/invite`, async ({ request }) => {
     await mockDelay();
     const body = (await request.json()) as { email: string; role: string };
     if (dbUsers.some((u) => u.email === body.email)) {
@@ -473,12 +471,12 @@ export const handlers = [
   // ═══════════════════════════════════════════════════════════
   // API Keys
   // ═══════════════════════════════════════════════════════════
-  http.get(`${BASE}/api/v1/api-keys`, async () => {
+  http.get(`/api/v1/api-keys`, async () => {
     await mockDelay();
     return HttpResponse.json(dbApiKeys);
   }),
 
-  http.post(`${BASE}/api/v1/api-keys`, async ({ request }) => {
+  http.post(`/api/v1/api-keys`, async ({ request }) => {
     await mockDelay();
     const body = (await request.json()) as { name: string };
     const prefix = `asy_${body.name.toLowerCase().replace(/\s+/g, '_').slice(0, 8)}_***`;
@@ -494,7 +492,7 @@ export const handlers = [
     return HttpResponse.json({ ...newKey, rawKey }, { status: 201 });
   }),
 
-  http.delete(`${BASE}/api/v1/api-keys/:id`, async ({ params }) => {
+  http.delete(`/api/v1/api-keys/:id`, async ({ params }) => {
     await mockDelay();
     const idx = dbApiKeys.findIndex((k) => k.id === params.id);
     if (idx === -1) return new HttpResponse(null, { status: 404 });
@@ -505,12 +503,12 @@ export const handlers = [
   // ═══════════════════════════════════════════════════════════
   // Webhooks
   // ═══════════════════════════════════════════════════════════
-  http.get(`${BASE}/api/v1/webhooks`, async () => {
+  http.get(`/api/v1/webhooks`, async () => {
     await mockDelay();
     return HttpResponse.json(dbWebhooks);
   }),
 
-  http.post(`${BASE}/api/v1/webhooks`, async ({ request }) => {
+  http.post(`/api/v1/webhooks`, async ({ request }) => {
     await mockDelay();
     const body = (await request.json()) as Partial<Webhook>;
     const newWh: Webhook = {
@@ -525,7 +523,7 @@ export const handlers = [
     return HttpResponse.json(newWh, { status: 201 });
   }),
 
-  http.put(`${BASE}/api/v1/webhooks/:id`, async ({ params, request }) => {
+  http.put(`/api/v1/webhooks/:id`, async ({ params, request }) => {
     await mockDelay();
     const body = (await request.json()) as Partial<Webhook>;
     const idx = dbWebhooks.findIndex((w) => w.id === params.id);
@@ -534,7 +532,7 @@ export const handlers = [
     return HttpResponse.json(dbWebhooks[idx]);
   }),
 
-  http.delete(`${BASE}/api/v1/webhooks/:id`, async ({ params }) => {
+  http.delete(`/api/v1/webhooks/:id`, async ({ params }) => {
     await mockDelay();
     const idx = dbWebhooks.findIndex((w) => w.id === params.id);
     if (idx === -1) return new HttpResponse(null, { status: 404 });
@@ -542,7 +540,7 @@ export const handlers = [
     return new HttpResponse(null, { status: 204 });
   }),
 
-  http.post(`${BASE}/api/v1/webhooks/:id/test`, async () => {
+  http.post(`/api/v1/webhooks/:id/test`, async () => {
     await mockDelay();
     await delay(1000); // Simulate test request latency
     return HttpResponse.json({ success: true });

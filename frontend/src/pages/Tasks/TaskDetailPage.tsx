@@ -1,11 +1,12 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Button, Modal, Text, Center, Loader } from '@mantine/core';
+import { Button, Text, Center, Loader } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { useDisclosure } from '@mantine/hooks';
 import { IconAlertTriangle, IconBan, IconRefresh } from '@tabler/icons-react';
 import { StatusBadge } from '../../components/shared/StatusBadge/StatusBadge';
 import { PriorityBadge } from '../../components/shared/PriorityBadge/PriorityBadge';
+import { ConfirmModal } from '../../components/shared/ConfirmModal/ConfirmModal';
 import { PageHeader } from '../../components/shared/PageHeader/PageHeader';
 import type { BreadcrumbItem } from '../../components/shared/PageHeader/PageHeader';
 import type { TaskTimelineEvent } from '../../types';
@@ -200,17 +201,17 @@ export function TaskDetailPage() {
         </div>
       </div>
 
-      <Modal opened={cancelOpened} onClose={closeCancel} title={t('tasks:cancelModal.title')} centered>
-        <Text size="sm" mb="md">
-          {t('tasks:cancelModal.message', { id: taskId })}
-        </Text>
-        <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
-          <Button variant="subtle" color="gray" onClick={closeCancel}>{t('tasks:cancelModal.keepBtn')}</Button>
-          <Button color="red" loading={cancelMutation.isPending} onClick={handleCancelConfirm}>
-            {t('tasks:cancelModal.confirmBtn')}
-          </Button>
-        </div>
-      </Modal>
+      <ConfirmModal
+        opened={cancelOpened}
+        onClose={closeCancel}
+        title={t('tasks:cancelModal.title')}
+        message={t('tasks:cancelModal.message', { id: taskId })}
+        target={{ icon: <IconBan size={14} />, label: taskId, detail: task.input }}
+        confirmLabel={t('tasks:cancelModal.confirmBtn')}
+        cancelLabel={t('tasks:cancelModal.keepBtn')}
+        confirmLoading={cancelMutation.isPending}
+        onConfirm={handleCancelConfirm}
+      />
     </>
   );
 }

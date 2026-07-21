@@ -1,0 +1,109 @@
+/* ── AppModal — 对齐 ui-kit.html Modal 规范 (max-width 480px) ── */
+
+.inner {
+  /* 居中容器，不撑满视口 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.content {
+  width: 100%;
+  max-width: 440px;
+  flex: 0 0 auto;
+  border: 1px solid var(--agentsys-card-border, var(--agentsys-border-subtle));
+  background: var(--agentsys-card-bg, var(--mantine-color-body));
+  box-shadow:
+    0 0 0 1px var(--agentsys-border-lighter),
+    0 8px 32px rgba(15, 23, 42, 0.12),
+    0 24px 64px rgba(15, 23, 42, 0.08);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  max-height: min(85vh, 640px);
+}
+
+[data-mantine-color-scheme='dark'] .content {
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.06),
+    0 8px 32px rgba(0, 0, 0, 0.45),
+    0 24px 64px rgba(0, 0, 0, 0.35);
+}
+
+.header {
+  flex-shrink: 0;
+  padding: 16px 20px;
+  min-height: unset;
+  border-bottom: 1px solid var(--agentsys-border-subtle);
+  background: var(--agentsys-page-bg);
+}
+
+.title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--mantine-color-text);
+  line-height: 1.3;
+}
+
+.close {
+  width: 30px;
+  height: 30px;
+  color: var(--mantine-color-dimmed);
+  border-radius: var(--mantine-radius-sm);
+  transition: color 150ms ease, background 150ms ease;
+}
+
+.close:hover {
+  color: var(--mantine-color-text);
+  background: var(--agentsys-muted-fill);
+}
+
+.body {
+  flex: 1 1 auto;
+  padding: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.bodyInner {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  padding: 20px;
+  font-size: 0.875rem;
+  line-height: 1.65;
+  color: var(--mantine-color-text);
+}
+
+.footer {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 12px 20px;
+  border-top: 1px solid var(--agentsys-border-subtle);
+  background: var(--agentsys-page-bg);
+}
+
+/* ── Danger variant ── */
+.danger .header {
+  border-bottom-color: rgba(239, 68, 68, 0.15);
+  background: rgba(239, 68, 68, 0.04);
+}
+
+.danger .title {
+  color: #DC2626;
+}
+
+[data-mantine-color-scheme='dark'] .danger .header {
+  background: rgba(239, 68, 68, 0.08);
+}
+
+.danger .title svg {
+  flex-shrink: 0;
+}

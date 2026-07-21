@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Button,
-  Modal,
   TextInput,
   Switch,
   Badge,
@@ -12,6 +11,7 @@ import {
 } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { IconWebhook, IconTrash, IconPlayerPlay, IconPencil } from '@tabler/icons-react';
+import { AppModal } from '../../components/shared/AppModal/AppModal';
 import { ConfirmModal } from '../../components/shared/ConfirmModal/ConfirmModal';
 import { useApiQuery, useApiMutation, queryKeys } from '../../hooks/useApi';
 import {
@@ -239,13 +239,25 @@ export function WebhookSettingsPage() {
         </div>
       </div>
 
-      {/* ── Create / Edit Modal ── */}
-      <Modal
+      <AppModal
         opened={modalOpen}
         onClose={() => setModalOpen(false)}
         title={editing ? t('webhooks:edit.title') : t('webhooks:create.title')}
-        centered
-        size="lg"
+        size="480px"
+        footer={
+          <>
+            <Button variant="default" onClick={() => setModalOpen(false)}>
+              {t('common:actions.cancel')}
+            </Button>
+            <Button
+              onClick={handleSave}
+              disabled={!formUrl.trim() || formEvents.length === 0}
+              loading={createMutation.isPending || updateMutation.isPending}
+            >
+              {editing ? t('webhooks:edit.saveBtn') : t('webhooks:create.submitBtn')}
+            </Button>
+          </>
+        }
       >
         <TextInput
           label={t('webhooks:create.urlLabel')}
@@ -273,18 +285,8 @@ export function WebhookSettingsPage() {
           description={t('webhooks:create.secretDesc')}
           value={formSecret}
           onChange={(e) => setFormSecret(e.currentTarget.value)}
-          mb="xl"
         />
-        <Button
-          fullWidth
-          onClick={handleSave}
-          disabled={!formUrl.trim() || formEvents.length === 0}
-          loading={createMutation.isPending || updateMutation.isPending}
-          size="md"
-        >
-          {editing ? t('webhooks:edit.saveBtn') : t('webhooks:create.submitBtn')}
-        </Button>
-      </Modal>
+      </AppModal>
 
       {/* ── Delete Confirm Modal ── */}
       <ConfirmModal
@@ -295,6 +297,7 @@ export function WebhookSettingsPage() {
         target={deleteTarget ? { icon: <IconWebhook size={14} />, label: deleteTarget.url } : undefined}
         confirmLabel={t('common:actions.delete')}
         cancelLabel={t('common:actions.cancel')}
+        confirmLoading={deleteMutation.isPending}
         onConfirm={() => deleteTarget && handleDelete(deleteTarget.id)}
       />
     </>

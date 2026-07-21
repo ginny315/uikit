@@ -57,17 +57,23 @@ function handleUnauthorized(): void {
 /**
  * fetch 封装
  *
+ * - mock.enabled=true 时使用相对路径，MSW 在同源拦截
+ * - mock.enabled=false 时请求 config.api.baseUrl
  * - auth.enabled=true 时自动附加 Authorization header
- * - 统一错误分类为 ApiRequestError
- * - 401 时清除 token 并跳转登录页
- * - 超时控制
  */
+function resolveUrl(path: string): string {
+  if (config.mock.enabled) {
+    return path;
+  }
+  return `${config.api.baseUrl}${path}`;
+}
+
 async function request<T>(
   method: string,
   path: string,
   body?: unknown,
 ): Promise<T> {
-  const url = `${config.api.baseUrl}${path}`;
+  const url = resolveUrl(path);
 
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',

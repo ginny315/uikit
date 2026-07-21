@@ -26,13 +26,9 @@ const queryClient = new QueryClient({
 });
 
 async function bootstrap() {
-  // Session 9: 开发模式下启动 MSW 拦截网络请求
   if (config.mock.enabled) {
     const { worker } = await import('./mocks/browser');
-    await worker.start({
-      onUnhandledRequest: 'bypass', // 非 API 请求不受影响
-      quiet: true,
-    });
+    await worker.start({ onUnhandledRequest: 'bypass', quiet: true });
   }
 
   const root = document.getElementById('root');

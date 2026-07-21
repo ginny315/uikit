@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
-  TextInput, Textarea, Button, ActionIcon, Tooltip, Badge, Pagination, Select, Modal, Text, Center, Loader,
+  TextInput, Textarea, Button, ActionIcon, Tooltip, Badge, Pagination, Select, Center, Loader,
 } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { useDisclosure } from '@mantine/hooks';
@@ -13,6 +13,8 @@ import {
 } from '@tabler/icons-react';
 import { StatusBadge } from '../../components/shared/StatusBadge/StatusBadge';
 import { PriorityBadge } from '../../components/shared/PriorityBadge/PriorityBadge';
+import { AppModal } from '../../components/shared/AppModal/AppModal';
+import { ConfirmModal } from '../../components/shared/ConfirmModal/ConfirmModal';
 import type { Task, TaskStatus, TaskPriority } from '../../types';
 import { useApiQuery, useApiMutation, queryKeys } from '../../hooks/useApi';
 import { useRealtimeInterval } from '../../hooks/useRealtime';
@@ -298,13 +300,22 @@ export function TaskListPage() {
         )}
       </div>
 
-      <Modal
+      <AppModal
         opened={createOpened}
         onClose={() => { closeCreate(); createForm.reset(); }}
         title={t('tasks:create.title')}
-        centered
+        footer={
+          <>
+            <Button variant="default" onClick={() => { closeCreate(); createForm.reset(); }}>
+              {t('common:actions.cancel')}
+            </Button>
+            <Button type="submit" form="create-task-form" loading={createMutation.isPending}>
+              {t('tasks:create.submitBtn')}
+            </Button>
+          </>
+        }
       >
-        <form onSubmit={createForm.onSubmit(handleCreateSubmit)}>
+        <form id="create-task-form" onSubmit={createForm.onSubmit(handleCreateSubmit)}>
           <Select
             label={t('tasks:create.agentLabel')}
             placeholder={t('tasks:create.agentPlaceholder')}
@@ -328,29 +339,22 @@ export function TaskListPage() {
             label={t('tasks:create.priorityLabel')}
             data={PRIORITY_FILTER_OPTIONS.filter((o) => o.value !== 'all')}
             allowDeselect={false}
-            mb="lg"
             {...createForm.getInputProps('priority')}
           />
-          <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
-            <Button variant="subtle" color="gray" onClick={() => { closeCreate(); createForm.reset(); }}>
-              {t('common:actions.cancel')}
-            </Button>
-            <Button type="submit" loading={createMutation.isPending}>{t('tasks:create.submitBtn')}</Button>
-          </div>
         </form>
-      </Modal>
+      </AppModal>
 
-      <Modal opened={cancelOpened} onClose={closeCancel} title={t('tasks:cancelModal.title')} centered>
-        <Text size="sm" mb="md">
-          {t('tasks:cancelModal.message', { id: cancelTarget?.id ?? '' })}
-        </Text>
-        <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
-          <Button variant="subtle" color="gray" onClick={closeCancel}>{t('tasks:cancelModal.keepBtn')}</Button>
-          <Button color="red" loading={cancelMutation.isPending} onClick={handleCancelConfirm}>
-            {t('tasks:cancelModal.confirmBtn')}
-          </Button>
-        </div>
-      </Modal>
+      <ConfirmModal
+        opened={cancelOpened}
+        onClose={closeCancel}
+        title={t('tasks:cancelModal.title')}
+        message={t('tasks:cancelModal.message', { id: cancelTarget?.id ?? '' })}
+        target={cancelTarget ? { icon: <IconBan size={14} />, label: cancelTarget.id, detail: cancelTarget.input } : undefined}
+        confirmLabel={t('tasks:cancelModal.confirmBtn')}
+        cancelLabel={t('tasks:cancelModal.keepBtn')}
+        confirmLoading={cancelMutation.isPending}
+        onConfirm={handleCancelConfirm}
+      />
     </>
   );
 }

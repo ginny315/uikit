@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Tabs, Button, Modal, TextInput, Select as MantineSelect, Badge, CopyButton, ActionIcon, Text, Loader, Center } from '@mantine/core';
+import { Button, TextInput, Select as MantineSelect, Badge, CopyButton, ActionIcon, Text, Loader, Center } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { IconCopy, IconCheck, IconKey, IconUsers, IconHistory } from '@tabler/icons-react';
 import { ConfirmModal } from '../../components/shared/ConfirmModal/ConfirmModal';
+import { AppModal } from '../../components/shared/AppModal/AppModal';
+import { AppTabs } from '../../components/shared/AppTabs/AppTabs';
 import { useApiQuery, useApiMutation, queryKeys } from '../../hooks/useApi';
 import {
   fetchUsers,
@@ -141,16 +143,15 @@ export function AccessSettingsPage() {
         <h1 className={classes.title}>{t('access:title')}</h1>
       </div>
 
-      <div className={classes.tabsCard}>
-        <Tabs defaultValue="users">
-          <Tabs.List>
-            <Tabs.Tab value="users" leftSection={<IconUsers size={14} />}>{t('access:users.title')}</Tabs.Tab>
-            <Tabs.Tab value="apiKeys" leftSection={<IconKey size={14} />}>{t('access:apiKeys.title')}</Tabs.Tab>
-            <Tabs.Tab value="audit" leftSection={<IconHistory size={14} />}>{t('access:auditLog.title')}</Tabs.Tab>
-          </Tabs.List>
+      <AppTabs defaultValue="users">
+          <AppTabs.List>
+            <AppTabs.Tab value="users" leftSection={<IconUsers size={14} />}>{t('access:users.title')}</AppTabs.Tab>
+            <AppTabs.Tab value="apiKeys" leftSection={<IconKey size={14} />}>{t('access:apiKeys.title')}</AppTabs.Tab>
+            <AppTabs.Tab value="audit" leftSection={<IconHistory size={14} />}>{t('access:auditLog.title')}</AppTabs.Tab>
+          </AppTabs.List>
 
         {/* ── Users Tab ── */}
-        <Tabs.Panel value="users">
+        <AppTabs.Panel value="users">
           <div className={classes.tabContent}>
             <div className={classes.sectionHeader}>
               <span className={classes.sectionTitle}>{t('access:users.title')}</span>
@@ -201,10 +202,10 @@ export function AccessSettingsPage() {
               </table>
             </div>
           </div>
-        </Tabs.Panel>
+        </AppTabs.Panel>
 
         {/* ── API Keys Tab ── */}
-        <Tabs.Panel value="apiKeys">
+        <AppTabs.Panel value="apiKeys">
           <div className={classes.tabContent}>
             <div className={classes.sectionHeader}>
               <span className={classes.sectionTitle}>{t('access:apiKeys.title')}</span>
@@ -249,10 +250,10 @@ export function AccessSettingsPage() {
               </table>
             </div>
           </div>
-        </Tabs.Panel>
+        </AppTabs.Panel>
 
         {/* ── Audit Log Tab ── */}
-        <Tabs.Panel value="audit">
+        <AppTabs.Panel value="audit">
           <div className={classes.tabContent}>
             <div className={classes.sectionHeader}>
               <span className={classes.sectionTitle}>{t('access:auditLog.title')}</span>
@@ -292,17 +293,24 @@ export function AccessSettingsPage() {
               )}
             </div>
           </div>
-        </Tabs.Panel>
-        </Tabs>
-      </div>
+        </AppTabs.Panel>
+      </AppTabs>
 
       {/* ── Invite User Modal ── */}
-      <Modal
+      <AppModal
         opened={inviteModalOpen}
         onClose={() => { setInviteModalOpen(false); setInviteEmail(''); setInviteRole('member'); }}
         title={t('access:users.invite.title')}
-        centered
-        size="md"
+        footer={
+          <>
+            <Button variant="default" onClick={() => { setInviteModalOpen(false); setInviteEmail(''); setInviteRole('member'); }}>
+              {t('common:actions.cancel')}
+            </Button>
+            <Button onClick={handleInviteUser} disabled={!inviteEmail.trim()} loading={inviteMutation.isPending}>
+              {t('access:users.invite.submitBtn')}
+            </Button>
+          </>
+        }
       >
         <TextInput
           label={t('access:users.invite.emailLabel')}
@@ -319,18 +327,29 @@ export function AccessSettingsPage() {
           onChange={(v) => v && setInviteRole(v as UserRole)}
           mt="md"
         />
-        <Button fullWidth mt="lg" onClick={handleInviteUser} disabled={!inviteEmail.trim()} loading={inviteMutation.isPending}>
-          {t('access:users.invite.submitBtn')}
-        </Button>
-      </Modal>
+      </AppModal>
 
       {/* ── Create API Key Modal ── */}
-      <Modal
+      <AppModal
         opened={createModalOpen}
         onClose={() => { setCreateModalOpen(false); setGeneratedKey(null); setNewKeyName(''); }}
         title={t('access:apiKeys.create.title')}
-        centered
-        size="md"
+        footer={
+          generatedKey ? (
+            <Button onClick={() => { setCreateModalOpen(false); setGeneratedKey(null); }}>
+              {t('common:actions.confirm')}
+            </Button>
+          ) : (
+            <>
+              <Button variant="default" onClick={() => { setCreateModalOpen(false); setGeneratedKey(null); setNewKeyName(''); }}>
+                {t('common:actions.cancel')}
+              </Button>
+              <Button onClick={handleCreateKey} disabled={!newKeyName.trim()} loading={createKeyMutation.isPending}>
+                {t('access:apiKeys.create.submitBtn')}
+              </Button>
+            </>
+          )
+        }
       >
         {generatedKey ? (
           <div>
@@ -351,10 +370,7 @@ export function AccessSettingsPage() {
                 )}
               </CopyButton>
             </div>
-            <Text size="xs" c="green" mt="xs">{t('access:apiKeys.create.copied')}</Text>
-            <Button fullWidth mt="lg" onClick={() => { setCreateModalOpen(false); setGeneratedKey(null); }}>
-              {t('common:actions.confirm')}
-            </Button>
+            <Text size="xs" c="green">{t('access:apiKeys.create.copied')}</Text>
           </div>
         ) : (
           <div>
@@ -366,15 +382,12 @@ export function AccessSettingsPage() {
               onChange={(e) => setNewKeyName(e.currentTarget.value)}
               data-autofocus
             />
-            <Button fullWidth mt="lg" onClick={handleCreateKey} disabled={!newKeyName.trim()} loading={createKeyMutation.isPending}>
-              {t('access:apiKeys.create.submitBtn')}
-            </Button>
           </div>
         )}
-      </Modal>
+      </AppModal>
 
       {/* ── Change Role Modal ── */}
-      <Modal opened={roleModal !== null} onClose={() => setRoleModal(null)} title={t('access:users.changeRole')} centered>
+      <AppModal opened={roleModal !== null} onClose={() => setRoleModal(null)} title={t('access:users.changeRole')}>
         {roleModal && (
           <div>
             <div className={classes.roleTarget}>
@@ -397,7 +410,7 @@ export function AccessSettingsPage() {
             />
           </div>
         )}
-      </Modal>
+      </AppModal>
 
       {/* ── Remove User Modal ── */}
       <ConfirmModal
@@ -408,6 +421,7 @@ export function AccessSettingsPage() {
         target={removeModal ? { label: removeModal.user.name } : undefined}
         confirmLabel={t('common:actions.delete')}
         cancelLabel={t('common:actions.cancel')}
+        confirmLoading={removeUserMutation.isPending}
         onConfirm={() => removeModal && handleRemoveUser(removeModal.user.id)}
       />
 
@@ -420,6 +434,7 @@ export function AccessSettingsPage() {
         target={revokeModal ? { icon: <IconKey size={14} />, label: revokeModal.key.name, detail: revokeModal.key.prefix } : undefined}
         confirmLabel={t('access:apiKeys.revoke')}
         cancelLabel={t('common:actions.cancel')}
+        confirmLoading={revokeKeyMutation.isPending}
         onConfirm={() => revokeModal && handleRevokeKey(revokeModal.key.id)}
       />
     </>

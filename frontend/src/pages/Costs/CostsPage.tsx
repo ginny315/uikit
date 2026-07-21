@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Switch, TextInput, Button, NumberInput, Modal, Loader, Center } from '@mantine/core';
+import { Switch, TextInput, Button, NumberInput, Loader, Center } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import {
   IconCoin,
@@ -11,6 +11,7 @@ import {
   IconGauge,
 } from '@tabler/icons-react';
 import { StatCard } from '../../components/shared/StatCard/StatCard';
+import { AppModal } from '../../components/shared/AppModal/AppModal';
 import { Select } from '../../components/shared/Select/Select';
 import type { SelectOption } from '../../components/shared/Select/Select';
 import { useApiQuery, useApiMutation, queryKeys } from '../../hooks/useApi';
@@ -303,15 +304,23 @@ export function CostsPage() {
         </div>
       </div>
 
-      {/* ── Edit Quota Modal ── */}
-      <Modal
+      <AppModal
         opened={editQuota !== null}
         onClose={() => setEditQuota(null)}
         title={t('costs:quota.editQuota')}
-        centered
+        footer={
+          <>
+            <Button variant="default" onClick={() => setEditQuota(null)}>
+              {t('common:actions.cancel')}
+            </Button>
+            <Button onClick={handleSaveQuota} loading={quotaMutation.isPending}>
+              {t('common:actions.save')}
+            </Button>
+          </>
+        }
       >
         {editQuota && (
-          <div>
+          <>
             <div className={classes.quotaTarget}>
               <IconGauge size={18} style={{ color: 'var(--mantine-color-dimmed)' }} />
               <div>
@@ -327,15 +336,11 @@ export function CostsPage() {
               onChange={(v) => setEditQuota({ ...editQuota, dailyLimit: Number(v) || 0 })}
               min={0}
               step={10000}
-              w="100%"
               mt="md"
             />
-            <Button fullWidth mt="lg" onClick={handleSaveQuota} size="md" loading={quotaMutation.isPending}>
-              {t('common:actions.save')}
-            </Button>
-          </div>
+          </>
         )}
-      </Modal>
+      </AppModal>
     </>
   );
 }

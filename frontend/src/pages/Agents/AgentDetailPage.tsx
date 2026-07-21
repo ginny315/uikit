@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Button, Tabs, Modal, Text, Tooltip, Center, Loader } from '@mantine/core';
+import { Button, Text, Tooltip, Center, Loader } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { useDisclosure } from '@mantine/hooks';
 import {
@@ -12,6 +12,8 @@ import { StatusBadge } from '../../components/shared/StatusBadge/StatusBadge';
 import { PriorityBadge } from '../../components/shared/PriorityBadge/PriorityBadge';
 import { PageHeader } from '../../components/shared/PageHeader/PageHeader';
 import type { BreadcrumbItem } from '../../components/shared/PageHeader/PageHeader';
+import { ConfirmModal } from '../../components/shared/ConfirmModal/ConfirmModal';
+import { AppTabs } from '../../components/shared/AppTabs/AppTabs';
 import type { AgentStatus } from '../../types';
 import { useApiQuery, useApiMutation, queryKeys } from '../../hooks/useApi';
 import { fetchAgent, updateAgent, deleteAgent } from '../../services/agents';
@@ -140,14 +142,13 @@ export function AgentDetailPage() {
         </Button>
       </PageHeader>
 
-      <div className={classes.tabsCard}>
-        <Tabs value={activeTab} onChange={setActiveTab}>
-          <Tabs.List>
-            <Tabs.Tab value="overview">{t('agents:detail.tabs.overview')}</Tabs.Tab>
-            <Tabs.Tab value="tasks">{tabTasksLabel}</Tabs.Tab>
-          </Tabs.List>
+      <AppTabs value={activeTab} onChange={setActiveTab}>
+          <AppTabs.List>
+            <AppTabs.Tab value="overview">{t('agents:detail.tabs.overview')}</AppTabs.Tab>
+            <AppTabs.Tab value="tasks">{tabTasksLabel}</AppTabs.Tab>
+          </AppTabs.List>
 
-          <Tabs.Panel value="overview">
+          <AppTabs.Panel value="overview">
             <div className={classes.tabContent}>
               <div className={classes.statsRow}>
                 <div className={classes.statMini}>
@@ -202,9 +203,9 @@ export function AgentDetailPage() {
                 <div className={classes.descriptionText}>{agent.description}</div>
               </div>
             </div>
-          </Tabs.Panel>
+          </AppTabs.Panel>
 
-          <Tabs.Panel value="tasks">
+          <AppTabs.Panel value="tasks">
             <div className={classes.tabContent}>
               <table className={classes.taskTable}>
                 <thead>
@@ -235,21 +236,20 @@ export function AgentDetailPage() {
                 </tbody>
               </table>
             </div>
-          </Tabs.Panel>
-        </Tabs>
-      </div>
+          </AppTabs.Panel>
+      </AppTabs>
 
-      <Modal opened={deleteOpened} onClose={closeDelete} title={t('agents:detail.deleteModal.title')} centered>
-        <Text size="sm" mb="md">
-          {t('agents:detail.deleteModal.message', { name: agent.name })}
-        </Text>
-        <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
-          <Button variant="subtle" color="gray" onClick={closeDelete}>{t('common:actions.cancel')}</Button>
-          <Button color="red" loading={deleteMutation.isPending} onClick={handleDeleteConfirm}>
-            {t('agents:detail.deleteModal.confirmBtn')}
-          </Button>
-        </div>
-      </Modal>
+      <ConfirmModal
+        opened={deleteOpened}
+        onClose={closeDelete}
+        title={t('agents:detail.deleteModal.title')}
+        message={t('agents:detail.deleteModal.message', { name: agent.name })}
+        target={{ icon: <IconTrash size={14} />, label: agent.name }}
+        confirmLabel={t('agents:detail.deleteModal.confirmBtn')}
+        cancelLabel={t('common:actions.cancel')}
+        confirmLoading={deleteMutation.isPending}
+        onConfirm={handleDeleteConfirm}
+      />
     </>
   );
 }

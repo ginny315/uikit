@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { TextInput, Button, ActionIcon, Tooltip, Badge, Pagination, Select, Modal, Text, Center, Loader } from '@mantine/core';
+import { TextInput, Button, ActionIcon, Tooltip, Badge, Pagination, Select, Center, Loader } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { useDisclosure } from '@mantine/hooks';
 import {
@@ -9,6 +9,7 @@ import {
   IconChevronUp, IconChevronDown, IconSelector,
 } from '@tabler/icons-react';
 import { StatusBadge } from '../../components/shared/StatusBadge/StatusBadge';
+import { ConfirmModal } from '../../components/shared/ConfirmModal/ConfirmModal';
 import type { Agent, AgentStatus } from '../../types';
 import { useApiQuery, useApiMutation, queryKeys } from '../../hooks/useApi';
 import { fetchAgents, deleteAgent } from '../../services/agents';
@@ -226,17 +227,17 @@ export function AgentListPage() {
         )}
       </div>
 
-      <Modal opened={deleteOpened} onClose={closeDelete} title={t('agents:detail.deleteModal.title')} centered>
-        <Text size="sm" mb="md">
-          {t('agents:detail.deleteModal.message', { name: deleteTarget?.name ?? '' })}
-        </Text>
-        <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
-          <Button variant="subtle" color="gray" onClick={closeDelete}>{t('common:actions.cancel')}</Button>
-          <Button color="red" loading={deleteMutation.isPending} onClick={handleDeleteConfirm}>
-            {t('agents:detail.deleteModal.confirmBtn')}
-          </Button>
-        </div>
-      </Modal>
+      <ConfirmModal
+        opened={deleteOpened}
+        onClose={closeDelete}
+        title={t('agents:detail.deleteModal.title')}
+        message={t('agents:detail.deleteModal.message', { name: deleteTarget?.name ?? '' })}
+        target={deleteTarget ? { icon: <IconTrash size={14} />, label: deleteTarget.name } : undefined}
+        confirmLabel={t('agents:detail.deleteModal.confirmBtn')}
+        cancelLabel={t('common:actions.cancel')}
+        confirmLoading={deleteMutation.isPending}
+        onConfirm={handleDeleteConfirm}
+      />
     </>
   );
 }

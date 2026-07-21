@@ -34,7 +34,7 @@ import {
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import {
-  Button, ActionIcon, Tooltip, Badge, Text, Modal, Center, Loader,
+  Button, ActionIcon, Tooltip, Badge, Text, Center, Loader,
 } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { useDisclosure } from '@mantine/hooks';
@@ -45,6 +45,7 @@ import {
   IconGitBranch,
 } from '@tabler/icons-react';
 import type { WorkflowDetail, WorkflowNode, WorkflowNodeData, WorkflowStatus } from '../../types';
+import { ConfirmModal } from '../../components/shared/ConfirmModal/ConfirmModal';
 import { useApiQuery, useApiMutation, queryKeys } from '../../hooks/useApi';
 import { fetchWorkflow, updateWorkflow } from '../../services/workflows';
 import { nodeTypes } from './nodes';
@@ -506,24 +507,18 @@ function WorkflowEditorInner({ detail, workflowId }: { detail: WorkflowDetail; w
         )}
       </div>
 
-      {/* ── 离开确认 Modal ── */}
-      <Modal opened={leaveOpened} onClose={closeLeave} title="未保存的更改" centered>
-        <Text size="sm" mb="md">{t('workflows:editor.unsavedChanges')}</Text>
-        <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
-          <Button variant="subtle" color="gray" onClick={closeLeave}>
-            {t('common:actions.cancel')}
-          </Button>
-          <Button
-            color="red"
-            onClick={() => {
-              closeLeave();
-              if (leaveTargetRef.current) navigate(leaveTargetRef.current);
-            }}
-          >
-            离开
-          </Button>
-        </div>
-      </Modal>
+      <ConfirmModal
+        opened={leaveOpened}
+        onClose={closeLeave}
+        title={t('workflows:editor.unsavedTitle', '未保存的更改')}
+        message={t('workflows:editor.unsavedChanges')}
+        confirmLabel={t('workflows:editor.leaveConfirm', '离开')}
+        cancelLabel={t('common:actions.cancel')}
+        onConfirm={() => {
+          closeLeave();
+          if (leaveTargetRef.current) navigate(leaveTargetRef.current);
+        }}
+      />
     </div>
   );
 }
