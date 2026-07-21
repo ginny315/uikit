@@ -16,67 +16,95 @@ agentSys/
 ├── docs/                          # 产品 & 技术文档
 │   ├── PRD.md                     # 产品需求文档
 │   ├── TECH_DESIGN.md             # 技术设计文档
-│   ├── DESIGN_SPEC.md             # 设计规范文档（token、组件、原则）
+│   ├── DESIGN_SPEC.md             # 设计规范（token、组件、原则）
+│   ├── FRONTEND_PLAN.md           # 前端架构决策（历史参考）
+│   ├── FRONTEND_BACKLOG.md        # 前端待办 & 进度（以这个为准）
 │   └── archive/
-│       └── llm-agent-manager-prd.md   # 原始合并版需求（仅历史参考）
+├── frontend/                      # React 管理后台（已实现 UI + MSW Mock）
+│   ├── src/
+│   │   ├── config.ts              # 环境开关（auth / mock / api）
+│   │   ├── pages/                 # Dashboard、Agents、Tasks、Workflows…
+│   │   ├── services/              # API 调用层
+│   │   └── mocks/                 # MSW handlers + mock 数据
+│   └── package.json
 ├── web/                           # 静态 HTML 原型 & 设计系统
-│   ├── index.html                 # Landing Page — Dark 主题营销页
-│   ├── agentsys_cn.html           # Landing Page — 中文版
-│   ├── dashboard.html             # Dashboard 原型 — Light 主题（完整页面）
-│   ├── design-system.html         # 设计系统组件库 — Token 参考 + Dashboard 业务组件
-│   └── ui-kit.html                # 基础 UI 组件库 — 23 类原子组件全状态展示
-├── scripts/                       # 工具脚本
-│   ├── create_ppt.js
-│   └── create_ppt_cn.js
-├── output/                        # 输出产物
-│   ├── AgentSys_PRD.pptx
-│   └── AgentSys_PRD_CN.pptx
-├── CLAUDE.md                      # Claude Code 项目指引
-├── .mcp.json                      # Figma MCP 连接配置
-└── README.md                      # 本文件
+│   ├── index.html                 # Landing Page — Dark 主题
+│   ├── dashboard.html             # Dashboard 原型 — Light 主题
+│   ├── design-system.html         # Dashboard 业务组件库
+│   └── ui-kit.html                # 原子 UI 组件库
+├── scripts/
+├── output/
+├── CLAUDE.md
+└── README.md
 ```
 
-## 🎨 设计系统 (2026-07-13)
+## 🚀 快速启动
 
-基于 `dashboard.html` (Light) 和 `index.html` (Dark) 提取的完整设计系统，分为三层：
+### 管理后台（React）
 
-| 文件 | 定位 | 内容 |
-|------|------|------|
-| **`docs/DESIGN_SPEC.md`** | 📐 设计规范文档 | 14 章 — 原则、双主题策略、色彩、字体、间距、圆角、阴影、边框、布局、10 个组件规范、图标、动画、响应式断点、已知问题 |
-| **`web/design-system.html`** | 🧩 Dashboard 业务组件 | Token 展示（色彩/字体/间距/圆角/阴影）+ Stat Cards、Charts(Bar+Latency)、Queue、Table、Status Badges、System Health、Navbar、Search、Buttons。Dark/Light 切换。 |
-| **`web/ui-kit.html`** | ⚛️ 基础 UI 原子组件 | 23 类组件，全部覆盖 default/focus/error/disabled 状态：Input、Textarea、Select、Checkbox、Radio、Toggle、Date/Color Picker、Slider、File Upload、Form Group、Form Layout、Breadcrumb、Tabs、Pagination、Steps、Tooltip、Toast、Modal、Dropdown Menu、Progress Bar、Skeleton、Empty State、Avatar、Chip/Tag、Badge、Kbd、Divider、Card、Buttons。Dark/Light 切换。 |
+```bash
+cd frontend
+npm install
+npm run dev
+# 默认 http://localhost:5173
+# Mock 模式：auth.enabled=false, mock.enabled=true（见 src/config.ts）
+```
 
-### 启动设计系统
+```bash
+npm run build   # 生产构建
+npm run lint    # Oxlint
+```
+
+### 静态原型 & 设计系统
 
 ```bash
 cd web && python3 -m http.server 8088
-# 打开 http://localhost:8088/ui-kit.html        → 基础组件
-# 打开 http://localhost:8088/design-system.html  → Dashboard 组件
-# 打开 http://localhost:8088/dashboard.html       → 完整页面预览
-# 打开 http://localhost:8088/index.html           → Landing Page
+# http://localhost:8088/index.html           → Landing Page
+# http://localhost:8088/dashboard.html       → Dashboard 原型
+# http://localhost:8088/design-system.html   → 业务组件
+# http://localhost:8088/ui-kit.html          → 原子组件
 ```
 
-### 设计原则
+## 🏗️ 当前进度（2026-07-21）
 
-- **双主题策略**: Landing Page 使用 Dark（营销冲击），Dashboard 使用 Light（长时间使用效率）
-- **8px 网格**: 所有间距基于 8px 基准
-- **CSS 变量驱动**: 全局 Token 通过 `:root` 自定义属性切换 Dark/Light
-- **三字体体系**: Space Grotesk（品牌/标题）、DM Sans（正文）、JetBrains Mono（代码/数据）
-- **品牌色**: 绿色系 `#16A34A` (Light) / `#22C55E` (Dark)
+| 模块 | 状态 |
+|------|------|
+| 产品 & 技术文档 | ✅ |
+| 静态 HTML 原型 / 设计系统 | ✅ |
+| **React 管理后台** | ✅ UI 完成，MSW Mock 联调，**等待后端** |
+| Go 后端微服务 | ❌ 未开始 |
 
-## 🏗️ 技术栈 (规划中)
+前端 P0 已完成：统一数据层（services + React Query + MSW）、生产构建通过、auth 逻辑修正。详见 [docs/FRONTEND_BACKLOG.md](./docs/FRONTEND_BACKLOG.md)。
 
-| 层 | 技术 |
-|----|------|
-| 后端 | Go 微服务 (gRPC + REST) |
-| 前端 | React + TypeScript + Tailwind CSS + shadcn/ui |
-| 数据 | PostgreSQL + Redis + ClickHouse |
-| 部署 | Docker Compose → Kubernetes |
-| 监控 | Prometheus + Grafana + Jaeger |
+## 🎨 设计系统
+
+| 文件 | 定位 |
+|------|------|
+| **`docs/DESIGN_SPEC.md`** | 设计规范文档 |
+| **`web/design-system.html`** | Dashboard 业务组件 + Token 展示 |
+| **`web/ui-kit.html`** | 23 类原子组件全状态展示 |
+| **`frontend/src/theme.ts`** | DESIGN_SPEC → Mantine 主题映射 |
+
+设计原则：Landing 用 Dark、Dashboard 用 Light；8px 网格；品牌色 `#16A34A` / `#22C55E`。
+
+## 🏗️ 技术栈
+
+| 层 | 技术 | 状态 |
+|----|------|------|
+| 后端 | Go 微服务 (gRPC + REST) | 规划中 |
+| 前端 | Vite + React 19 + TypeScript + **Mantine v9** + React Query + MSW + ReactFlow + i18next | **已实现** |
+| 数据 | PostgreSQL + Redis + ClickHouse | 规划中 |
+| 部署 | Docker Compose → Kubernetes | 规划中 |
+| 监控 | Prometheus + Grafana + Jaeger | 规划中 |
 
 ## 📖 文档
 
-- [**docs/PRD.md**](./docs/PRD.md) — 产品需求（给产品和设计看）
-- [**docs/TECH_DESIGN.md**](./docs/TECH_DESIGN.md) — 技术设计（给开发看）
-- [**docs/DESIGN_SPEC.md**](./docs/DESIGN_SPEC.md) — 设计规范（给设计和前端看）
-- [**CLAUDE.md**](./CLAUDE.md) — AI Agent 项目指引
+| 文档 | 说明 |
+|------|------|
+| [docs/PRD.md](./docs/PRD.md) | 产品需求 |
+| [docs/TECH_DESIGN.md](./docs/TECH_DESIGN.md) | 技术设计（后端架构、API） |
+| [docs/DESIGN_SPEC.md](./docs/DESIGN_SPEC.md) | 设计规范 |
+| [docs/FRONTEND_PLAN.md](./docs/FRONTEND_PLAN.md) | 前端架构决策 |
+| [docs/FRONTEND_BACKLOG.md](./docs/FRONTEND_BACKLOG.md) | 前端待办 & 进度 |
+| [frontend/README.md](./frontend/README.md) | 前端开发指引 |
+| [CLAUDE.md](./CLAUDE.md) | AI Agent 项目指引 |

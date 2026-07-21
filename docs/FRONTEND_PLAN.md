@@ -1,8 +1,11 @@
 # AgentSys 前端实现计划
 
 **创建日期**: 2026-07-16
-**状态**: Session 1 进行中
+**最后更新**: 2026-07-21
+**状态**: Session 1–11 已完成；P0 数据层统一已完成（详见 [FRONTEND_BACKLOG.md](./FRONTEND_BACKLOG.md)）
 **决策者**: ginny
+
+> **进度跟踪请以 [FRONTEND_BACKLOG.md](./FRONTEND_BACKLOG.md) 为准。** 本文件保留架构决策与 Session 划分，作为历史参考。
 
 ---
 
@@ -10,7 +13,7 @@
 
 | 决策点 | 结论 | 原因 |
 |--------|------|------|
-| 组件库 | **Mantine v7** | 一人团队，需要组件完整度高、开箱即用，避免自研 Table/Select/DatePicker 等行为的 Bug 风险 |
+| 组件库 | **Mantine v9** | 一人团队，需要组件完整度高、开箱即用，避免自研 Table/Select/DatePicker 等行为的 Bug 风险 |
 | 样式方案 | **纯 Mantine theme，不用 Tailwind** | 集中式主题保证一致性；Mantine style props 覆盖大部分需求 |
 | CSS 类型 | CSS Modules + Mantine styles API | 模块化、无冲突、主题变量可访问 |
 | 工作模式 | **一次会话一个模块** | Context 有限，分治推进；git commit 作为跨会话持久记忆 |
@@ -21,17 +24,18 @@
 ## 1. 技术栈
 
 ```
-Vite + React + TypeScript
-Mantine v7                — 组件 (100+) + 主题 + hooks (50+)
+Vite + React 19 + TypeScript
+Mantine v9                — 组件 (100+) + 主题 + hooks (50+)
 @mantine/form + zod       — 表单 + 校验
 @mantine/charts           — 图表 (Recharts 封装)
 @mantine/notifications    — 通知系统
-@mantine/spotlight        — 命令面板
+@mantine/spotlight        — 命令面板（已安装，待接入）
 @tanstack/react-query     — 异步状态管理
 zustand                   — 客户端状态 (auth, theme, filters)
-React Router v6           — 路由
+React Router v7           — 路由
 ReactFlow                 — 工作流 DAG 编辑器
-MSW (Mock Service Worker) — Phase 1 Mock 数据
+MSW (Mock Service Worker) — Mock 数据（已接入全部页面）
+i18next                   — 国际化 (zh-CN / en-US)
 ```
 
 ---
