@@ -1,0 +1,83 @@
+{
+  "title": "访问控制",
+
+  "users": {
+    "title": "用户管理",
+    "inviteBtn": "邀请用户",
+    "columns": {
+      "name": "姓名",
+      "email": "邮箱",
+      "role": "角色",
+      "joinedAt": "加入时间",
+      "actions": "操作"
+    },
+    "roles": {
+      "admin": "管理员",
+      "member": "成员",
+      "viewer": "观察者"
+    },
+    "roleDesc": {
+      "admin": "完整读写权限，可管理用户和设置",
+      "member": "可创建和管理 Agent、任务、工作流",
+      "viewer": "仅可查看，不可修改"
+    },
+    "changeRole": "修改角色",
+    "roleChanged": "用户角色已更新",
+    "removeUser": "移除用户",
+    "removeConfirm": "确定要移除用户 {{name}} 吗？他们将失去所有项目访问权限。",
+    "userRemoved": "用户已移除"
+  },
+
+  "apiKeys": {
+    "title": "API Key",
+    "createBtn": "创建 API Key",
+    "columns": {
+      "name": "名称",
+      "prefix": "Key 前缀",
+      "createdAt": "创建时间",
+      "lastUsed": "最后使用",
+      "actions": "操作"
+    },
+    "create": {
+      "title": "创建 API Key",
+      "nameLabel": "Key 名称",
+      "namePlaceholder": "例如：生产环境、本地开发",
+      "submitBtn": "生成 Key",
+      "successMsg": "API Key 已创建",
+      "copyWarning": "请立即复制此 Key，关闭后将无法再次查看。",
+      "copied": "已复制到剪贴板"
+    },
+    "revoke": "吊销",
+    "revokeConfirm": "确定要吊销 Key \"{{name}}\" 吗？使用此 Key 的所有服务将立即失效。",
+    "revoked": "API Key 已吊销",
+    "never": "从未使用",
+    "today": "今天",
+    "yesterday": "昨天",
+    "daysAgo": "{{count}} 天前"
+  },
+
+  "auditLog": {
+    "title": "操作审计",
+    "columns": {
+      "timestamp": "时间",
+      "user": "用户",
+      "action": "操作",
+      "resource": "资源",
+      "detail": "详情",
+      "ip": "IP 地址"
+    },
+    "actions": {
+      "user_invited": "邀请用户",
+      "user_removed": "移除用户",
+      "role_changed": "修改角色",
+      "api_key_created": "创建 API Key",
+      "api_key_revoked": "吊销 API Key",
+      "webhook_created": "创建 Webhook",
+      "webhook_deleted": "删除 Webhook",
+      "agent_created": "创建 Agent",
+      "agent_deleted": "删除 Agent",
+      "task_created": "创建任务",
+      "task_cancelled": "取消任务"
+    }
+  }
+}

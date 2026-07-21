@@ -12,6 +12,9 @@ import logs from './locales/zh-CN/logs.json';
 import status from './locales/zh-CN/status.json';
 import validation from './locales/zh-CN/validation.json';
 import workflows from './locales/zh-CN/workflows.json';
+import costs from './locales/zh-CN/costs.json';
+import access from './locales/zh-CN/access.json';
+import webhooks from './locales/zh-CN/webhooks.json';
 
 const resources = {
   'zh-CN': {
@@ -25,6 +28,9 @@ const resources = {
     status,
     validation,
     workflows,
+    costs,
+    access,
+    webhooks,
   },
 };
 
@@ -36,7 +42,7 @@ i18n
     fallbackLng: 'zh-CN',
     lng: 'zh-CN', // 目前仅中文，后期由 detector 自动切换
     defaultNS: 'common',
-    ns: ['common', 'nav', 'auth', 'dashboard', 'agents', 'tasks', 'logs', 'status', 'validation', 'workflows'],
+    ns: ['common', 'nav', 'auth', 'dashboard', 'agents', 'tasks', 'logs', 'status', 'validation', 'workflows', 'costs', 'access', 'webhooks'],
     interpolation: {
       escapeValue: false, // React 已经处理 XSS
     },

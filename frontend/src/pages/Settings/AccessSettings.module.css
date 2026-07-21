@@ -1,0 +1,280 @@
+/* ════════════════════════════════════════════════════════════
+   Access Settings Page Styles
+   ════════════════════════════════════════════════════════════ */
+
+/* ── Header ── */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.75rem;
+  font-weight: 600;
+}
+
+.tabs {
+  /* Mantine Tabs wrapper */
+}
+
+/* ── Tabs Card ── */
+.tabsCard {
+  background: var(--mantine-color-body);
+  border: 1px solid var(--agentsys-card-border, rgba(0,0,0,0.06));
+  border-radius: var(--mantine-radius-lg);
+  overflow: hidden;
+}
+
+.tabsCard :global(.mantine-Tabs-list) {
+  padding: 0 16px;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+  gap: 4px;
+}
+
+.tabsCard :global(.mantine-Tabs-tab) {
+  font-size: 0.88rem;
+  font-weight: 500;
+  padding: 14px 20px;
+  color: var(--mantine-color-dimmed);
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  transition: color 150ms ease, border-color 150ms ease;
+}
+
+.tabsCard :global(.mantine-Tabs-tab:hover) {
+  color: var(--mantine-color-text);
+  background: transparent;
+}
+
+.tabsCard :global(.mantine-Tabs-tab[data-active]) {
+  color: var(--mantine-color-agentGreen-6);
+  border-bottom-color: var(--mantine-color-agentGreen-6);
+}
+
+.tabContent {
+  padding: 24px;
+}
+
+/* ── Per-tab section header ── */
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.sectionTitle {
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+/* ── Table ── */
+.tableWrap {
+  overflow-x: auto;
+}
+
+.tableWrap table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.tableWrap thead th {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--mantine-color-dimmed);
+  text-align: left;
+  padding: 8px 12px;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+  white-space: nowrap;
+}
+
+.tableWrap tbody td {
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(0,0,0,0.03);
+  white-space: nowrap;
+  font-size: 0.83rem;
+}
+
+.tableWrap tbody tr:hover {
+  background: rgba(0,0,0,0.02);
+}
+
+.nameCell {
+  font-weight: 500;
+}
+
+.monoCell {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+}
+
+.dateCell {
+  font-size: 0.82rem;
+  color: var(--mantine-color-dimmed);
+}
+
+.emptyCell {
+  text-align: center;
+  color: var(--mantine-color-dimmed);
+  padding: 32px !important;
+}
+
+.detailCell {
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 0.82rem;
+  color: var(--mantine-color-dimmed);
+}
+
+/* ── User Cell ── */
+.userCell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.userName {
+  font-weight: 500;
+}
+
+.avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667EEA, #764BA2);
+  color: #FFF;
+  font-size: 0.75rem;
+  font-weight: 700;
+  font-family: 'DM Sans', sans-serif;
+  letter-spacing: 0.02em;
+  flex-shrink: 0;
+}
+
+/* ── Action Buttons ── */
+.actionBtns {
+  display: flex;
+  gap: 4px;
+}
+
+/* ── API Key Modal ── */
+.keyWarning {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 14px 16px;
+  background: rgba(245,158,11,0.08);
+  border: 1px solid rgba(245,158,11,0.2);
+  border-radius: var(--mantine-radius-md);
+  font-size: 0.83rem;
+  color: #B45309;
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
+
+.keyWarning svg {
+  flex-shrink: 0;
+  margin-top: 1px;
+  color: #D97706;
+}
+
+.keyDisplay {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  background: #0F172A;
+  border: 1px solid rgba(0,0,0,0.15);
+  border-radius: var(--mantine-radius-md);
+  overflow: hidden;
+}
+
+.keyCode {
+  flex: 1;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  color: #4ADE80;
+  padding: 14px 16px;
+  word-break: break-all;
+  user-select: all;
+  line-height: 1.6;
+}
+
+.copyBtn {
+  flex-shrink: 0;
+  width: 44px;
+  height: auto;
+  border-radius: 0;
+  color: #94A3B8;
+  background: rgba(255,255,255,0.04);
+  border-left: 1px solid rgba(255,255,255,0.08);
+  transition: color 150ms ease, background 150ms ease;
+}
+
+.copyBtn:hover {
+  color: #F1F5F9;
+  background: rgba(255,255,255,0.08);
+}
+
+/* ── Role Change Modal ── */
+.roleTarget {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  background: var(--agentsys-page-bg, #F8F9FB);
+  border: 1px solid rgba(0,0,0,0.06);
+  border-radius: var(--mantine-radius-md);
+}
+
+.roleTargetName {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.roleTargetEmail {
+  font-size: 0.78rem;
+  color: var(--mantine-color-dimmed);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.roleTargetBadge {
+  margin-left: auto;
+}
+
+/* ════════════════════════════════════════════════════════════
+   Responsive
+   ════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .title {
+    font-size: 1.4rem;
+  }
+  .tabContent {
+    padding: 16px;
+  }
+  .sectionHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .tableWrap thead th,
+  .tableWrap tbody td {
+    padding: 8px;
+  }
+  .detailCell {
+    max-width: 120px;
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "title": "Webhook 配置",
+
+  "list": {
+    "createBtn": "创建 Webhook",
+    "empty": "暂无 Webhook。点击上方按钮创建第一个。",
+    "columns": {
+      "url": "URL",
+      "events": "订阅事件",
+      "status": "状态",
+      "createdAt": "创建时间",
+      "actions": "操作"
+    },
+    "enabled": "启用",
+    "disabled": "停用",
+    "toggleOn": "Webhook 已启用",
+    "toggleOff": "Webhook 已停用"
+  },
+
+  "create": {
+    "title": "创建 Webhook",
+    "urlLabel": "Webhook URL",
+    "urlPlaceholder": "https://example.com/webhook",
+    "urlDesc": "任务事件发生时将向此 URL 发送 POST 请求。",
+    "eventsLabel": "订阅事件",
+    "eventsDesc": "选择要接收通知的事件类型。",
+    "secretLabel": "签名密钥 (可选)",
+    "secretPlaceholder": "用于验证请求来源的密钥",
+    "secretDesc": "设置后，每个请求将包含 X-AgentSys-Signature 头部用于验证。",
+    "submitBtn": "创建 Webhook",
+    "successMsg": "Webhook 已创建",
+    "noEventsFound": "没有匹配的事件"
+  },
+
+  "edit": {
+    "title": "编辑 Webhook",
+    "saveBtn": "保存修改",
+    "savedMsg": "Webhook 已更新"
+  },
+
+  "events": {
+    "task.completed": "任务完成",
+    "task.failed": "任务失败",
+    "agent.started": "Agent 启动",
+    "agent.stopped": "Agent 停止"
+  },
+
+  "delete": {
+    "confirmTitle": "删除 Webhook",
+    "confirmMsg": "确定要删除此 Webhook 吗？此操作不可撤销。",
+    "successMsg": "Webhook 已删除"
+  },
+
+  "test": {
+    "btn": "测试",
+    "title": "发送测试请求",
+    "desc": "将向 Webhook URL 发送模拟事件数据。",
+    "successMsg": "测试请求已发送",
+    "errorMsg": "测试请求失败，请检查 URL 是否正确。"
+  }
+}

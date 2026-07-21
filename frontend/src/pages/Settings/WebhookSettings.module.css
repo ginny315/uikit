@@ -1,0 +1,168 @@
+/* ════════════════════════════════════════════════════════════
+   Webhook Settings Page Styles
+   ════════════════════════════════════════════════════════════ */
+
+/* ── Header ── */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.75rem;
+  font-weight: 600;
+}
+
+/* ── Section ── */
+.section {
+  background: var(--mantine-color-body);
+  border: 1px solid var(--agentsys-card-border, rgba(0,0,0,0.06));
+  border-radius: var(--mantine-radius-lg);
+  padding: 22px 24px;
+  overflow: hidden;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.sectionTitle {
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+/* ── Table ── */
+.tableWrap {
+  overflow-x: auto;
+}
+
+.tableWrap table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.tableWrap thead th {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--mantine-color-dimmed);
+  text-align: left;
+  padding: 8px 12px;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+  white-space: nowrap;
+}
+
+.tableWrap tbody td {
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(0,0,0,0.03);
+  white-space: nowrap;
+  font-size: 0.83rem;
+  vertical-align: middle;
+}
+
+.tableWrap tbody tr:hover {
+  background: rgba(0,0,0,0.02);
+}
+
+.emptyCell {
+  text-align: center;
+  color: var(--mantine-color-dimmed);
+  padding: 32px !important;
+}
+
+.dateCell {
+  font-size: 0.82rem;
+  color: var(--mantine-color-dimmed);
+}
+
+/* ── URL Cell ── */
+.urlCell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 280px;
+}
+
+.urlIcon {
+  flex-shrink: 0;
+  color: var(--mantine-color-dimmed);
+}
+
+.urlText {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.76rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── Events Cell ── */
+.eventsCell {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  max-width: 200px;
+}
+
+/* ── Status ── */
+.statusLabel {
+  font-size: 0.78rem;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+
+.enabledLabel {
+  color: #16A34A;
+  font-weight: 500;
+}
+
+.disabledLabel {
+  color: var(--mantine-color-dimmed);
+}
+
+/* ── Action Buttons ── */
+.actionBtns {
+  display: flex;
+  gap: 2px;
+  flex-wrap: wrap;
+}
+
+/* ════════════════════════════════════════════════════════════
+   Responsive
+   ════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .title {
+    font-size: 1.4rem;
+  }
+  .section {
+    padding: 16px;
+  }
+  .sectionHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .tableWrap thead th,
+  .tableWrap tbody td {
+    padding: 8px;
+  }
+  .urlCell {
+    max-width: 180px;
+  }
+  .actionBtns {
+    flex-direction: column;
+  }
+}

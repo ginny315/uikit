@@ -1,0 +1,49 @@
+{
+  "title": "成本管理",
+
+  "stats": {
+    "todayCost": "今日成本",
+    "weekCost": "本周成本",
+    "monthCost": "本月成本",
+    "todayTokens": "今日 Token",
+    "avgCostPerTask": "平均任务成本",
+    "projectedMonth": "预估月成本"
+  },
+
+  "breakdown": {
+    "title": "成本分析",
+    "byAgent": "按 Agent",
+    "byUser": "按用户",
+    "byDay": "按日期",
+    "agent": "Agent",
+    "user": "用户",
+    "cost": "费用",
+    "tokens": "Token",
+    "tasks": "任务数",
+    "percentage": "占比"
+  },
+
+  "quota": {
+    "title": "配额管理",
+    "agent": "Agent",
+    "dailyLimit": "每日限额 (Token)",
+    "used": "已用",
+    "remaining": "剩余",
+    "usage": "使用率",
+    "editQuota": "编辑配额",
+    "quotaSaved": "配额已更新",
+    "unlimited": "不限"
+  },
+
+  "alerts": {
+    "title": "成本预警",
+    "enabled": "已启用",
+    "disabled": "已关闭",
+    "threshold": "预警阈值",
+    "dailyThreshold": "每日费用阈值 ($)",
+    "weeklyThreshold": "每周费用阈值 ($)",
+    "email": "通知邮箱",
+    "saveAlert": "保存预警规则",
+    "alertSaved": "预警规则已保存"
+  }
+}

@@ -1,0 +1,338 @@
+/* ════════════════════════════════════════════════════════════
+   Costs Page Styles
+   ════════════════════════════════════════════════════════════ */
+
+/* ── Header ── */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.75rem;
+  font-weight: 600;
+}
+
+/* ── Stats Row ── */
+.statsRow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin-bottom: 28px;
+}
+
+/* ── Charts Row ── */
+.chartsRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  margin-bottom: 28px;
+}
+
+.chartCard {
+  background: var(--mantine-color-body);
+  border: 1px solid var(--agentsys-card-border, rgba(0,0,0,0.06));
+  border-radius: var(--mantine-radius-lg);
+  padding: 22px 24px;
+  overflow: hidden;
+}
+
+.chartHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.chartTitle {
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+/* ── Table ── */
+.tableWrap {
+  overflow-x: auto;
+}
+
+.tableWrap table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.tableWrap thead th {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--mantine-color-dimmed);
+  text-align: left;
+  padding: 8px 12px;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+  white-space: nowrap;
+}
+
+.tableWrap tbody td {
+  padding: 9px 12px;
+  border-bottom: 1px solid rgba(0,0,0,0.03);
+  white-space: nowrap;
+  font-size: 0.83rem;
+}
+
+.tableWrap tbody tr:hover {
+  background: rgba(0,0,0,0.02);
+}
+
+.nameCell {
+  font-weight: 500;
+}
+
+.monoCell {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+}
+
+/* ── Percentage bars (cost breakdown) ── */
+.pctCell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 100px;
+}
+
+.pctBar {
+  height: 6px;
+  background: linear-gradient(90deg, #F59E0B, #D97706);
+  border-radius: 3px;
+  min-width: 4px;
+  transition: width 400ms ease;
+}
+
+.pctText {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--mantine-color-dimmed);
+  flex-shrink: 0;
+}
+
+/* ── CSS Bar Chart (Daily Trend) ── */
+.barChart {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  height: 180px;
+  padding: 0 4px;
+}
+
+.barCol {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  height: 100%;
+  justify-content: flex-end;
+}
+
+.bar {
+  width: 100%;
+  max-width: 48px;
+  border-radius: 6px 6px 0 0;
+  background: linear-gradient(180deg, #FBBF24, #D97706);
+  transition: filter 200ms ease;
+  cursor: pointer;
+}
+
+.bar:hover {
+  filter: brightness(1.3);
+}
+
+.barLabel {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--mantine-color-dimmed);
+}
+
+.barValue {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: #D97706;
+}
+
+/* ── Section (Quota / Alerts) ── */
+.section {
+  background: var(--mantine-color-body);
+  border: 1px solid var(--agentsys-card-border, rgba(0,0,0,0.06));
+  border-radius: var(--mantine-radius-lg);
+  padding: 22px 24px;
+  margin-bottom: 28px;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.sectionTitle {
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+/* ── Usage Bar (Quota) ── */
+.usageBar {
+  position: relative;
+  height: 22px;
+  background: rgba(0,0,0,0.04);
+  border-radius: 4px;
+  overflow: hidden;
+  min-width: 120px;
+}
+
+.usageFill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 400ms ease;
+}
+
+.usageNormal {
+  background: linear-gradient(90deg, #86EFAC, #22C55E);
+}
+
+.usageHigh {
+  background: linear-gradient(90deg, #FCA5A5, #EF4444);
+}
+
+.usageText {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+.usageTextHigh {
+  color: #991B1B;
+}
+
+/* ── Quota Modal ── */
+.quotaTarget {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  background: var(--agentsys-page-bg, #F8F9FB);
+  border: 1px solid rgba(0,0,0,0.06);
+  border-radius: var(--mantine-radius-md);
+}
+
+.quotaTargetName {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.quotaTargetUsage {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--mantine-color-dimmed);
+  margin-top: 2px;
+}
+
+/* ── Alert Config ── */
+.alertStatus {
+  font-size: 0.78rem;
+  font-weight: 500;
+  padding: 3px 10px;
+  border-radius: 100px;
+}
+
+.alertOn {
+  color: #16A34A;
+  background: rgba(34,197,94,0.1);
+}
+
+.alertOff {
+  color: var(--mantine-color-dimmed);
+  background: rgba(0,0,0,0.04);
+}
+
+.alertForm {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.alertFields {
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+/* ════════════════════════════════════════════════════════════
+   Responsive
+   ════════════════════════════════════════════════════════════ */
+@media (max-width: 1400px) {
+  .statsRow {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 1200px) {
+  .chartsRow {
+    grid-template-columns: 1fr;
+  }
+  .statsRow {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .title {
+    font-size: 1.4rem;
+  }
+  .statsRow {
+    grid-template-columns: 1fr;
+  }
+  .chartCard,
+  .section {
+    padding: 16px;
+  }
+  .chartHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .barChart {
+    gap: 8px;
+    height: 130px;
+  }
+  .alertFields {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .tableWrap thead th,
+  .tableWrap tbody td {
+    padding: 8px;
+  }
+}
+
+@media (max-width: 640px) {
+  .statsRow {
+    grid-template-columns: 1fr;
+  }
+}
