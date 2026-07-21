@@ -55,3 +55,24 @@ export function fetchRecentTasks(limit = 5): Promise<Task[]> {
     (res) => res.data,
   );
 }
+
+export interface ThroughputBucket {
+  label: string;
+  count: number;
+}
+
+export interface LatencyBucket {
+  label: string;
+  count: number;
+  variant: 'fast' | 'mid' | 'slow' | 'tail';
+}
+
+export function fetchTaskThroughput(range = 'today'): Promise<ThroughputBucket[]> {
+  const sp = new URLSearchParams({ range });
+  return apiGet<ThroughputBucket[]>(`/api/v1/metrics/throughput?${sp}`);
+}
+
+export function fetchLatencyDistribution(range = 'all'): Promise<LatencyBucket[]> {
+  const sp = new URLSearchParams({ range });
+  return apiGet<LatencyBucket[]>(`/api/v1/metrics/latency?${sp}`);
+}

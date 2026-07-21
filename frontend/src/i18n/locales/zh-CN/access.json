@@ -4,6 +4,14 @@
   "users": {
     "title": "用户管理",
     "inviteBtn": "邀请用户",
+    "invite": {
+      "title": "邀请用户",
+      "emailLabel": "邮箱地址",
+      "emailPlaceholder": "user@example.com",
+      "roleLabel": "角色",
+      "submitBtn": "发送邀请",
+      "successMsg": "邀请已发送至 {{email}}"
+    },
     "columns": {
       "name": "姓名",
       "email": "邮箱",

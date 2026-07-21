@@ -15,6 +15,7 @@ import { StatusBadge } from '../../components/shared/StatusBadge/StatusBadge';
 import { PriorityBadge } from '../../components/shared/PriorityBadge/PriorityBadge';
 import type { Task, TaskStatus, TaskPriority } from '../../types';
 import { useApiQuery, useApiMutation, queryKeys } from '../../hooks/useApi';
+import { useRealtimeInterval } from '../../hooks/useRealtime';
 import { fetchTasks, createTask, cancelTask } from '../../services/tasks';
 import { fetchAgents } from '../../services/agents';
 import { formatDuration } from '../../lib/format';
@@ -72,9 +73,12 @@ export function TaskListPage() {
     pageSize,
   }), [search, statusFilter, priorityFilter, sortField, sortDir, page, pageSize]);
 
+  const refetchInterval = useRealtimeInterval();
+
   const { data, isLoading } = useApiQuery(
     queryKeys.tasks.list(listParams),
     () => fetchTasks(listParams),
+    { refetchInterval },
   );
 
   const { data: agentsData } = useApiQuery(

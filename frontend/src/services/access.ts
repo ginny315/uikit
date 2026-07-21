@@ -27,6 +27,10 @@ export function removeUser(userId: string): Promise<void> {
   return apiDelete<void>(`/api/v1/users/${userId}`);
 }
 
+export function inviteUser(email: string, role: string): Promise<User> {
+  return apiPost<User>('/api/v1/users/invite', { email, role });
+}
+
 // ── API Keys ──
 export function fetchApiKeys(): Promise<ApiKey[]> {
   return apiGet<ApiKey[]>('/api/v1/api-keys');

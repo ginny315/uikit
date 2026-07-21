@@ -1,6 +1,6 @@
 # AgentSys 前端待办清单
 
-**最后更新**: 2026-07-21 · **P0 已完成**（commit `8db13c7`）
+**最后更新**: 2026-07-21 · **P0 已完成**（commit `8db13c7`）· **P1 功能缺口已完成**
 **关联**: [FRONTEND_PLAN.md](./FRONTEND_PLAN.md) · [PRD.md](./PRD.md) · [DESIGN_SPEC.md](./DESIGN_SPEC.md) · [TECH_DESIGN.md](./TECH_DESIGN.md)
 
 ---
@@ -11,6 +11,7 @@
 |------|------|
 | 12 个路由页面 UI | ✅ |
 | 数据层（services + React Query + MSW） | ✅ |
+| P1 功能闭环（编辑/重试/邀请/图表/轮询/env） | ✅ |
 | `npm run build` / `npm run lint` | ✅ |
 | 测试 / CI | ❌ |
 | 后端联调 | ⏸ 等待后端 + OpenAPI |
@@ -28,30 +29,32 @@
 
 </details>
 
+<details>
+<summary>P1 功能缺口已完成（点击展开）</summary>
+
+- Agent 编辑：Create 页 `?edit=id` 模式，预填 + `updateAgent`
+- 任务重试：`retryTask` service + MSW + TaskDetail 接线
+- 用户邀请：邀请 Modal + `inviteUser` + MSW
+- Dashboard 图表：吞吐量/延迟接 API（`/metrics/throughput`、`/metrics/latency`）
+- `useRealtime` hook：Dashboard / TaskList 按 `config.realtime.pollingInterval` 轮询
+- `.env` 注入 + `config.ts` 读取 `VITE_*` 环境变量
+- 清理 legacy `mocks/agents.ts` 等 4 个 re-export 文件
+
+</details>
+
 ---
 
-## P1 — 下一步（MVP 闭环）
-
-### 功能缺口
-
-- [ ] **Agent 编辑**：详情页「编辑」仍跳转 create 页，需接通 `updateAgent` 或独立编辑表单
-- [ ] **任务重试**：TaskDetail 重试按钮仅 toast，需接 API
-- [ ] **邀请用户**：Access 页如有入口，接 MSW/API
-- [ ] **Dashboard 图表**：吞吐量 / 延迟仍为静态 CSS，接 API 或 `@mantine/charts`
-- [ ] **登录流程验收**：`auth.enabled=true` 下端到端（含 Remember me）
-
-### 实时数据
-
-- [ ] 实现 `useRealtime` hook（读 `config.realtime`）
-- [ ] Polling：Dashboard / TaskList 按 `pollingInterval` 自动 refetch
-- [ ] WebSocket：预留 `wsUrl` + invalidate（后端就绪后）
+## P1 — 剩余（MVP 闭环）
 
 ### 后端联调准备
 
 - [ ] 产出 `openapi.yaml`（对照 TECH_DESIGN §4）
 - [ ] 引入 `openapi-typescript` 替换手写 `types/`
-- [ ] `.env` 注入 `VITE_API_BASE_URL`，`config.ts` 读取环境变量
-- [ ] 清理遗留 `mocks/agents.ts` 等独立文件（改为 re-export 或删除）
+- [ ] **登录流程验收**：`auth.enabled=true` 下端到端（含 Remember me）
+
+### 实时数据（进阶）
+
+- [ ] WebSocket：完善 `useRealtimeInvalidation` 消息协议（后端就绪后）
 
 ---
 
@@ -90,6 +93,8 @@
 | Mock 模式下完整用户流程（Agent → Task → 日志 → Dashboard） | ✅ |
 | `npm run build` 成功 | ✅ |
 | 数据全走 services 层 | ✅ |
+| Agent 编辑 / 任务重试 / 用户邀请 | ✅ |
+| Dashboard 实时轮询 + API 图表 | ✅ |
 | `auth.enabled=true` 登录流程 | ⬜ |
 | 真实 API 联调 | ⬜ 等后端 |
 
@@ -99,5 +104,6 @@
 
 | 日期 | 变更 |
 |------|------|
+| 2026-07-21 | P1 功能缺口完成：编辑/重试/邀请/图表/useRealtime/env/清理 mocks |
 | 2026-07-21 | 精简文档：P0 折叠，删除已完成 checklist |
 | 2026-07-21 | P0 完成 + 文档同步 |

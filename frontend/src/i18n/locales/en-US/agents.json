@@ -39,12 +39,19 @@
     "toolsDesc": "Choose which tools and integrations this agent can invoke",
     "submitBtn": "Create Agent",
     "cancelBtn": "Cancel",
+    "successMsg": "Agent \"{{name}}\" created successfully",
     "providerOptions": {
       "anthropic": "Anthropic (Claude)",
       "openai": "OpenAI (GPT)",
       "ollama": "Ollama (Local)",
       "vllm": "vLLM (Local)"
     }
+  },
+
+  "edit": {
+    "title": "Edit Agent",
+    "submitBtn": "Save Changes",
+    "successMsg": "Agent \"{{name}}\" updated successfully"
   },
 
   "detail": {

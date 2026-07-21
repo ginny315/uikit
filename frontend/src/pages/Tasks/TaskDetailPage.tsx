@@ -10,7 +10,7 @@ import { PageHeader } from '../../components/shared/PageHeader/PageHeader';
 import type { BreadcrumbItem } from '../../components/shared/PageHeader/PageHeader';
 import type { TaskTimelineEvent } from '../../types';
 import { useApiQuery, useApiMutation, queryKeys } from '../../hooks/useApi';
-import { fetchTask, fetchTaskTimeline, cancelTask } from '../../services/tasks';
+import { fetchTask, fetchTaskTimeline, cancelTask, retryTask } from '../../services/tasks';
 import { formatDuration } from '../../lib/format';
 import classes from './TaskDetail.module.css';
 
@@ -44,6 +44,7 @@ export function TaskDetailPage() {
   );
 
   const cancelMutation = useApiMutation(queryKeys.tasks.all, () => cancelTask(id!));
+  const retryMutation = useApiMutation(queryKeys.tasks.all, () => retryTask(id!));
 
   if (isLoading) {
     return <Center h="60vh"><Loader size="md" /></Center>;
@@ -81,7 +82,11 @@ export function TaskDetailPage() {
   }
 
   function handleRetry() {
-    notifications.show({ message: t('tasks:detail.retryMsg', { id: taskId }), color: 'green', withCloseButton: true });
+    retryMutation.mutate(undefined, {
+      onSuccess: () => {
+        notifications.show({ message: t('tasks:detail.retryMsg', { id: taskId }), color: 'green', withCloseButton: true });
+      },
+    });
   }
 
   return (
@@ -95,7 +100,7 @@ export function TaskDetailPage() {
           </Button>
         )}
         {isRetryable && (
-          <Button variant="light" color="agentGreen" size="sm" leftSection={<IconRefresh size={14} />} onClick={handleRetry}>
+          <Button variant="light" color="agentGreen" size="sm" leftSection={<IconRefresh size={14} />} loading={retryMutation.isPending} onClick={handleRetry}>
             {t('tasks:detail.retryBtn')}
           </Button>
         )}

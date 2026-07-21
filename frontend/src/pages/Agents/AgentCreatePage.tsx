@@ -1,16 +1,16 @@
-import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
-  Button, TextInput, Textarea, Select, NumberInput, MultiSelect, Text,
+  Button, TextInput, Textarea, Select, NumberInput, MultiSelect, Text, Center, Loader,
 } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { useForm } from '@mantine/form';
 import { IconDeviceFloppy, IconX } from '@tabler/icons-react';
 import { PageHeader } from '../../components/shared/PageHeader/PageHeader';
 import type { BreadcrumbItem } from '../../components/shared/PageHeader/PageHeader';
-import { useApiMutation, queryKeys } from '../../hooks/useApi';
-import { createAgent } from '../../services/agents';
+import { useApiQuery, useApiMutation, queryKeys } from '../../hooks/useApi';
+import { fetchAgent, createAgent, updateAgent } from '../../services/agents';
 import classes from './AgentCreate.module.css';
 
 const TOOL_OPTIONS = [
@@ -40,10 +40,28 @@ const MODEL_OPTIONS: Record<string, string[]> = {
   vllm: ['llama3.1:8b', 'llama3.1:70b', 'mixtral:8x7b'],
 };
 
+function normalizeProvider(provider: string): string {
+  const lower = provider.toLowerCase();
+  if (lower.includes('anthropic')) return 'anthropic';
+  if (lower.includes('openai')) return 'openai';
+  if (lower.includes('ollama')) return 'ollama';
+  if (lower.includes('vllm')) return 'vllm';
+  return 'anthropic';
+}
+
 export function AgentCreatePage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const editId = searchParams.get('edit');
+  const isEditMode = !!editId;
   const [triedSubmit, setTriedSubmit] = useState(false);
+
+  const { data: existingAgent, isLoading: agentLoading } = useApiQuery(
+    queryKeys.agents.detail(editId ?? ''),
+    () => fetchAgent(editId!),
+    { enabled: isEditMode },
+  );
 
   const PROVIDER_OPTIONS = [
     { value: 'anthropic', label: t('agents:create.providerOptions.anthropic') },
@@ -64,8 +82,8 @@ export function AgentCreatePage() {
     validate: {
       name: (value) => {
         if (!value.trim()) return t('validation:nameRequired');
-        if (value.trim().length < 2) return t('validation:nameMinLength');
-        if (!/^[a-zA-Z0-9_-]+$/.test(value.trim())) return t('validation:nameFormat');
+        if (!isEditMode && value.trim().length < 2) return t('validation:nameMinLength');
+        if (!isEditMode && !/^[a-zA-Z0-9_-]+$/.test(value.trim())) return t('validation:nameFormat');
         return null;
       },
       description: (value) => {
@@ -86,29 +104,54 @@ export function AgentCreatePage() {
     }),
   });
 
+  useEffect(() => {
+    if (!existingAgent) return;
+    form.setValues({
+      name: existingAgent.name,
+      description: existingAgent.description,
+      provider: normalizeProvider(existingAgent.llmProvider),
+      model: existingAgent.llmModel,
+      tools: existingAgent.tools,
+      dailyTokenQuota: existingAgent.dailyTokenQuota,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- 仅在加载 agent 时预填一次
+  }, [existingAgent]);
+
   const selectedProvider = form.values.provider;
+  const pageTitle = isEditMode ? t('agents:edit.title') : t('agents:create.title');
   const breadcrumbs: BreadcrumbItem[] = [
     { label: t('nav:pageTitles./agents'), path: '/agents' },
-    { label: t('agents:create.title') },
+    ...(isEditMode && existingAgent
+      ? [{ label: existingAgent.name, path: `/agents/${editId}` }, { label: pageTitle }]
+      : [{ label: pageTitle }]),
   ];
 
-  const createMutation = useApiMutation(queryKeys.agents.all, (values: typeof form.values) =>
-    createAgent({
-      name: values.name,
+  const saveMutation = useApiMutation(queryKeys.agents.all, (values: typeof form.values) => {
+    const payload = {
       description: values.description,
       llmProvider: values.provider,
       llmModel: values.model,
       tools: values.tools,
       dailyTokenQuota: values.dailyTokenQuota,
-    }),
-  );
+    };
+    if (isEditMode) {
+      return updateAgent(editId!, payload);
+    }
+    return createAgent({
+      name: values.name,
+      ...payload,
+    });
+  });
 
   function handleSubmit(values: typeof form.values) {
     setTriedSubmit(false);
-    createMutation.mutate(values, {
+    saveMutation.mutate(values, {
       onSuccess: () => {
-        notifications.show({ message: `Agent "${values.name}" 创建成功`, color: 'green', withCloseButton: true });
-        navigate('/agents');
+        const msg = isEditMode
+          ? t('agents:edit.successMsg', { name: values.name })
+          : t('agents:create.successMsg', { name: values.name });
+        notifications.show({ message: msg, color: 'green', withCloseButton: true });
+        navigate(isEditMode ? `/agents/${editId}` : '/agents');
       },
     });
   }
@@ -117,9 +160,13 @@ export function AgentCreatePage() {
     setTriedSubmit(true);
   }
 
+  if (isEditMode && agentLoading) {
+    return <Center h="60vh"><Loader size="md" /></Center>;
+  }
+
   return (
     <>
-      <PageHeader breadcrumbs={breadcrumbs} title={t('agents:create.title')} />
+      <PageHeader breadcrumbs={breadcrumbs} title={pageTitle} />
 
       <div className={classes.formCard}>
         <form onSubmit={form.onSubmit(handleSubmit, handleValidationError)}>
@@ -129,6 +176,7 @@ export function AgentCreatePage() {
               placeholder={t('agents:create.namePlaceholder')}
               description={t('agents:create.nameDesc')}
               withAsterisk
+              disabled={isEditMode}
               inputWrapperOrder={['label', 'input', 'description', 'error']}
               {...form.getInputProps('name')}
             />
@@ -191,10 +239,15 @@ export function AgentCreatePage() {
           </div>
 
           <div className={classes.formActions}>
-            <Button type="submit" leftSection={<IconDeviceFloppy size={16} />} loading={createMutation.isPending}>
-              {t('agents:create.submitBtn')}
+            <Button type="submit" leftSection={<IconDeviceFloppy size={16} />} loading={saveMutation.isPending}>
+              {isEditMode ? t('agents:edit.submitBtn') : t('agents:create.submitBtn')}
             </Button>
-            <Button variant="subtle" color="gray" leftSection={<IconX size={16} />} onClick={() => navigate('/agents')}>
+            <Button
+              variant="subtle"
+              color="gray"
+              leftSection={<IconX size={16} />}
+              onClick={() => navigate(isEditMode ? `/agents/${editId}` : '/agents')}
+            >
               {t('agents:create.cancelBtn')}
             </Button>
             {!form.isValid() && triedSubmit && (

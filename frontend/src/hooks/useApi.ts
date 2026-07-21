@@ -72,6 +72,8 @@ export const queryKeys = {
     queue: ['metrics', 'queue'] as const,
     health: ['metrics', 'health'] as const,
     services: ['metrics', 'services'] as const,
+    throughput: (range?: string) => ['metrics', 'throughput', range] as const,
+    latency: (range?: string) => ['metrics', 'latency', range] as const,
   },
   logs: {
     all: ['logs'] as const,

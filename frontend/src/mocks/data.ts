@@ -1,9 +1,7 @@
 /**
  * 中心化 Mock 数据库
  *
- * Session 9: 所有 mock 数据统一从此文件导出。
- * MSW handlers 和旧的 mocks/*.ts 文件都引用同一份数据，
- * 页面迁移完成后清理旧的独立 mock 文件。
+ * Session 9: 所有 mock 数据统一从此文件导出，MSW handlers 直接引用。
  */
 
 import type {
@@ -354,6 +352,52 @@ export const dbServiceHealth = [
   { name: 'Metrics Service', status: 'healthy' as const, uptime: '14d', latency: '8ms' },
   { name: 'Log Service', status: 'healthy' as const, uptime: '14d', latency: '6ms' },
   { name: 'Webhook Service', status: 'healthy' as const, uptime: '14d', latency: '5ms' },
+];
+
+export interface ThroughputBucket {
+  label: string;
+  count: number;
+}
+
+export interface LatencyBucket {
+  label: string;
+  count: number;
+  variant: 'fast' | 'mid' | 'slow' | 'tail';
+}
+
+export const dbThroughputByRange: Record<string, ThroughputBucket[]> = {
+  today: [
+    { label: '00:00', count: 45 },
+    { label: '03:00', count: 30 },
+    { label: '06:00', count: 65 },
+    { label: '09:00', count: 88 },
+    { label: '12:00', count: 95 },
+    { label: '15:00', count: 72 },
+    { label: '18:00', count: 58 },
+    { label: '21:00', count: 40 },
+  ],
+  week: [
+    { label: 'Mon', count: 820 },
+    { label: 'Tue', count: 910 },
+    { label: 'Wed', count: 780 },
+    { label: 'Thu', count: 950 },
+    { label: 'Fri', count: 870 },
+    { label: 'Sat', count: 420 },
+    { label: 'Sun', count: 380 },
+  ],
+  month: [
+    { label: 'W1', count: 4200 },
+    { label: 'W2', count: 5100 },
+    { label: 'W3', count: 4800 },
+    { label: 'W4', count: 5300 },
+  ],
+};
+
+export const dbLatencyDistribution: LatencyBucket[] = [
+  { label: '<100ms', count: 774, variant: 'fast' },
+  { label: '100-500ms', count: 299, variant: 'mid' },
+  { label: '500ms-2s', count: 125, variant: 'slow' },
+  { label: '>2s', count: 49, variant: 'tail' },
 ];
 
 export interface AuditLogEntry {

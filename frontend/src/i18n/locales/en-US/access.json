@@ -4,6 +4,14 @@
   "users": {
     "title": "User Management",
     "inviteBtn": "Invite User",
+    "invite": {
+      "title": "Invite User",
+      "emailLabel": "Email Address",
+      "emailPlaceholder": "user@example.com",
+      "roleLabel": "Role",
+      "submitBtn": "Send Invite",
+      "successMsg": "Invitation sent to {{email}}"
+    },
     "columns": {
       "name": "Name",
       "email": "Email",

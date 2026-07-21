@@ -16,32 +16,17 @@ import { StatusBadge } from '../../components/shared/StatusBadge/StatusBadge';
 import { Select } from '../../components/shared/Select/Select';
 import type { SelectOption } from '../../components/shared/Select/Select';
 import { useApiQuery, queryKeys } from '../../hooks/useApi';
+import { useRealtimeInterval } from '../../hooks/useRealtime';
 import {
   fetchDashboardMetrics,
   fetchQueueStatus,
   fetchServiceHealth,
   fetchRecentTasks,
+  fetchTaskThroughput,
+  fetchLatencyDistribution,
 } from '../../services/dashboard';
 import { formatTokens } from '../../lib/format';
 import classes from './Dashboard.module.css';
-
-const THROUGHPUT_BARS = [
-  { label: '00:00', height: 45 },
-  { label: '03:00', height: 30 },
-  { label: '06:00', height: 65 },
-  { label: '09:00', height: 88 },
-  { label: '12:00', height: 95 },
-  { label: '15:00', height: 72 },
-  { label: '18:00', height: 58 },
-  { label: '21:00', height: 40 },
-];
-
-const LATENCY_DATA = [
-  { label: '<100ms', width: 62, count: 774, variant: 'fast' as const },
-  { label: '100-500ms', width: 24, count: 299, variant: 'mid' as const },
-  { label: '500ms-2s', width: 10, count: 125, variant: 'slow' as const },
-  { label: '>2s', width: 4, count: 49, variant: 'tail' as const },
-];
 
 const LATENCY_FILL_CLASS: Record<string, string> = {
   fast: classes.latencyFast,
@@ -72,19 +57,35 @@ export function DashboardPage() {
   const { t } = useTranslation();
   const [throughputFilter, setThroughputFilter] = useState('today');
   const [latencyFilter, setLatencyFilter] = useState('all');
+  const refetchInterval = useRealtimeInterval();
 
   const { data: metrics, isLoading: metricsLoading } = useApiQuery(
     queryKeys.metrics.dashboard,
     fetchDashboardMetrics,
+    { refetchInterval },
   );
-  const { data: queue } = useApiQuery(queryKeys.metrics.queue, fetchQueueStatus);
+  const { data: queue } = useApiQuery(
+    queryKeys.metrics.queue,
+    fetchQueueStatus,
+    { refetchInterval },
+  );
   const { data: services, isLoading: servicesLoading } = useApiQuery(
     queryKeys.metrics.services,
     fetchServiceHealth,
+    { refetchInterval },
   );
   const { data: recentTasks, isLoading: tasksLoading } = useApiQuery(
     queryKeys.tasks.list({ recent: true }),
     () => fetchRecentTasks(5),
+    { refetchInterval },
+  );
+  const { data: throughputData } = useApiQuery(
+    queryKeys.metrics.throughput(throughputFilter),
+    () => fetchTaskThroughput(throughputFilter),
+  );
+  const { data: latencyData } = useApiQuery(
+    queryKeys.metrics.latency(latencyFilter),
+    () => fetchLatencyDistribution(latencyFilter),
   );
 
   const THROUGHPUT_OPTIONS: SelectOption[] = [
@@ -115,6 +116,9 @@ export function DashboardPage() {
   const tokenPct = metrics
     ? Math.round((metrics.todayTokens / metrics.dailyQuota) * 100)
     : 0;
+
+  const maxThroughput = Math.max(...(throughputData ?? []).map((b) => b.count), 1);
+  const maxLatency = Math.max(...(latencyData ?? []).map((b) => b.count), 1);
 
   return (
     <>
@@ -166,9 +170,12 @@ export function DashboardPage() {
             <Select options={THROUGHPUT_OPTIONS} value={throughputFilter} onChange={setThroughputFilter} />
           </div>
           <div className={classes.barChart}>
-            {THROUGHPUT_BARS.map((bar) => (
+            {(throughputData ?? []).map((bar) => (
               <div key={bar.label} className={classes.barCol}>
-                <div className={`${classes.bar} ${classes.barGreen}`} style={{ height: `${bar.height}%` }} />
+                <div
+                  className={`${classes.bar} ${classes.barGreen}`}
+                  style={{ height: `${Math.round((bar.count / maxThroughput) * 100)}%` }}
+                />
                 <span className={classes.barLabel}>{bar.label}</span>
               </div>
             ))}
@@ -181,11 +188,14 @@ export function DashboardPage() {
             <Select options={LATENCY_OPTIONS} value={latencyFilter} onChange={setLatencyFilter} />
           </div>
           <div className={classes.latencyBars}>
-            {LATENCY_DATA.map((row) => (
+            {(latencyData ?? []).map((row) => (
               <div key={row.label} className={classes.latencyRow}>
                 <span className={classes.latencyLabel}>{row.label}</span>
                 <div className={classes.latencyTrack}>
-                  <div className={`${classes.latencyFill} ${LATENCY_FILL_CLASS[row.variant]}`} style={{ width: `${row.width}%` }} />
+                  <div
+                    className={`${classes.latencyFill} ${LATENCY_FILL_CLASS[row.variant]}`}
+                    style={{ width: `${Math.round((row.count / maxLatency) * 100)}%` }}
+                  />
                 </div>
                 <span className={classes.latencyCount}>{row.count}</span>
               </div>

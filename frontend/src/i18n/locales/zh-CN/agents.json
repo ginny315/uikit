@@ -39,12 +39,19 @@
     "toolsDesc": "选择该 Agent 可以调用的工具和集成服务",
     "submitBtn": "创建 Agent",
     "cancelBtn": "取消",
+    "successMsg": "Agent \"{{name}}\" 创建成功",
     "providerOptions": {
       "anthropic": "Anthropic (Claude)",
       "openai": "OpenAI (GPT)",
       "ollama": "Ollama (本地)",
       "vllm": "vLLM (本地)"
     }
+  },
+
+  "edit": {
+    "title": "编辑 Agent",
+    "submitBtn": "保存更改",
+    "successMsg": "Agent \"{{name}}\" 已更新"
   },
 
   "detail": {

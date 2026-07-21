@@ -9,6 +9,7 @@ import {
   fetchUsers,
   updateUserRole,
   removeUser,
+  inviteUser,
   fetchApiKeys,
   createApiKey,
   revokeApiKey,
@@ -60,16 +61,34 @@ export function AccessSettingsPage() {
     updateUserRole(vars.id, vars.role),
   );
   const removeUserMutation = useApiMutation(queryKeys.users.all, (id: string) => removeUser(id));
+  const inviteMutation = useApiMutation(queryKeys.users.all, (vars: { email: string; role: UserRole }) =>
+    inviteUser(vars.email, vars.role),
+  );
   const createKeyMutation = useApiMutation(queryKeys.apiKeys.all, (name: string) => createApiKey(name));
   const revokeKeyMutation = useApiMutation(queryKeys.apiKeys.all, (id: string) => revokeApiKey(id));
 
   // ── Local state ──
   const [createModalOpen, setCreateModalOpen] = useState(false);
+  const [inviteModalOpen, setInviteModalOpen] = useState(false);
+  const [inviteEmail, setInviteEmail] = useState('');
+  const [inviteRole, setInviteRole] = useState<UserRole>('member');
   const [newKeyName, setNewKeyName] = useState('');
   const [generatedKey, setGeneratedKey] = useState<string | null>(null);
   const [roleModal, setRoleModal] = useState<{ user: User } | null>(null);
   const [removeModal, setRemoveModal] = useState<{ user: User } | null>(null);
   const [revokeModal, setRevokeModal] = useState<{ key: ApiKey } | null>(null);
+
+  function handleInviteUser() {
+    if (!inviteEmail.trim()) return;
+    inviteMutation.mutate({ email: inviteEmail.trim(), role: inviteRole }, {
+      onSuccess: () => {
+        setInviteModalOpen(false);
+        setInviteEmail('');
+        setInviteRole('member');
+        notifications.show({ message: t('access:users.invite.successMsg', { email: inviteEmail.trim() }), color: 'green' });
+      },
+    });
+  }
 
   function handleCreateKey() {
     if (!newKeyName.trim()) return;
@@ -135,7 +154,7 @@ export function AccessSettingsPage() {
           <div className={classes.tabContent}>
             <div className={classes.sectionHeader}>
               <span className={classes.sectionTitle}>{t('access:users.title')}</span>
-              <Button variant="filled" size="compact-sm" leftSection={<span>+</span>}>
+              <Button variant="filled" size="compact-sm" leftSection={<span>+</span>} onClick={() => setInviteModalOpen(true)}>
                 {t('access:users.inviteBtn')}
               </Button>
             </div>
@@ -276,6 +295,34 @@ export function AccessSettingsPage() {
         </Tabs.Panel>
         </Tabs>
       </div>
+
+      {/* ── Invite User Modal ── */}
+      <Modal
+        opened={inviteModalOpen}
+        onClose={() => { setInviteModalOpen(false); setInviteEmail(''); setInviteRole('member'); }}
+        title={t('access:users.invite.title')}
+        centered
+        size="md"
+      >
+        <TextInput
+          label={t('access:users.invite.emailLabel')}
+          placeholder={t('access:users.invite.emailPlaceholder')}
+          type="email"
+          value={inviteEmail}
+          onChange={(e) => setInviteEmail(e.currentTarget.value)}
+          data-autofocus
+        />
+        <MantineSelect
+          label={t('access:users.invite.roleLabel')}
+          data={ROLE_OPTIONS.map((r) => ({ value: r.value, label: t(`access:users.roles.${r.value}`) }))}
+          value={inviteRole}
+          onChange={(v) => v && setInviteRole(v as UserRole)}
+          mt="md"
+        />
+        <Button fullWidth mt="lg" onClick={handleInviteUser} disabled={!inviteEmail.trim()} loading={inviteMutation.isPending}>
+          {t('access:users.invite.submitBtn')}
+        </Button>
+      </Modal>
 
       {/* ── Create API Key Modal ── */}
       <Modal

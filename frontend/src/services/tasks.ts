@@ -39,3 +39,7 @@ export function createTask(data: { agentId: string; priority?: number; input: st
 export function cancelTask(id: string): Promise<Task> {
   return apiPost<Task>(`/api/v1/tasks/${id}/cancel`);
 }
+
+export function retryTask(id: string): Promise<Task> {
+  return apiPost<Task>(`/api/v1/tasks/${id}/retry`);
+}

@@ -2,7 +2,7 @@
  * MSW Request Handlers
  *
  * 拦截所有 API 请求并返回中心化 mock 数据。
- * Session 9: 统一 mock 数据层，页面迁移期间与旧 MOCK_* 导入并存。
+ * Session 9: 统一 mock 数据层，所有页面通过 services + MSW 取数。
  */
 
 import { http, HttpResponse, delay } from 'msw';
@@ -22,6 +22,8 @@ import {
   dbSystemHealth,
   dbServiceHealth,
   dbAuditLogs,
+  dbThroughputByRange,
+  dbLatencyDistribution,
 } from './data';
 
 const BASE = config.api.baseUrl; // http://localhost:8080
@@ -56,6 +58,16 @@ export const handlers = [
   http.get(`${BASE}/api/v1/metrics/services`, async () => {
     await mockDelay();
     return HttpResponse.json(dbServiceHealth);
+  }),
+  http.get(`${BASE}/api/v1/metrics/throughput`, async ({ request }) => {
+    await mockDelay();
+    const url = new URL(request.url);
+    const range = url.searchParams.get('range') ?? 'today';
+    return HttpResponse.json(dbThroughputByRange[range] ?? dbThroughputByRange.today);
+  }),
+  http.get(`${BASE}/api/v1/metrics/latency`, async () => {
+    await mockDelay();
+    return HttpResponse.json(dbLatencyDistribution);
   }),
 
   // ═══════════════════════════════════════════════════════════
@@ -219,6 +231,23 @@ export const handlers = [
     if (!task) return new HttpResponse(null, { status: 404 });
     task.status = 'cancelled';
     task.completedAt = new Date().toISOString().replace('T', ' ').slice(0, 19);
+    return HttpResponse.json(task);
+  }),
+
+  http.post(`${BASE}/api/v1/tasks/:id/retry`, async ({ params }) => {
+    await mockDelay();
+    const task = dbTasks.find((t) => t.id === params.id);
+    if (!task) return new HttpResponse(null, { status: 404 });
+    if (task.status !== 'failed' && task.status !== 'cancelled') {
+      return HttpResponse.json({ code: 'INVALID_STATE', message: 'Only failed or cancelled tasks can be retried' }, { status: 400 });
+    }
+    task.status = 'queued';
+    task.output = undefined;
+    task.errorMessage = undefined;
+    task.duration = undefined;
+    task.tokensUsed = undefined;
+    task.startedAt = undefined;
+    task.completedAt = undefined;
     return HttpResponse.json(task);
   }),
 
@@ -412,6 +441,33 @@ export const handlers = [
     if (idx === -1) return new HttpResponse(null, { status: 404 });
     dbUsers.splice(idx, 1);
     return new HttpResponse(null, { status: 204 });
+  }),
+
+  http.post(`${BASE}/api/v1/users/invite`, async ({ request }) => {
+    await mockDelay();
+    const body = (await request.json()) as { email: string; role: string };
+    if (dbUsers.some((u) => u.email === body.email)) {
+      return HttpResponse.json({ code: 'DUPLICATE', message: 'User already exists' }, { status: 409 });
+    }
+    const namePart = body.email.split('@')[0] ?? 'user';
+    const displayName = namePart.replace(/[._-]/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+    const newUser: User = {
+      id: `u_${Date.now()}`,
+      name: displayName,
+      email: body.email,
+      role: body.role as User['role'],
+    };
+    dbUsers.push(newUser);
+    dbAuditLogs.unshift({
+      id: `a_${Date.now()}`,
+      timestamp: new Date().toISOString().replace('T', ' ').slice(0, 19),
+      user: 'Alice Chen',
+      action: 'user_invited',
+      resource: newUser.id,
+      detail: `邀请 ${newUser.email} 加入团队`,
+      ip: '192.168.1.100',
+    });
+    return HttpResponse.json(newUser, { status: 201 });
   }),
 
   // ═══════════════════════════════════════════════════════════
