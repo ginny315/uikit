@@ -311,6 +311,20 @@ function WorkflowEditorInner({ detail }: { detail: WorkflowDetail }) {
     return () => window.removeEventListener('beforeunload', handler);
   }, [hasChanges]);
 
+  // ── 首次加载自动布局 + 适应画布 ──
+  const initialLayoutDone = useRef(false);
+  useEffect(() => {
+    if (initialLayoutDone.current) return;
+    initialLayoutDone.current = true;
+
+    const layouted = runDagreLayout(nodes, edges);
+    setNodes(layouted);
+    requestAnimationFrame(() => {
+      fitView({ padding: 0.2, duration: 300 });
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // 导航拦截
   const navigateSafely = useCallback(
     (to: string) => {
