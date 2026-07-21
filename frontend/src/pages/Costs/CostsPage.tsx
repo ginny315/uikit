@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Switch, TextInput, Button, NumberInput, Modal } from '@mantine/core';
+import { Switch, TextInput, Button, NumberInput, Modal, Loader, Center } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import {
   IconCoin,
@@ -13,65 +13,10 @@ import {
 import { StatCard } from '../../components/shared/StatCard/StatCard';
 import { Select } from '../../components/shared/Select/Select';
 import type { SelectOption } from '../../components/shared/Select/Select';
+import { useApiQuery, useApiMutation, queryKeys } from '../../hooks/useApi';
+import { fetchCostReport, updateQuota, updateAlerts } from '../../services/costs';
+import type { CostBreakdownItem, QuotaEntry } from '../../services/costs';
 import classes from './Costs.module.css';
-
-// ── Mock Data ──
-
-interface CostByAgent {
-  agentId: string;
-  agentName: string;
-  cost: number;
-  tokens: number;
-  tasks: number;
-}
-
-interface CostByDay {
-  date: string;
-  cost: number;
-}
-
-interface QuotaEntry {
-  agentId: string;
-  agentName: string;
-  dailyLimit: number;
-  used: number;
-}
-
-const MOCK_COST_BY_AGENT: CostByAgent[] = [
-  { agentId: '1', agentName: 'code-reviewer', cost: 42.50, tokens: 425000, tasks: 87 },
-  { agentId: '2', agentName: 'security-scanner', cost: 28.30, tokens: 283000, tasks: 54 },
-  { agentId: '3', agentName: 'test-generator', cost: 15.75, tokens: 157500, tasks: 32 },
-  { agentId: '4', agentName: 'slack-notifier', cost: 3.20, tokens: 32000, tasks: 148 },
-  { agentId: '5', agentName: 'doc-writer', cost: 18.90, tokens: 189000, tasks: 23 },
-];
-
-const MOCK_COST_BY_USER: CostByAgent[] = [
-  { agentId: 'u1', agentName: 'Alice Chen', cost: 52.80, tokens: 528000, tasks: 156 },
-  { agentId: 'u2', agentName: 'Bob Zhang', cost: 31.45, tokens: 314500, tasks: 89 },
-  { agentId: 'u3', agentName: 'Carol Li', cost: 18.20, tokens: 182000, tasks: 67 },
-  { agentId: 'u4', agentName: 'David Wang', cost: 6.20, tokens: 62000, tasks: 32 },
-];
-
-const MOCK_COST_BY_DAY: CostByDay[] = [
-  { date: '07/15', cost: 18.50 },
-  { date: '07/16', cost: 22.30 },
-  { date: '07/17', cost: 15.80 },
-  { date: '07/18', cost: 28.90 },
-  { date: '07/19', cost: 19.20 },
-  { date: '07/20', cost: 25.60 },
-  { date: '07/21', cost: 12.40 },
-];
-
-const MOCK_QUOTAS: QuotaEntry[] = [
-  { agentId: '1', agentName: 'code-reviewer', dailyLimit: 500000, used: 425000 },
-  { agentId: '2', agentName: 'security-scanner', dailyLimit: 300000, used: 283000 },
-  { agentId: '3', agentName: 'test-generator', dailyLimit: 200000, used: 157500 },
-  { agentId: '4', agentName: 'slack-notifier', dailyLimit: 100000, used: 32000 },
-  { agentId: '5', agentName: 'doc-writer', dailyLimit: 250000, used: 189000 },
-];
-
-const MAX_BAR_COST = Math.max(...MOCK_COST_BY_AGENT.map((a) => a.cost));
-const MAX_DAY_COST = Math.max(...MOCK_COST_BY_DAY.map((d) => d.cost));
 
 export function CostsPage() {
   const { t } = useTranslation();
@@ -80,27 +25,59 @@ export function CostsPage() {
   const [alertEnabled, setAlertEnabled] = useState(false);
   const [dailyThreshold, setDailyThreshold] = useState(50);
   const [alertEmail, setAlertEmail] = useState('admin@example.com');
-  const [editQuota, setEditQuota] = useState<{ agentId: string; agentName: string; limit: number } | null>(null);
+  const [editQuota, setEditQuota] = useState<QuotaEntry | null>(null);
+
+  // ── Data fetching ──
+  const { data: report, isLoading } = useApiQuery(
+    queryKeys.costs.report({ groupBy: breakdownTab }),
+    () => fetchCostReport(breakdownTab === 'agent' ? 'agent' : 'user'),
+  );
+
+  const quotaMutation = useApiMutation(queryKeys.costs.all, (vars: { agentId: string; limit: number }) =>
+    updateQuota(vars.agentId, { dailyLimit: vars.limit }),
+  );
+
+  const alertMutation = useApiMutation(queryKeys.costs.all, () =>
+    updateAlerts({ enabled: alertEnabled, threshold: dailyThreshold, email: alertEmail }),
+  );
 
   const breakdownOptions: SelectOption[] = [
     { value: 'agent', label: t('costs:breakdown.byAgent') },
     { value: 'user', label: t('costs:breakdown.byUser') },
   ];
 
-  const breakdownData = breakdownTab === 'agent' ? MOCK_COST_BY_AGENT : MOCK_COST_BY_USER;
+  const breakdownData: CostBreakdownItem[] = report?.breakdown ?? [];
+  const quotas: QuotaEntry[] = report?.quotas ?? [];
+  const maxBarCost = Math.max(...breakdownData.map((a) => a.cost), 1);
+  const maxDayCost = Math.max(...(report?.dailyTrend ?? []).map((d) => d.cost), 1);
 
-  const todayCost = 12.40;
-  const weekCost = 108.65;
-  const monthCost = 452.80;
-  const todayTokens = 124000;
+  const summary = report?.summary;
 
   function handleSaveAlert() {
-    notifications.show({ message: t('costs:alerts.alertSaved'), color: 'green' });
+    alertMutation.mutate(undefined, {
+      onSuccess: () => notifications.show({ message: t('costs:alerts.alertSaved'), color: 'green' }),
+    });
   }
 
   function handleSaveQuota() {
-    notifications.show({ message: t('costs:quota.quotaSaved'), color: 'green' });
-    setEditQuota(null);
+    if (!editQuota) return;
+    quotaMutation.mutate(
+      { agentId: editQuota.id, limit: editQuota.dailyLimit },
+      {
+        onSuccess: () => {
+          notifications.show({ message: t('costs:quota.quotaSaved'), color: 'green' });
+          setEditQuota(null);
+        },
+      },
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <Center h={400}>
+        <Loader />
+      </Center>
+    );
   }
 
   return (
@@ -116,7 +93,7 @@ export function CostsPage() {
           iconBg="rgba(245,158,11,0.12)"
           iconColor="#F59E0B"
           label={t('costs:stats.todayCost')}
-          value={todayCost.toFixed(2)}
+          value={summary?.todayCost.toFixed(2) ?? '—'}
           unit="$"
         />
         <StatCard
@@ -124,7 +101,7 @@ export function CostsPage() {
           iconBg="rgba(6,182,212,0.12)"
           iconColor="#06B6D4"
           label={t('costs:stats.weekCost')}
-          value={weekCost.toFixed(2)}
+          value={summary?.weekCost.toFixed(2) ?? '—'}
           unit="$"
         />
         <StatCard
@@ -132,7 +109,7 @@ export function CostsPage() {
           iconBg="rgba(168,85,247,0.12)"
           iconColor="#A855F7"
           label={t('costs:stats.monthCost')}
-          value={monthCost.toFixed(2)}
+          value={summary?.monthCost.toFixed(2) ?? '—'}
           unit="$"
         />
         <StatCard
@@ -140,14 +117,14 @@ export function CostsPage() {
           iconBg="rgba(239,68,68,0.12)"
           iconColor="#EF4444"
           label={t('costs:stats.todayTokens')}
-          value={todayTokens.toLocaleString()}
+          value={summary?.todayTokens.toLocaleString() ?? '—'}
         />
         <StatCard
           icon={<IconGauge size={16} strokeWidth={2.2} />}
           iconBg="rgba(34,197,94,0.12)"
           iconColor="#22C55E"
           label={t('costs:stats.avgCostPerTask')}
-          value="0.36"
+          value={summary?.avgCostPerTask.toFixed(2) ?? '—'}
           unit="$"
         />
         <StatCard
@@ -155,7 +132,7 @@ export function CostsPage() {
           iconBg="rgba(59,130,246,0.12)"
           iconColor="#3B82F6"
           label={t('costs:stats.projectedMonth')}
-          value="512.00"
+          value={summary?.projectedMonth.toFixed(2) ?? '—'}
           unit="$"
         />
       </div>
@@ -186,11 +163,11 @@ export function CostsPage() {
               <tbody>
                 {breakdownData.map((row) => {
                   const totalCost = breakdownData.reduce((s, r) => s + r.cost, 0);
-                  const pct = ((row.cost / totalCost) * 100).toFixed(1);
-                  const barWidth = (row.cost / MAX_BAR_COST) * 100;
+                  const pct = totalCost > 0 ? ((row.cost / totalCost) * 100).toFixed(1) : '0';
+                  const barWidth = (row.cost / maxBarCost) * 100;
                   return (
-                    <tr key={row.agentId}>
-                      <td className={classes.nameCell}>{row.agentName}</td>
+                    <tr key={row.id}>
+                      <td className={classes.nameCell}>{row.name}</td>
                       <td className={classes.monoCell}>${row.cost.toFixed(2)}</td>
                       <td className={classes.monoCell}>{row.tokens.toLocaleString()}</td>
                       <td className={classes.monoCell}>{row.tasks}</td>
@@ -214,11 +191,11 @@ export function CostsPage() {
             <span className={classes.chartTitle}>{t('costs:breakdown.byDay')}</span>
           </div>
           <div className={classes.barChart}>
-            {MOCK_COST_BY_DAY.map((day) => (
+            {(report?.dailyTrend ?? []).map((day) => (
               <div key={day.date} className={classes.barCol}>
                 <div
                   className={classes.bar}
-                  style={{ height: `${(day.cost / MAX_DAY_COST) * 100}%` }}
+                  style={{ height: `${(day.cost / maxDayCost) * 100}%` }}
                 />
                 <span className={classes.barLabel}>{day.date}</span>
                 <span className={classes.barValue}>${day.cost.toFixed(1)}</span>
@@ -246,12 +223,12 @@ export function CostsPage() {
               </tr>
             </thead>
             <tbody>
-              {MOCK_QUOTAS.map((q) => {
-                const usagePct = (q.used / q.dailyLimit) * 100;
+              {quotas.map((q) => {
+                const usagePct = q.dailyLimit > 0 ? (q.used / q.dailyLimit) * 100 : 0;
                 const isHigh = usagePct > 80;
                 return (
-                  <tr key={q.agentId}>
-                    <td className={classes.nameCell}>{q.agentName}</td>
+                  <tr key={q.id}>
+                    <td className={classes.nameCell}>{q.name}</td>
                     <td className={classes.monoCell}>{q.dailyLimit.toLocaleString()}</td>
                     <td className={classes.monoCell}>{q.used.toLocaleString()}</td>
                     <td className={classes.monoCell}>{(q.dailyLimit - q.used).toLocaleString()}</td>
@@ -270,7 +247,7 @@ export function CostsPage() {
                       <Button
                         variant="subtle"
                         size="compact-xs"
-                        onClick={() => setEditQuota({ agentId: q.agentId, agentName: q.agentName, limit: q.dailyLimit })}
+                        onClick={() => setEditQuota(q)}
                       >
                         {t('common:actions.edit')}
                       </Button>
@@ -318,7 +295,9 @@ export function CostsPage() {
                 placeholder="admin@example.com"
                 w={280}
               />
-              <Button onClick={handleSaveAlert} mt="lg">{t('costs:alerts.saveAlert')}</Button>
+              <Button onClick={handleSaveAlert} mt="lg" loading={alertMutation.isPending}>
+                {t('costs:alerts.saveAlert')}
+              </Button>
             </div>
           )}
         </div>
@@ -336,27 +315,24 @@ export function CostsPage() {
             <div className={classes.quotaTarget}>
               <IconGauge size={18} style={{ color: 'var(--mantine-color-dimmed)' }} />
               <div>
-                <div className={classes.quotaTargetName}>{editQuota.agentName}</div>
-                {(() => {
-                  const q = MOCK_QUOTAS.find((q) => q.agentId === editQuota.agentId);
-                  return q ? (
-                    <div className={classes.quotaTargetUsage}>
-                      {t('costs:quota.used')}: {q.used.toLocaleString()} / {q.dailyLimit.toLocaleString()} tokens
-                    </div>
-                  ) : null;
-                })()}
+                <div className={classes.quotaTargetName}>{editQuota.name}</div>
+                <div className={classes.quotaTargetUsage}>
+                  {t('costs:quota.used')}: {editQuota.used.toLocaleString()} / {editQuota.dailyLimit.toLocaleString()} tokens
+                </div>
               </div>
             </div>
             <NumberInput
               label={t('costs:quota.dailyLimit')}
-              value={editQuota.limit}
-              onChange={(v) => setEditQuota({ ...editQuota, limit: Number(v) || 0 })}
+              value={editQuota.dailyLimit}
+              onChange={(v) => setEditQuota({ ...editQuota, dailyLimit: Number(v) || 0 })}
               min={0}
               step={10000}
               w="100%"
               mt="md"
             />
-            <Button fullWidth mt="lg" onClick={handleSaveQuota} size="md">{t('common:actions.save')}</Button>
+            <Button fullWidth mt="lg" onClick={handleSaveQuota} size="md" loading={quotaMutation.isPending}>
+              {t('common:actions.save')}
+            </Button>
           </div>
         )}
       </Modal>

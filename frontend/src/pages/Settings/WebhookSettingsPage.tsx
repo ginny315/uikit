@@ -7,42 +7,25 @@ import {
   Switch,
   Badge,
   MultiSelect,
+  Loader,
+  Center,
 } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { IconWebhook, IconTrash, IconPlayerPlay, IconPencil } from '@tabler/icons-react';
 import { ConfirmModal } from '../../components/shared/ConfirmModal/ConfirmModal';
+import { useApiQuery, useApiMutation, queryKeys } from '../../hooks/useApi';
+import {
+  fetchWebhooks,
+  createWebhook,
+  updateWebhook,
+  deleteWebhook,
+  testWebhook,
+} from '../../services/webhooks';
 import type { Webhook, WebhookEvent } from '../../types';
 import classes from './WebhookSettings.module.css';
 
-// ── Mock Data ──
-
-const MOCK_WEBHOOKS: Webhook[] = [
-  {
-    id: 'wh_1',
-    url: 'https://hooks.slack.com/services/T01/ABC/xyz',
-    events: ['task.completed', 'task.failed'],
-    enabled: true,
-    createdAt: '2026-07-10T08:00:00Z',
-  },
-  {
-    id: 'wh_2',
-    url: 'https://api.example.com/agent-events',
-    events: ['agent.started', 'agent.stopped'],
-    enabled: true,
-    secret: 'whsec_abc123',
-    createdAt: '2026-07-15T14:30:00Z',
-  },
-  {
-    id: 'wh_3',
-    url: 'https://myapp.com/webhooks/agent-sys',
-    events: ['task.completed', 'task.failed', 'agent.started', 'agent.stopped'],
-    enabled: false,
-    createdAt: '2026-06-20T09:00:00Z',
-  },
-];
-
 const ALL_EVENTS: { value: WebhookEvent; label: string }[] = [
-  { value: 'task.completed', label: '' }, // label filled from i18n
+  { value: 'task.completed', label: '' },
   { value: 'task.failed', label: '' },
   { value: 'agent.started', label: '' },
   { value: 'agent.stopped', label: '' },
@@ -55,19 +38,25 @@ function formatDate(iso: string): string {
 export function WebhookSettingsPage() {
   const { t } = useTranslation();
 
-  const [webhooks, setWebhooks] = useState<Webhook[]>(MOCK_WEBHOOKS);
+  // ── Data fetching ──
+  const { data: webhooks, isLoading } = useApiQuery(queryKeys.webhooks.list(), fetchWebhooks);
 
-  // Create / Edit modal
+  const createMutation = useApiMutation(queryKeys.webhooks.list(), (vars: { url: string; events: WebhookEvent[]; secret?: string }) =>
+    createWebhook(vars),
+  );
+  const updateMutation = useApiMutation(queryKeys.webhooks.list(), (vars: { id: string; data: Partial<Webhook> }) =>
+    updateWebhook(vars.id, vars.data),
+  );
+  const deleteMutation = useApiMutation(queryKeys.webhooks.list(), (id: string) => deleteWebhook(id));
+  const testMutation = useApiMutation(queryKeys.webhooks.list(), (id: string) => testWebhook(id));
+
+  // ── Local state ──
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState<Webhook | null>(null);
   const [formUrl, setFormUrl] = useState('');
   const [formEvents, setFormEvents] = useState<WebhookEvent[]>([]);
   const [formSecret, setFormSecret] = useState('');
-
-  // Delete modal
   const [deleteTarget, setDeleteTarget] = useState<Webhook | null>(null);
-
-  // Test state
   const [testingId, setTestingId] = useState<string | null>(null);
 
   const EVENT_OPTIONS = ALL_EVENTS.map((e) => ({
@@ -95,50 +84,70 @@ export function WebhookSettingsPage() {
     if (!formUrl.trim() || formEvents.length === 0) return;
 
     if (editing) {
-      setWebhooks(webhooks.map((w) =>
-        w.id === editing.id
-          ? { ...w, url: formUrl.trim(), events: formEvents, secret: formSecret || undefined }
-          : w
-      ));
-      notifications.show({ message: t('webhooks:edit.savedMsg'), color: 'green' });
+      updateMutation.mutate(
+        { id: editing.id, data: { url: formUrl.trim(), events: formEvents, secret: formSecret || undefined } },
+        {
+          onSuccess: () => {
+            notifications.show({ message: t('webhooks:edit.savedMsg'), color: 'green' });
+            setModalOpen(false);
+          },
+        },
+      );
     } else {
-      const newWh: Webhook = {
-        id: `wh_${Date.now()}`,
-        url: formUrl.trim(),
-        events: formEvents,
-        enabled: true,
-        secret: formSecret || undefined,
-        createdAt: new Date().toISOString(),
-      };
-      setWebhooks([newWh, ...webhooks]);
-      notifications.show({ message: t('webhooks:create.successMsg'), color: 'green' });
+      createMutation.mutate(
+        { url: formUrl.trim(), events: formEvents, secret: formSecret || undefined },
+        {
+          onSuccess: () => {
+            notifications.show({ message: t('webhooks:create.successMsg'), color: 'green' });
+            setModalOpen(false);
+          },
+        },
+      );
     }
-
-    setModalOpen(false);
   }
 
   function handleToggle(whId: string, enabled: boolean) {
-    setWebhooks(webhooks.map((w) => (w.id === whId ? { ...w, enabled } : w)));
-    notifications.show({
-      message: enabled ? t('webhooks:list.toggleOn') : t('webhooks:list.toggleOff'),
-      color: 'green',
-    });
+    updateMutation.mutate(
+      { id: whId, data: { enabled } },
+      {
+        onSuccess: () => {
+          notifications.show({
+            message: enabled ? t('webhooks:list.toggleOn') : t('webhooks:list.toggleOff'),
+            color: 'green',
+          });
+        },
+      },
+    );
   }
 
   function handleDelete(whId: string) {
-    setWebhooks(webhooks.filter((w) => w.id !== whId));
-    setDeleteTarget(null);
-    notifications.show({ message: t('webhooks:delete.successMsg'), color: 'green' });
+    deleteMutation.mutate(whId, {
+      onSuccess: () => {
+        setDeleteTarget(null);
+        notifications.show({ message: t('webhooks:delete.successMsg'), color: 'green' });
+      },
+    });
   }
 
   function handleTest(whId: string) {
     setTestingId(whId);
-    // Simulate test request
-    setTimeout(() => {
-      setTestingId(null);
-      notifications.show({ message: t('webhooks:test.successMsg'), color: 'green' });
-    }, 1500);
+    testMutation.mutate(whId, {
+      onSuccess: () => {
+        setTestingId(null);
+        notifications.show({ message: t('webhooks:test.successMsg'), color: 'green' });
+      },
+      onError: () => {
+        setTestingId(null);
+      },
+    });
   }
+
+  if (isLoading) {
+    return <Center h={400}><Loader /></Center>;
+  }
+
+  const list = webhooks ?? [];
+  const testing = testMutation.isPending ? testingId : null;
 
   return (
     <>
@@ -162,7 +171,7 @@ export function WebhookSettingsPage() {
               </tr>
             </thead>
             <tbody>
-              {webhooks.map((wh) => (
+              {list.map((wh) => (
                 <tr key={wh.id}>
                   <td>
                     <div className={classes.urlCell}>
@@ -184,9 +193,6 @@ export function WebhookSettingsPage() {
                       checked={wh.enabled}
                       onChange={(e) => handleToggle(wh.id, e.currentTarget.checked)}
                       size="sm"
-                      thumbIcon={
-                        wh.enabled ? undefined : undefined
-                      }
                     />
                     <span className={`${classes.statusLabel} ${wh.enabled ? classes.enabledLabel : classes.disabledLabel}`}>
                       {wh.enabled ? t('webhooks:list.enabled') : t('webhooks:list.disabled')}
@@ -199,7 +205,7 @@ export function WebhookSettingsPage() {
                         variant="subtle"
                         size="compact-xs"
                         leftSection={<IconPlayerPlay size={12} />}
-                        loading={testingId === wh.id}
+                        loading={testing === wh.id}
                         onClick={() => handleTest(wh.id)}
                       >
                         {t('webhooks:test.btn')}
@@ -225,12 +231,8 @@ export function WebhookSettingsPage() {
                   </td>
                 </tr>
               ))}
-              {webhooks.length === 0 && (
-                <tr>
-                  <td colSpan={5} className={classes.emptyCell}>
-                    {t('webhooks:list.empty')}
-                  </td>
-                </tr>
+              {list.length === 0 && (
+                <tr><td colSpan={5} className={classes.emptyCell}>{t('webhooks:list.empty')}</td></tr>
               )}
             </tbody>
           </table>
@@ -273,7 +275,13 @@ export function WebhookSettingsPage() {
           onChange={(e) => setFormSecret(e.currentTarget.value)}
           mb="xl"
         />
-        <Button fullWidth onClick={handleSave} disabled={!formUrl.trim() || formEvents.length === 0} size="md">
+        <Button
+          fullWidth
+          onClick={handleSave}
+          disabled={!formUrl.trim() || formEvents.length === 0}
+          loading={createMutation.isPending || updateMutation.isPending}
+          size="md"
+        >
           {editing ? t('webhooks:edit.saveBtn') : t('webhooks:create.submitBtn')}
         </Button>
       </Modal>

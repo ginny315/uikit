@@ -1,48 +1,20 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Tabs, Button, Modal, TextInput, Select as MantineSelect, Badge, CopyButton, ActionIcon, Text } from '@mantine/core';
+import { Tabs, Button, Modal, TextInput, Select as MantineSelect, Badge, CopyButton, ActionIcon, Text, Loader, Center } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
-import { IconCopy, IconCheck, IconKey, IconUsers, IconHistory, IconTrash } from '@tabler/icons-react';
+import { IconCopy, IconCheck, IconKey, IconUsers, IconHistory } from '@tabler/icons-react';
 import { ConfirmModal } from '../../components/shared/ConfirmModal/ConfirmModal';
+import { useApiQuery, useApiMutation, queryKeys } from '../../hooks/useApi';
+import {
+  fetchUsers,
+  updateUserRole,
+  removeUser,
+  fetchApiKeys,
+  createApiKey,
+  revokeApiKey,
+} from '../../services/access';
 import type { User, UserRole, ApiKey } from '../../types';
 import classes from './AccessSettings.module.css';
-
-// ── Mock Data ──
-
-const MOCK_USERS: User[] = [
-  { id: 'u1', name: 'Alice Chen', email: 'alice@example.com', role: 'admin', avatarUrl: '' },
-  { id: 'u2', name: 'Bob Zhang', email: 'bob@example.com', role: 'member', avatarUrl: '' },
-  { id: 'u3', name: 'Carol Li', email: 'carol@example.com', role: 'member', avatarUrl: '' },
-  { id: 'u4', name: 'David Wang', email: 'david@example.com', role: 'viewer', avatarUrl: '' },
-  { id: 'u5', name: 'Eve Liu', email: 'eve@example.com', role: 'viewer', avatarUrl: '' },
-];
-
-const MOCK_API_KEYS: ApiKey[] = [
-  { id: 'key_1', name: 'Production', prefix: 'asy_p_***', createdAt: '2026-07-10T08:00:00Z', lastUsedAt: '2026-07-21T10:32:00Z' },
-  { id: 'key_2', name: 'Local Dev', prefix: 'asy_l_***', createdAt: '2026-07-15T14:30:00Z', lastUsedAt: '2026-07-20T18:00:00Z' },
-  { id: 'key_3', name: 'CI Pipeline', prefix: 'asy_c_***', createdAt: '2026-06-01T09:00:00Z', lastUsedAt: undefined },
-];
-
-interface AuditEntry {
-  id: string;
-  timestamp: string;
-  user: string;
-  action: string;
-  resource: string;
-  detail: string;
-  ip: string;
-}
-
-const MOCK_AUDIT: AuditEntry[] = [
-  { id: 'a1', timestamp: '2026-07-21 10:32:15', user: 'Alice Chen', action: 'task_created', resource: 'task_7a3f2', detail: '提交代码审查任务', ip: '192.168.1.100' },
-  { id: 'a2', timestamp: '2026-07-21 09:15:00', user: 'Bob Zhang', action: 'agent_created', resource: 'agent_5', detail: '创建 Agent: doc-writer', ip: '192.168.1.101' },
-  { id: 'a3', timestamp: '2026-07-20 18:00:30', user: 'Alice Chen', action: 'api_key_created', resource: 'key_2', detail: '创建 API Key: Local Dev', ip: '192.168.1.100' },
-  { id: 'a4', timestamp: '2026-07-20 16:45:00', user: 'Carol Li', action: 'role_changed', resource: 'user_u4', detail: 'David Wang: viewer → member', ip: '192.168.1.102' },
-  { id: 'a5', timestamp: '2026-07-19 14:20:00', user: 'Alice Chen', action: 'webhook_created', resource: 'wh_1', detail: '创建 Webhook: Slack 通知', ip: '192.168.1.100' },
-  { id: 'a6', timestamp: '2026-07-19 11:00:00', user: 'Bob Zhang', action: 'task_cancelled', resource: 'task_9d55c', detail: '取消长时间运行任务', ip: '192.168.1.101' },
-  { id: 'a7', timestamp: '2026-07-18 09:30:00', user: 'Alice Chen', action: 'user_invited', resource: 'user_u5', detail: '邀请 Eve Liu 加入团队', ip: '192.168.1.100' },
-  { id: 'a8', timestamp: '2026-07-17 15:10:00', user: 'Carol Li', action: 'api_key_revoked', resource: 'key_old', detail: '吊销旧 CI Key', ip: '192.168.1.102' },
-];
 
 const ROLE_OPTIONS: { value: UserRole; label: string }[] = [
   { value: 'admin', label: '管理员' },
@@ -76,60 +48,84 @@ function Avatar({ name }: { name: string }) {
   return <span className={classes.avatar}>{initials}</span>;
 }
 
+// 本地审计日志 mock（未接入 MSW 端点）
+const MOCK_AUDIT = [
+  { id: 'a1', timestamp: '2026-07-21 10:32:15', user: 'Alice Chen', action: 'task_created', resource: 'task_7a3f2', detail: '提交代码审查任务', ip: '192.168.1.100' },
+  { id: 'a2', timestamp: '2026-07-21 09:15:00', user: 'Bob Zhang', action: 'agent_created', resource: 'agent_5', detail: '创建 Agent: doc-writer', ip: '192.168.1.101' },
+  { id: 'a3', timestamp: '2026-07-20 18:00:30', user: 'Alice Chen', action: 'api_key_created', resource: 'key_2', detail: '创建 API Key: Local Dev', ip: '192.168.1.100' },
+  { id: 'a4', timestamp: '2026-07-20 16:45:00', user: 'Carol Li', action: 'role_changed', resource: 'user_u4', detail: 'David Wang: viewer → member', ip: '192.168.1.102' },
+  { id: 'a5', timestamp: '2026-07-19 14:20:00', user: 'Alice Chen', action: 'webhook_created', resource: 'wh_1', detail: '创建 Webhook: Slack 通知', ip: '192.168.1.100' },
+  { id: 'a6', timestamp: '2026-07-19 11:00:00', user: 'Bob Zhang', action: 'task_cancelled', resource: 'task_9d55c', detail: '取消长时间运行任务', ip: '192.168.1.101' },
+  { id: 'a7', timestamp: '2026-07-18 09:30:00', user: 'Alice Chen', action: 'user_invited', resource: 'user_u5', detail: '邀请 Eve Liu 加入团队', ip: '192.168.1.100' },
+  { id: 'a8', timestamp: '2026-07-17 15:10:00', user: 'Carol Li', action: 'api_key_revoked', resource: 'key_old', detail: '吊销旧 CI Key', ip: '192.168.1.102' },
+];
+
 export function AccessSettingsPage() {
   const { t } = useTranslation();
 
-  const [users, setUsers] = useState<User[]>(MOCK_USERS);
-  const [apiKeys, setApiKeys] = useState<ApiKey[]>(MOCK_API_KEYS);
-  const [audit] = useState<AuditEntry[]>(MOCK_AUDIT);
+  // ── Data fetching ──
+  const { data: users, isLoading: usersLoading } = useApiQuery(queryKeys.users.list(), fetchUsers);
+  const { data: apiKeys, isLoading: keysLoading } = useApiQuery(queryKeys.users.list(), fetchApiKeys);
 
-  // API Key creation
+  const roleMutation = useApiMutation(queryKeys.users.list(), (vars: { id: string; role: string }) =>
+    updateUserRole(vars.id, vars.role),
+  );
+  const removeUserMutation = useApiMutation(queryKeys.users.list(), (id: string) => removeUser(id));
+  const createKeyMutation = useApiMutation(queryKeys.users.list(), (name: string) => createApiKey(name));
+  const revokeKeyMutation = useApiMutation(queryKeys.users.list(), (id: string) => revokeApiKey(id));
+
+  // ── Local state ──
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [newKeyName, setNewKeyName] = useState('');
   const [generatedKey, setGeneratedKey] = useState<string | null>(null);
-
-  // Role change
   const [roleModal, setRoleModal] = useState<{ user: User } | null>(null);
-
-  // Remove user
   const [removeModal, setRemoveModal] = useState<{ user: User } | null>(null);
-
-  // Revoke key
   const [revokeModal, setRevokeModal] = useState<{ key: ApiKey } | null>(null);
 
   function handleCreateKey() {
     if (!newKeyName.trim()) return;
-    const prefix = `asy_${newKeyName.toLowerCase().replace(/\s+/g, '_').slice(0, 8)}_***`;
-    const newKey: ApiKey = {
-      id: `key_${Date.now()}`,
-      name: newKeyName.trim(),
-      prefix,
-      createdAt: new Date().toISOString(),
-      lastUsedAt: undefined,
-    };
-    setGeneratedKey(`asy_${crypto.randomUUID().replace(/-/g, '')}`);
-    setApiKeys([newKey, ...apiKeys]);
-    setNewKeyName('');
-    notifications.show({ message: t('access:apiKeys.create.successMsg'), color: 'green' });
+    createKeyMutation.mutate(newKeyName.trim(), {
+      onSuccess: (result) => {
+        setGeneratedKey(result.rawKey);
+        setNewKeyName('');
+        notifications.show({ message: t('access:apiKeys.create.successMsg'), color: 'green' });
+      },
+    });
   }
 
   function handleRoleChange(userId: string, newRole: UserRole) {
-    setUsers(users.map((u) => (u.id === userId ? { ...u, role: newRole } : u)));
-    setRoleModal(null);
-    notifications.show({ message: t('access:users.roleChanged'), color: 'green' });
+    roleMutation.mutate({ id: userId, role: newRole }, {
+      onSuccess: () => {
+        setRoleModal(null);
+        notifications.show({ message: t('access:users.roleChanged'), color: 'green' });
+      },
+    });
   }
 
   function handleRemoveUser(userId: string) {
-    setUsers(users.filter((u) => u.id !== userId));
-    setRemoveModal(null);
-    notifications.show({ message: t('access:users.userRemoved'), color: 'green' });
+    removeUserMutation.mutate(userId, {
+      onSuccess: () => {
+        setRemoveModal(null);
+        notifications.show({ message: t('access:users.userRemoved'), color: 'green' });
+      },
+    });
   }
 
   function handleRevokeKey(keyId: string) {
-    setApiKeys(apiKeys.filter((k) => k.id !== keyId));
-    setRevokeModal(null);
-    notifications.show({ message: t('access:apiKeys.revoked'), color: 'green' });
+    revokeKeyMutation.mutate(keyId, {
+      onSuccess: () => {
+        setRevokeModal(null);
+        notifications.show({ message: t('access:apiKeys.revoked'), color: 'green' });
+      },
+    });
   }
+
+  if (usersLoading || keysLoading) {
+    return <Center h={400}><Loader /></Center>;
+  }
+
+  const userList = users ?? [];
+  const keyList = apiKeys ?? [];
 
   return (
     <>
@@ -166,7 +162,7 @@ export function AccessSettingsPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {users.map((user) => (
+                  {userList.map((user) => (
                     <tr key={user.id}>
                       <td>
                         <div className={classes.userCell}>
@@ -176,30 +172,17 @@ export function AccessSettingsPage() {
                       </td>
                       <td className={classes.monoCell}>{user.email}</td>
                       <td>
-                        <Badge
-                          variant="light"
-                          color={ROLE_COLORS[user.role]}
-                          size="sm"
-                        >
+                        <Badge variant="light" color={ROLE_COLORS[user.role]} size="sm">
                           {t(`access:users.roles.${user.role}`)}
                         </Badge>
                       </td>
                       <td className={classes.dateCell}>2026-07-10</td>
                       <td>
                         <div className={classes.actionBtns}>
-                          <Button
-                            variant="subtle"
-                            size="compact-xs"
-                            onClick={() => setRoleModal({ user })}
-                          >
+                          <Button variant="subtle" size="compact-xs" onClick={() => setRoleModal({ user })}>
                             {t('access:users.changeRole')}
                           </Button>
-                          <Button
-                            variant="subtle"
-                            size="compact-xs"
-                            color="red"
-                            onClick={() => setRemoveModal({ user })}
-                          >
+                          <Button variant="subtle" size="compact-xs" color="red" onClick={() => setRemoveModal({ user })}>
                             {t('access:users.removeUser')}
                           </Button>
                         </div>
@@ -238,30 +221,21 @@ export function AccessSettingsPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {apiKeys.map((key) => (
+                  {keyList.map((key) => (
                     <tr key={key.id}>
                       <td className={classes.nameCell}>{key.name}</td>
                       <td className={classes.monoCell}>{key.prefix}</td>
                       <td className={classes.dateCell}>{formatDate(key.createdAt)}</td>
                       <td className={classes.dateCell}>{formatLastUsed(key.lastUsedAt, t)}</td>
                       <td>
-                        <Button
-                          variant="subtle"
-                          size="compact-xs"
-                          color="red"
-                          onClick={() => setRevokeModal({ key })}
-                        >
+                        <Button variant="subtle" size="compact-xs" color="red" onClick={() => setRevokeModal({ key })}>
                           {t('access:apiKeys.revoke')}
                         </Button>
                       </td>
                     </tr>
                   ))}
-                  {apiKeys.length === 0 && (
-                    <tr>
-                      <td colSpan={5} className={classes.emptyCell}>
-                        {t('common:empty.noResults')}
-                      </td>
-                    </tr>
+                  {keyList.length === 0 && (
+                    <tr><td colSpan={5} className={classes.emptyCell}>{t('common:empty.noResults')}</td></tr>
                   )}
                 </tbody>
               </table>
@@ -288,7 +262,7 @@ export function AccessSettingsPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {audit.map((entry) => (
+                  {MOCK_AUDIT.map((entry) => (
                     <tr key={entry.id}>
                       <td className={classes.monoCell}>{entry.timestamp}</td>
                       <td className={classes.nameCell}>{entry.user}</td>
@@ -331,12 +305,7 @@ export function AccessSettingsPage() {
               <code className={classes.keyCode}>{generatedKey}</code>
               <CopyButton value={generatedKey}>
                 {({ copied, copy }) => (
-                  <ActionIcon
-                    color={copied ? 'green' : 'gray'}
-                    variant="light"
-                    onClick={copy}
-                    className={classes.copyBtn}
-                  >
+                  <ActionIcon color={copied ? 'green' : 'gray'} variant="light" onClick={copy} className={classes.copyBtn}>
                     {copied ? <IconCheck size={16} /> : <IconCopy size={16} />}
                   </ActionIcon>
                 )}
@@ -357,7 +326,7 @@ export function AccessSettingsPage() {
               onChange={(e) => setNewKeyName(e.currentTarget.value)}
               data-autofocus
             />
-            <Button fullWidth mt="lg" onClick={handleCreateKey} disabled={!newKeyName.trim()}>
+            <Button fullWidth mt="lg" onClick={handleCreateKey} disabled={!newKeyName.trim()} loading={createKeyMutation.isPending}>
               {t('access:apiKeys.create.submitBtn')}
             </Button>
           </div>
@@ -365,12 +334,7 @@ export function AccessSettingsPage() {
       </Modal>
 
       {/* ── Change Role Modal ── */}
-      <Modal
-        opened={roleModal !== null}
-        onClose={() => setRoleModal(null)}
-        title={t('access:users.changeRole')}
-        centered
-      >
+      <Modal opened={roleModal !== null} onClose={() => setRoleModal(null)} title={t('access:users.changeRole')} centered>
         {roleModal && (
           <div>
             <div className={classes.roleTarget}>
@@ -386,10 +350,7 @@ export function AccessSettingsPage() {
             <MantineSelect
               label={t('access:users.columns.role')}
               description={t(`access:users.roleDesc.${roleModal.user.role}`)}
-              data={ROLE_OPTIONS.map((r) => ({
-                value: r.value,
-                label: t(`access:users.roles.${r.value}`),
-              }))}
+              data={ROLE_OPTIONS.map((r) => ({ value: r.value, label: t(`access:users.roles.${r.value}`) }))}
               value={roleModal.user.role}
               onChange={(v) => v && handleRoleChange(roleModal.user.id, v as UserRole)}
               mt="md"

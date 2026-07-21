@@ -1,34 +1,5 @@
-import type { Agent } from '../types';
-
 /**
- * 共享 Agent mock 数据。
- * AgentListPage 和 AgentDetailPage 共用此数据源，避免不一致。
- * Session 9 迁移到 MSW 后替换。
+ * Agent mock 数据 — 向后兼容重导出。
+ * Session 9: 数据源统一至 data.ts，旧引用保持不变。
  */
-export const MOCK_AGENTS: Agent[] = [
-  { id: '1', name: 'code-reviewer', description: '自动审查 PR 代码，检查代码规范与潜在 Bug', status: 'running', llmProvider: 'Anthropic', llmModel: 'Claude Opus 4.5', tools: ['github', 'gitlab'], dailyTokenQuota: 500000, todayTokens: 142000, todayTasks: 47, createdAt: '2026-07-01', updatedAt: '2026-07-15' },
-  { id: '2', name: 'security-scanner', description: '扫描项目依赖与代码安全漏洞，生成修复建议', status: 'running', llmProvider: 'Anthropic', llmModel: 'Claude Sonnet 4.5', tools: ['snyk', 'trivy'], dailyTokenQuota: 300000, todayTokens: 89000, todayTasks: 23, createdAt: '2026-07-02', updatedAt: '2026-07-15' },
-  { id: '3', name: 'test-generator', description: '基于代码变更自动生成单元测试与集成测试', status: 'running', llmProvider: 'OpenAI', llmModel: 'GPT-4o', tools: ['jest', 'pytest'], dailyTokenQuota: 400000, todayTokens: 256000, todayTasks: 89, createdAt: '2026-07-03', updatedAt: '2026-07-14' },
-  { id: '4', name: 'slack-notifier', description: '监听系统事件并发送 Slack 通知', status: 'running', llmProvider: 'OpenAI', llmModel: 'GPT-4o-mini', tools: ['slack'], dailyTokenQuota: 50000, todayTokens: 12000, todayTasks: 156, createdAt: '2026-07-05', updatedAt: '2026-07-15' },
-  { id: '5', name: 'data-analyzer', description: '分析数据库查询性能并给出优化建议', status: 'stopped', llmProvider: 'Anthropic', llmModel: 'Claude Opus 4.5', tools: ['postgres', 'clickhouse'], dailyTokenQuota: 600000, todayTokens: 0, todayTasks: 0, createdAt: '2026-07-06', updatedAt: '2026-07-10' },
-  { id: '6', name: 'doc-writer', description: '基于代码自动生成 API 文档与变更日志', status: 'running', llmProvider: 'OpenAI', llmModel: 'GPT-4o', tools: ['github', 'notion'], dailyTokenQuota: 200000, todayTokens: 98000, todayTasks: 34, createdAt: '2026-07-08', updatedAt: '2026-07-15' },
-  { id: '7', name: 'incident-responder', description: '自动响应监控告警，执行预定义修复流程', status: 'running', llmProvider: 'Anthropic', llmModel: 'Claude Sonnet 4.5', tools: ['pagerduty', 'slack', 'kubectl'], dailyTokenQuota: 800000, todayTokens: 310000, todayTasks: 12, createdAt: '2026-07-09', updatedAt: '2026-07-15' },
-  { id: '8', name: 'release-bot', description: '自动化发布流程：构建、测试、部署、回滚', status: 'error', llmProvider: 'Anthropic', llmModel: 'Claude Opus 4.5', tools: ['docker', 'kubectl', 'github'], dailyTokenQuota: 500000, todayTokens: 450000, todayTasks: 6, createdAt: '2026-07-10', updatedAt: '2026-07-15' },
-  { id: '9', name: 'sql-translator', description: '自然语言转 SQL，支持多方言', status: 'stopped', llmProvider: 'OpenAI', llmModel: 'GPT-4o-mini', tools: ['postgres', 'mysql'], dailyTokenQuota: 100000, todayTokens: 0, todayTasks: 0, createdAt: '2026-07-12', updatedAt: '2026-07-12' },
-  { id: '10', name: 'email-assistant', description: '智能分类与回复邮件', status: 'running', llmProvider: 'OpenAI', llmModel: 'GPT-4o', tools: ['gmail', 'outlook'], dailyTokenQuota: 150000, todayTokens: 67000, todayTasks: 201, createdAt: '2026-07-13', updatedAt: '2026-07-15' },
-  { id: '11', name: 'legal-reviewer', description: '审核合同条款，标记风险项并给出修改建议', status: 'running', llmProvider: 'Anthropic', llmModel: 'Claude Opus 4.5', tools: ['notion'], dailyTokenQuota: 700000, todayTokens: 520000, todayTasks: 8, createdAt: '2026-07-14', updatedAt: '2026-07-15' },
-  { id: '12', name: 'onboarding-buddy', description: '新员工入职引导与 FAQ 问答', status: 'running', llmProvider: 'OpenAI', llmModel: 'GPT-4o-mini', tools: ['slack', 'notion'], dailyTokenQuota: 80000, todayTokens: 34000, todayTasks: 67, createdAt: '2026-07-14', updatedAt: '2026-07-15' },
-  { id: '13', name: 'log-analyzer', description: '实时分析日志流，检测异常模式并告警', status: 'running', llmProvider: 'Anthropic', llmModel: 'Claude Sonnet 4.5', tools: ['clickhouse', 'slack'], dailyTokenQuota: 350000, todayTokens: 189000, todayTasks: 340, createdAt: '2026-07-01', updatedAt: '2026-07-15' },
-  { id: '14', name: 'performance-profiler', description: '分析服务性能瓶颈，生成优化建议报告', status: 'stopped', llmProvider: 'OpenAI', llmModel: 'GPT-4o', tools: ['postgres', 'redis'], dailyTokenQuota: 250000, todayTokens: 0, todayTasks: 0, createdAt: '2026-07-03', updatedAt: '2026-07-08' },
-  { id: '15', name: 'dependency-updater', description: '自动检测并更新项目依赖，创建 PR', status: 'running', llmProvider: 'Anthropic', llmModel: 'Claude Haiku 4.5', tools: ['github', 'gitlab'], dailyTokenQuota: 120000, todayTokens: 45000, todayTasks: 18, createdAt: '2026-07-04', updatedAt: '2026-07-15' },
-  { id: '16', name: 'schema-migrator', description: '数据库 Schema 变更助手，生成迁移脚本并验证', status: 'running', llmProvider: 'OpenAI', llmModel: 'GPT-4o', tools: ['postgres', 'mysql', 'clickhouse'], dailyTokenQuota: 180000, todayTokens: 72000, todayTasks: 5, createdAt: '2026-07-05', updatedAt: '2026-07-14' },
-  { id: '17', name: 'compliance-checker', description: '检查代码和基础设施是否符合 SOC2 合规要求', status: 'error', llmProvider: 'Anthropic', llmModel: 'Claude Opus 4.5', tools: ['github', 'kubectl', 'notion'], dailyTokenQuota: 400000, todayTokens: 380000, todayTasks: 3, createdAt: '2026-07-06', updatedAt: '2026-07-15' },
-  { id: '18', name: 'api-doc-generator', description: '从代码注解和流量自动生成 OpenAPI 文档', status: 'running', llmProvider: 'OpenAI', llmModel: 'GPT-4o-mini', tools: ['github', 'notion'], dailyTokenQuota: 90000, todayTokens: 31000, todayTasks: 45, createdAt: '2026-07-07', updatedAt: '2026-07-15' },
-  { id: '19', name: 'incident-postmortem', description: '故障后自动生成复盘报告，包含时间线和改进建议', status: 'stopped', llmProvider: 'Anthropic', llmModel: 'Claude Opus 4.5', tools: ['pagerduty', 'slack', 'notion'], dailyTokenQuota: 300000, todayTokens: 0, todayTasks: 0, createdAt: '2026-07-08', updatedAt: '2026-07-08' },
-  { id: '20', name: 'cost-optimizer', description: '分析 LLM 调用成本，推荐模型降级和缓存策略', status: 'running', llmProvider: 'OpenAI', llmModel: 'GPT-4o-mini', tools: ['postgres', 'clickhouse'], dailyTokenQuota: 60000, todayTokens: 28000, todayTasks: 12, createdAt: '2026-07-09', updatedAt: '2026-07-15' },
-  { id: '21', name: 'sentiment-tracker', description: '监控用户反馈渠道的情感倾向变化', status: 'running', llmProvider: 'Anthropic', llmModel: 'Claude Haiku 4.5', tools: ['slack', 'gmail'], dailyTokenQuota: 100000, todayTokens: 56000, todayTasks: 230, createdAt: '2026-07-10', updatedAt: '2026-07-15' },
-  { id: '22', name: 'backup-verifier', description: '定期验证备份完整性并生成验证报告', status: 'running', llmProvider: 'OpenAI', llmModel: 'GPT-4o-mini', tools: ['docker', 'postgres'], dailyTokenQuota: 40000, todayTokens: 15000, todayTasks: 4, createdAt: '2026-07-11', updatedAt: '2026-07-15' },
-  { id: '23', name: 'config-validator', description: '验证 K8s 配置和 Helm Chart 的语法与最佳实践', status: 'running', llmProvider: 'Anthropic', llmModel: 'Claude Sonnet 4.5', tools: ['kubectl', 'github'], dailyTokenQuota: 200000, todayTokens: 88000, todayTasks: 76, createdAt: '2026-07-12', updatedAt: '2026-07-15' },
-  { id: '24', name: 'alert-correlator', description: '关联多个告警源，识别根因并抑制重复告警', status: 'running', llmProvider: 'Anthropic', llmModel: 'Claude Haiku 4.5', tools: ['pagerduty', 'slack', 'clickhouse'], dailyTokenQuota: 160000, todayTokens: 94000, todayTasks: 145, createdAt: '2026-07-13', updatedAt: '2026-07-15' },
-  { id: '25', name: 'i18n-helper', description: '自动化翻译和国际化文件管理', status: 'stopped', llmProvider: 'OpenAI', llmModel: 'GPT-4o-mini', tools: ['github', 'notion'], dailyTokenQuota: 75000, todayTokens: 0, todayTasks: 0, createdAt: '2026-07-14', updatedAt: '2026-07-14' },
-];
+export { dbAgents as MOCK_AGENTS } from './data';

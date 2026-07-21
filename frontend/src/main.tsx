@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter } from 'react-router-dom';
 import { theme } from './theme';
 import { App } from './App';
+import { config } from './config';
 import './i18n';
 
 import '@mantine/core/styles.css';
@@ -24,20 +25,33 @@ const queryClient = new QueryClient({
   },
 });
 
-const root = document.getElementById('root');
-if (!root) {
-  throw new Error('Root element not found');
+async function bootstrap() {
+  // Session 9: 开发模式下启动 MSW 拦截网络请求
+  if (config.mock.enabled) {
+    const { worker } = await import('./mocks/browser');
+    await worker.start({
+      onUnhandledRequest: 'bypass', // 非 API 请求不受影响
+      quiet: true,
+    });
+  }
+
+  const root = document.getElementById('root');
+  if (!root) {
+    throw new Error('Root element not found');
+  }
+
+  createRoot(root).render(
+    <StrictMode>
+      <QueryClientProvider client={queryClient}>
+        <MantineProvider theme={theme} defaultColorScheme="light">
+          <Notifications position="top-right" />
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        </MantineProvider>
+      </QueryClientProvider>
+    </StrictMode>,
+  );
 }
 
-createRoot(root).render(
-  <StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <MantineProvider theme={theme} defaultColorScheme="light">
-        <Notifications position="top-right" />
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
-      </MantineProvider>
-    </QueryClientProvider>
-  </StrictMode>,
-);
+bootstrap();
