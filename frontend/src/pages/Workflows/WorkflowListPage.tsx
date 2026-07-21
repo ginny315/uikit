@@ -1,19 +1,19 @@
-import { useState, useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
-  TextInput, Button, ActionIcon, Tooltip, Badge, Pagination, Select, Modal, Text, Card,
+  TextInput, Button, ActionIcon, Tooltip, Badge, Pagination, Select, Modal, Text, Card, Center, Loader,
 } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { useDisclosure } from '@mantine/hooks';
 import { useForm } from '@mantine/form';
-import dayjs from 'dayjs';
 import {
   IconSearch, IconPlus, IconPencil, IconTrash,
   IconPlayerPlay, IconPlayerPause, IconGitBranch,
 } from '@tabler/icons-react';
 import type { WorkflowSummary, WorkflowStatus } from '../../types';
-import { MOCK_WORKFLOW_SUMMARIES } from '../../mocks/workflows';
+import { useApiQuery, useApiMutation, queryKeys } from '../../hooks/useApi';
+import { fetchWorkflows, createWorkflow, updateWorkflow, deleteWorkflow } from '../../services/workflows';
 import classes from './WorkflowList.module.css';
 
 const PAGE_SIZE_OPTIONS = [
@@ -39,7 +39,6 @@ const STATUS_ICON: Record<WorkflowStatus, React.ReactNode> = {
 export function WorkflowListPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const [workflows, setWorkflows] = useState<WorkflowSummary[]>(MOCK_WORKFLOW_SUMMARIES);
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<WorkflowStatus | 'all'>('all');
   const [pageSize, setPageSize] = useState(10);
@@ -47,6 +46,22 @@ export function WorkflowListPage() {
   const [deleteTarget, setDeleteTarget] = useState<WorkflowSummary | null>(null);
   const [deleteOpened, { open: openDelete, close: closeDelete }] = useDisclosure(false);
   const [createOpened, { open: openCreate, close: closeCreate }] = useDisclosure(false);
+
+  const listParams = useMemo(() => ({
+    search: search.trim() || undefined,
+    status: statusFilter === 'all' ? undefined : statusFilter,
+  }), [search, statusFilter]);
+
+  const { data: workflows = [], isLoading } = useApiQuery(
+    queryKeys.workflows.list(listParams),
+    () => fetchWorkflows(listParams),
+  );
+
+  const createMutation = useApiMutation(queryKeys.workflows.all, createWorkflow);
+  const updateMutation = useApiMutation(queryKeys.workflows.all, (vars: { id: string; data: Partial<WorkflowSummary> }) =>
+    updateWorkflow(vars.id, vars.data),
+  );
+  const deleteMutation = useApiMutation(queryKeys.workflows.all, deleteWorkflow);
 
   const statuses: { value: WorkflowStatus | 'all'; label: string }[] = [
     { value: 'all', label: t('workflows:list.filterAll') },
@@ -61,54 +76,54 @@ export function WorkflowListPage() {
     },
   });
 
+  const filtered = useMemo(() => {
+    let list = [...workflows];
+    list.sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
+    return list;
+  }, [workflows]);
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
+  const safePage = Math.min(page, totalPages);
+  const paginated = filtered.slice((safePage - 1) * pageSize, safePage * pageSize);
+
   function handleCreate(values: typeof createForm.values) {
-    const newWf: WorkflowSummary = {
-      id: `wf_${Math.random().toString(36).slice(2, 7)}`,
-      name: values.name.trim(),
-      description: values.description.trim(),
-      status: 'draft',
-      stepCount: 0,
-      createdAt: dayjs().format('YYYY-MM-DD'),
-      updatedAt: dayjs().format('YYYY-MM-DD'),
-    };
-    setWorkflows((prev) => [newWf, ...prev]);
-    notifications.show({ message: `工作流「${newWf.name}」已创建`, color: 'green', withCloseButton: true });
-    closeCreate();
-    createForm.reset();
-    setPage(1);
+    createMutation.mutate(
+      { name: values.name.trim(), description: values.description.trim() },
+      {
+        onSuccess: (newWf) => {
+          notifications.show({ message: `工作流「${newWf.name}」已创建`, color: 'green', withCloseButton: true });
+          closeCreate();
+          createForm.reset();
+          setPage(1);
+        },
+      },
+    );
   }
 
   function handleToggleStatus(wf: WorkflowSummary) {
     const next: WorkflowStatus = wf.status === 'active' ? 'paused' : 'active';
-    setWorkflows((prev) => prev.map((w) => (w.id === wf.id ? { ...w, status: next, updatedAt: dayjs().format('YYYY-MM-DD') } : w)));
-    const msgKey = next === 'active' ? 'enabledMsg' : 'pausedMsg';
-    notifications.show({ message: t(`workflows:editor.${msgKey}`), withCloseButton: true });
+    updateMutation.mutate(
+      { id: wf.id, data: { status: next } },
+      {
+        onSuccess: () => {
+          const msgKey = next === 'active' ? 'enabledMsg' : 'pausedMsg';
+          notifications.show({ message: t(`workflows:editor.${msgKey}`), withCloseButton: true });
+        },
+      },
+    );
   }
 
   function handleDeleteConfirm() {
     if (!deleteTarget) return;
     const name = deleteTarget.name;
-    setWorkflows((prev) => prev.filter((w) => w.id !== deleteTarget.id));
-    notifications.show({ message: `工作流「${name}」已删除`, color: 'green', withCloseButton: true });
-    closeDelete();
-    setDeleteTarget(null);
+    deleteMutation.mutate(deleteTarget.id, {
+      onSuccess: () => {
+        notifications.show({ message: `工作流「${name}」已删除`, color: 'green', withCloseButton: true });
+        closeDelete();
+        setDeleteTarget(null);
+      },
+    });
   }
-
-  const filtered = useMemo(() => {
-    let list = workflows;
-    if (search.trim()) {
-      const q = search.toLowerCase();
-      list = list.filter((w) => w.name.toLowerCase().includes(q) || w.description.toLowerCase().includes(q));
-    }
-    if (statusFilter !== 'all') list = list.filter((w) => w.status === statusFilter);
-    // 按更新时间倒序
-    list = [...list].sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
-    return list;
-  }, [workflows, search, statusFilter]);
-
-  const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
-  const safePage = Math.min(page, totalPages);
-  const paginated = filtered.slice((safePage - 1) * pageSize, safePage * pageSize);
 
   return (
     <>
@@ -141,101 +156,94 @@ export function WorkflowListPage() {
         ))}
       </div>
 
-      <div className={classes.cardGrid}>
-        {paginated.map((wf) => (
-          <Card
-            key={wf.id}
-            className={classes.workflowCard}
-            padding="lg"
-            onClick={() => navigate(`/workflows/${wf.id}`)}
-          >
-            <div className={classes.cardHeader}>
-              <div className={classes.cardTitleWrap}>
-                <IconGitBranch size={18} className={classes.cardIcon} />
-                <span className={classes.cardName}>{wf.name}</span>
-              </div>
-              <div className={classes.cardActions} onClick={(e) => e.stopPropagation()}>
-                <Tooltip label={wf.status === 'active' ? t('workflows:editor.pause') : t('workflows:editor.enable')}>
-                  <ActionIcon
-                    variant="subtle"
-                    color={wf.status === 'active' ? 'yellow' : 'agentGreen'}
-                    size="sm"
-                    onClick={() => handleToggleStatus(wf)}
-                    disabled={wf.status === 'draft'}
-                  >
-                    {wf.status === 'active' ? <IconPlayerPause size={15} /> : <IconPlayerPlay size={15} />}
-                  </ActionIcon>
-                </Tooltip>
-                <Tooltip label={t('common:actions.edit')}>
-                  <ActionIcon
-                    variant="subtle"
-                    color="gray"
-                    size="sm"
-                    onClick={() => navigate(`/workflows/${wf.id}`)}
-                  >
-                    <IconPencil size={15} />
-                  </ActionIcon>
-                </Tooltip>
-                <Tooltip label={t('common:actions.delete')}>
-                  <ActionIcon
-                    variant="subtle"
-                    color="red"
-                    size="sm"
-                    onClick={() => { setDeleteTarget(wf); openDelete(); }}
-                  >
-                    <IconTrash size={15} />
-                  </ActionIcon>
-                </Tooltip>
-              </div>
-            </div>
-            <Text size="sm" c="dimmed" lineClamp={2} mb="md" className={classes.cardDesc}>
-              {wf.description}
-            </Text>
-            <div className={classes.cardMeta}>
-              <Badge
-                variant="light"
-                color={STATUS_COLOR[wf.status]}
-                size="sm"
-                leftSection={STATUS_ICON[wf.status]}
-                ff="monospace"
+      {isLoading ? (
+        <Center py="xl"><Loader size="md" /></Center>
+      ) : (
+        <>
+          <div className={classes.cardGrid}>
+            {paginated.map((wf) => (
+              <Card
+                key={wf.id}
+                className={classes.workflowCard}
+                padding="lg"
+                onClick={() => navigate(`/workflows/${wf.id}`)}
               >
-                {t(`workflows:status.${wf.status}`)}
-              </Badge>
-              <span className={classes.stepCount}>
-                {t('workflows:list.stepCount', { count: wf.stepCount })}
-              </span>
-              <span className={classes.updatedAt}>
-                {wf.updatedAt}
+                <div className={classes.cardHeader}>
+                  <div className={classes.cardTitleWrap}>
+                    <IconGitBranch size={18} className={classes.cardIcon} />
+                    <span className={classes.cardName}>{wf.name}</span>
+                  </div>
+                  <div className={classes.cardActions} onClick={(e) => e.stopPropagation()}>
+                    <Tooltip label={wf.status === 'active' ? t('workflows:editor.pause') : t('workflows:editor.enable')}>
+                      <ActionIcon
+                        variant="subtle"
+                        color={wf.status === 'active' ? 'yellow' : 'agentGreen'}
+                        size="sm"
+                        onClick={() => handleToggleStatus(wf)}
+                        disabled={wf.status === 'draft'}
+                      >
+                        {wf.status === 'active' ? <IconPlayerPause size={15} /> : <IconPlayerPlay size={15} />}
+                      </ActionIcon>
+                    </Tooltip>
+                    <Tooltip label={t('common:actions.edit')}>
+                      <ActionIcon variant="subtle" color="gray" size="sm" onClick={() => navigate(`/workflows/${wf.id}`)}>
+                        <IconPencil size={15} />
+                      </ActionIcon>
+                    </Tooltip>
+                    <Tooltip label={t('common:actions.delete')}>
+                      <ActionIcon variant="subtle" color="red" size="sm" onClick={() => { setDeleteTarget(wf); openDelete(); }}>
+                        <IconTrash size={15} />
+                      </ActionIcon>
+                    </Tooltip>
+                  </div>
+                </div>
+                <Text size="sm" c="dimmed" lineClamp={2} mb="md" className={classes.cardDesc}>
+                  {wf.description}
+                </Text>
+                <div className={classes.cardMeta}>
+                  <Badge
+                    variant="light"
+                    color={STATUS_COLOR[wf.status]}
+                    size="sm"
+                    leftSection={STATUS_ICON[wf.status]}
+                    ff="monospace"
+                  >
+                    {t(`workflows:status.${wf.status}`)}
+                  </Badge>
+                  <span className={classes.stepCount}>
+                    {t('workflows:list.stepCount', { count: wf.stepCount })}
+                  </span>
+                  <span className={classes.updatedAt}>{wf.updatedAt}</span>
+                </div>
+              </Card>
+            ))}
+          </div>
+
+          {filtered.length === 0 && (
+            <div className={classes.empty}>{t('workflows:list.empty')}</div>
+          )}
+
+          <div className={classes.paginationRow}>
+            <div className={classes.pageSizeWrap}>
+              <Select
+                data={PAGE_SIZE_OPTIONS}
+                value={String(pageSize)}
+                onChange={(v) => { setPageSize(Number(v)); setPage(1); }}
+                size="xs"
+                w={120}
+                allowDeselect={false}
+              />
+              <span className={classes.totalText}>
+                {t('common:pagination.total', { count: filtered.length })}
               </span>
             </div>
-          </Card>
-        ))}
-      </div>
-
-      {filtered.length === 0 && (
-        <div className={classes.empty}>{t('workflows:list.empty')}</div>
+            {totalPages > 1 && (
+              <Pagination total={totalPages} value={safePage} onChange={setPage} size="sm" withEdges />
+            )}
+          </div>
+        </>
       )}
 
-      <div className={classes.paginationRow}>
-        <div className={classes.pageSizeWrap}>
-          <Select
-            data={PAGE_SIZE_OPTIONS}
-            value={String(pageSize)}
-            onChange={(v) => { setPageSize(Number(v)); setPage(1); }}
-            size="xs"
-            w={120}
-            allowDeselect={false}
-          />
-          <span className={classes.totalText}>
-            {t('common:pagination.total', { count: filtered.length })}
-          </span>
-        </div>
-        {totalPages > 1 && (
-          <Pagination total={totalPages} value={safePage} onChange={setPage} size="sm" withEdges />
-        )}
-      </div>
-
-      {/* ── 创建工作流 ── */}
       <Modal
         opened={createOpened}
         onClose={() => { closeCreate(); createForm.reset(); }}
@@ -261,19 +269,20 @@ export function WorkflowListPage() {
             <Button variant="subtle" color="gray" onClick={() => { closeCreate(); createForm.reset(); }}>
               {t('common:actions.cancel')}
             </Button>
-            <Button type="submit">{t('workflows:create.submitBtn')}</Button>
+            <Button type="submit" loading={createMutation.isPending}>{t('workflows:create.submitBtn')}</Button>
           </div>
         </form>
       </Modal>
 
-      {/* ── 删除确认 ── */}
       <Modal opened={deleteOpened} onClose={closeDelete} title={t('workflows:list.confirmDeleteTitle')} centered>
         <Text size="sm" mb="md">
           {t('workflows:list.confirmDeleteMsg', { name: deleteTarget?.name ?? '' })}
         </Text>
         <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
           <Button variant="subtle" color="gray" onClick={closeDelete}>{t('common:actions.cancel')}</Button>
-          <Button color="red" onClick={handleDeleteConfirm}>{t('common:actions.confirmDelete')}</Button>
+          <Button color="red" loading={deleteMutation.isPending} onClick={handleDeleteConfirm}>
+            {t('common:actions.confirmDelete')}
+          </Button>
         </div>
       </Modal>
     </>

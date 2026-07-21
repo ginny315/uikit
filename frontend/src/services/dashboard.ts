@@ -2,6 +2,9 @@
  * Dashboard API Service
  */
 import { apiGet } from '../lib/api';
+import type { SystemHealthCardProps } from '../components/shared/SystemHealthCard/SystemHealthCard';
+import type { Task } from '../types';
+import { fetchTasks } from './tasks';
 
 export interface DashboardMetrics {
   totalAgents: number;
@@ -41,4 +44,14 @@ export function fetchQueueStatus(): Promise<QueueStatus> {
 
 export function fetchSystemHealth(): Promise<SystemHealth> {
   return apiGet<SystemHealth>('/api/v1/metrics/health');
+}
+
+export function fetchServiceHealth(): Promise<SystemHealthCardProps[]> {
+  return apiGet<SystemHealthCardProps[]>('/api/v1/metrics/services');
+}
+
+export function fetchRecentTasks(limit = 5): Promise<Task[]> {
+  return fetchTasks({ page: 1, pageSize: limit, sort: 'createdAt', order: 'desc' }).then(
+    (res) => res.data,
+  );
 }

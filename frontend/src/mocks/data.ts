@@ -209,6 +209,7 @@ export const dbWorkflowDetails: Record<string, WorkflowDetail> = {
     name: 'PR Review Pipeline',
     description: 'PR 提交后自动进行代码审查和安全扫描，结果通知到 Slack',
     status: 'active',
+    stepCount: 3,
     nodes: [
       { id: 'node_start', type: 'start', position: { x: 0, y: 0 }, data: { label: 'PR Opened' } },
       { id: 'node_1', type: 'agent', position: { x: 0, y: 0 }, data: { label: 'code-reviewer', agentId: '1' } },
@@ -231,6 +232,7 @@ export const dbWorkflowDetails: Record<string, WorkflowDetail> = {
     name: 'Incident Response',
     description: '告警触发后自动分诊、分析日志并通知相关团队',
     status: 'active',
+    stepCount: 2,
     nodes: [
       { id: 'node_start', type: 'start', position: { x: 0, y: 0 }, data: { label: 'Alert Fired' } },
       { id: 'node_1', type: 'agent', position: { x: 0, y: 0 }, data: { label: 'incident-responder', agentId: '7' } },
@@ -250,6 +252,7 @@ export const dbWorkflowDetails: Record<string, WorkflowDetail> = {
     name: 'Daily Report Generator',
     description: '每日定时汇总各 Agent 运行报告并发送到指定频道',
     status: 'draft',
+    stepCount: 3,
     nodes: [
       { id: 'node_start', type: 'start', position: { x: 0, y: 0 }, data: { label: 'Scheduled 9:00' } },
       { id: 'node_1', type: 'agent', position: { x: 0, y: 0 }, data: { label: 'data-analyzer', agentId: '5' } },
@@ -272,6 +275,7 @@ export const dbWorkflowDetails: Record<string, WorkflowDetail> = {
     name: 'Data ETL Pipeline',
     description: '从多个数据源采集数据、清洗、分析并写入 ClickHouse',
     status: 'active',
+    stepCount: 3,
     nodes: [
       { id: 'node_start', type: 'start', position: { x: 0, y: 0 }, data: { label: 'Triggered' } },
       { id: 'node_1', type: 'agent', position: { x: 0, y: 0 }, data: { label: 'log-analyzer', agentId: '13' } },
@@ -340,3 +344,35 @@ export const dbSystemHealth = {
   diskUsage: 55,
   activeInstances: 12,
 };
+
+export const dbServiceHealth = [
+  { name: 'API Gateway', status: 'healthy' as const, uptime: '14d', latency: '2ms' },
+  { name: 'Control Service', status: 'healthy' as const, uptime: '14d', latency: '4ms' },
+  { name: 'Scheduler', status: 'healthy' as const, uptime: '7d', latency: '1ms' },
+  { name: 'Agent Runtime', status: 'healthy' as const, uptime: '14d', latency: '18ms' },
+  { name: 'Auth Service', status: 'degraded' as const, uptime: '3d', latency: '45ms' },
+  { name: 'Metrics Service', status: 'healthy' as const, uptime: '14d', latency: '8ms' },
+  { name: 'Log Service', status: 'healthy' as const, uptime: '14d', latency: '6ms' },
+  { name: 'Webhook Service', status: 'healthy' as const, uptime: '14d', latency: '5ms' },
+];
+
+export interface AuditLogEntry {
+  id: string;
+  timestamp: string;
+  user: string;
+  action: string;
+  resource: string;
+  detail: string;
+  ip: string;
+}
+
+export const dbAuditLogs: AuditLogEntry[] = [
+  { id: 'a1', timestamp: '2026-07-21 10:32:15', user: 'Alice Chen', action: 'task_created', resource: 'task_7a3f2', detail: '提交代码审查任务', ip: '192.168.1.100' },
+  { id: 'a2', timestamp: '2026-07-21 09:15:00', user: 'Bob Zhang', action: 'agent_created', resource: 'agent_5', detail: '创建 Agent: doc-writer', ip: '192.168.1.101' },
+  { id: 'a3', timestamp: '2026-07-20 18:00:30', user: 'Alice Chen', action: 'api_key_created', resource: 'key_2', detail: '创建 API Key: Local Dev', ip: '192.168.1.100' },
+  { id: 'a4', timestamp: '2026-07-20 16:45:00', user: 'Carol Li', action: 'role_changed', resource: 'user_u4', detail: 'David Wang: viewer → member', ip: '192.168.1.102' },
+  { id: 'a5', timestamp: '2026-07-19 14:20:00', user: 'Alice Chen', action: 'webhook_created', resource: 'wh_1', detail: '创建 Webhook: Slack 通知', ip: '192.168.1.100' },
+  { id: 'a6', timestamp: '2026-07-19 11:00:00', user: 'Bob Zhang', action: 'task_cancelled', resource: 'task_9d55c', detail: '取消长时间运行任务', ip: '192.168.1.101' },
+  { id: 'a7', timestamp: '2026-07-18 09:30:00', user: 'Alice Chen', action: 'user_invited', resource: 'user_u5', detail: '邀请 Eve Liu 加入团队', ip: '192.168.1.100' },
+  { id: 'a8', timestamp: '2026-07-17 15:10:00', user: 'Carol Li', action: 'api_key_revoked', resource: 'key_old', detail: '吊销旧 CI Key', ip: '192.168.1.102' },
+];

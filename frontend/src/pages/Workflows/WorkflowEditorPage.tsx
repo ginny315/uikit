@@ -10,7 +10,7 @@
  *   3. 点击节点 → 右侧面板配置 Agent 和输入模板
  *   4. Delete/Backspace → 删除选中节点或边
  *   5. 自动布局 → dagre 从上到下层级排列
- *   6. 保存 → DAG 环检测 → 写入 MOCK_WORKFLOW_DETAILS
+ *   6. 保存 → DAG 环检测 → 调用 updateWorkflow API
  */
 import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -34,7 +34,7 @@ import {
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import {
-  Button, ActionIcon, Tooltip, Badge, Text, Modal,
+  Button, ActionIcon, Tooltip, Badge, Text, Modal, Center, Loader,
 } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { useDisclosure } from '@mantine/hooks';
@@ -45,7 +45,8 @@ import {
   IconGitBranch,
 } from '@tabler/icons-react';
 import type { WorkflowDetail, WorkflowNode, WorkflowNodeData, WorkflowStatus } from '../../types';
-import { getWorkflowDetail } from '../../mocks/workflows';
+import { useApiQuery, useApiMutation, queryKeys } from '../../hooks/useApi';
+import { fetchWorkflow, updateWorkflow } from '../../services/workflows';
 import { nodeTypes } from './nodes';
 import { NodeConfigPanel } from './NodeConfigPanel';
 import { runDagreLayout } from './dagreLayout';
@@ -88,17 +89,35 @@ function uid(prefix: string): string {
   return `${prefix}_${Math.random().toString(36).slice(2, 7)}`;
 }
 
+function nodeToWorkflowNode(node: Node): WorkflowNode {
+  return {
+    id: node.id,
+    type: node.type as WorkflowNode['type'],
+    position: node.position,
+    data: node.data as unknown as WorkflowNodeData,
+  };
+}
+
 export function WorkflowEditorPage() {
   const { id } = useParams<{ id: string }>();
-
-  // 加载工作流
-  const detail = useMemo(() => (id ? getWorkflowDetail(id) : undefined), [id]);
-
-  // ── 不存在 ──
   const { t } = useTranslation();
   const navigate = useNavigate();
 
-  if (!detail) {
+  const { data: detail, isLoading, isError } = useApiQuery(
+    queryKeys.workflows.detail(id ?? ''),
+    () => fetchWorkflow(id!),
+    { enabled: !!id },
+  );
+
+  if (isLoading) {
+    return (
+      <Center h="60vh">
+        <Loader size="md" />
+      </Center>
+    );
+  }
+
+  if (!detail || isError) {
     return (
       <div className={classes.notFound}>
         <IconAlertTriangle size={48} style={{ color: 'var(--mantine-color-dimmed)' }} />
@@ -113,16 +132,20 @@ export function WorkflowEditorPage() {
 
   return (
     <ReactFlowProvider>
-      <WorkflowEditorInner detail={detail} />
+      <WorkflowEditorInner detail={detail} workflowId={detail.id} />
     </ReactFlowProvider>
   );
 }
 
 // ── Inner component — has access to ReactFlow context ──
 
-function WorkflowEditorInner({ detail }: { detail: WorkflowDetail }) {
+function WorkflowEditorInner({ detail, workflowId }: { detail: WorkflowDetail; workflowId: string }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
+
+  const saveMutation = useApiMutation(queryKeys.workflows.all, (payload: Partial<WorkflowDetail>) =>
+    updateWorkflow(workflowId, payload),
+  );
 
   // ReactFlow 节点/边状态 + fitView
   const [nodes, setNodes, onNodesChangeRaw] = useNodesState(
@@ -174,10 +197,12 @@ function WorkflowEditorInner({ detail }: { detail: WorkflowDetail }) {
 
   // ── 连接校验：禁止自连接、重复边 ──
   const isValidConnection = useCallback(
-    (connection: Connection) => {
-      if (connection.source === connection.target) return false;
+    (connection: Edge | Connection) => {
+      const source = connection.source;
+      const target = connection.target;
+      if (!source || !target || source === target) return false;
       const dup = edges.some(
-        (e) => e.source === connection.source && e.target === connection.target,
+        (e) => e.source === source && e.target === target,
       );
       return !dup;
     },
@@ -275,22 +300,27 @@ function WorkflowEditorInner({ detail }: { detail: WorkflowDetail }) {
       return;
     }
 
-    // 更新 mock 数据（Session 9 改为 API 调用）
-    detail.name = name;
-    detail.status = status;
-    detail.nodes = nodes.map((n) => ({
-      id: n.id,
-      type: n.type as WorkflowNode['type'],
-      position: n.position,
-      data: n.data as WorkflowNodeData,
-    }));
-    detail.edges = edges.map((e) => ({ id: e.id, source: e.source, target: e.target }));
-    detail.stepCount = nodes.filter((n) => n.type === 'agent').length;
-    detail.updatedAt = dayjs().format('YYYY-MM-DD');
+    const payload: Partial<WorkflowDetail> = {
+      name,
+      status,
+      nodes: nodes.map((n) => ({
+        id: n.id,
+        type: n.type as WorkflowNode['type'],
+        position: n.position,
+        data: n.data as unknown as WorkflowNodeData,
+      })),
+      edges: edges.map((e) => ({ id: e.id, source: e.source, target: e.target })),
+      stepCount: nodes.filter((n) => n.type === 'agent').length,
+      updatedAt: dayjs().format('YYYY-MM-DD'),
+    };
 
-    setHasChanges(false);
-    notifications.show({ message: t('workflows:editor.savedMsg'), color: 'green', withCloseButton: true });
-  }, [detail, name, status, nodes, edges, t]);
+    saveMutation.mutate(payload, {
+      onSuccess: () => {
+        setHasChanges(false);
+        notifications.show({ message: t('workflows:editor.savedMsg'), color: 'green', withCloseButton: true });
+      },
+    });
+  }, [name, status, nodes, edges, t, saveMutation]);
 
   // ── 启用/暂停 ──
   const handleToggleStatus = useCallback(() => {
@@ -468,7 +498,7 @@ function WorkflowEditorInner({ detail }: { detail: WorkflowDetail }) {
         {/* Right panel — 节点配置 */}
         {selectedNode && selectedNode.type === 'agent' && (
           <NodeConfigPanel
-            node={selectedNode as WorkflowNode}
+            node={nodeToWorkflowNode(selectedNode)}
             visible
             onChange={handleNodeDataChange}
             onDelete={handleDeleteNode}

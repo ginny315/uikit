@@ -1,8 +1,18 @@
 /**
- * Access (Users + API Keys) Service
+ * Access (Users + API Keys + Audit) Service
  */
 import { apiGet, apiPost, apiPut, apiDelete } from '../lib/api';
 import type { User, ApiKey } from '../types';
+
+export interface AuditLogEntry {
+  id: string;
+  timestamp: string;
+  user: string;
+  action: string;
+  resource: string;
+  detail: string;
+  ip: string;
+}
 
 // ── Users ──
 export function fetchUsers(): Promise<User[]> {
@@ -28,4 +38,9 @@ export function createApiKey(name: string): Promise<ApiKey & { rawKey: string }>
 
 export function revokeApiKey(id: string): Promise<void> {
   return apiDelete<void>(`/api/v1/api-keys/${id}`);
+}
+
+// ── Audit Logs ──
+export function fetchAuditLogs(): Promise<AuditLogEntry[]> {
+  return apiGet<AuditLogEntry[]>('/api/v1/audit-logs');
 }

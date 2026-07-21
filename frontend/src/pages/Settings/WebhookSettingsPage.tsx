@@ -41,14 +41,14 @@ export function WebhookSettingsPage() {
   // ── Data fetching ──
   const { data: webhooks, isLoading } = useApiQuery(queryKeys.webhooks.list(), fetchWebhooks);
 
-  const createMutation = useApiMutation(queryKeys.webhooks.list(), (vars: { url: string; events: WebhookEvent[]; secret?: string }) =>
+  const createMutation = useApiMutation(queryKeys.webhooks.all, (vars: { url: string; events: WebhookEvent[]; secret?: string }) =>
     createWebhook(vars),
   );
-  const updateMutation = useApiMutation(queryKeys.webhooks.list(), (vars: { id: string; data: Partial<Webhook> }) =>
+  const updateMutation = useApiMutation(queryKeys.webhooks.all, (vars: { id: string; data: Partial<Webhook> }) =>
     updateWebhook(vars.id, vars.data),
   );
-  const deleteMutation = useApiMutation(queryKeys.webhooks.list(), (id: string) => deleteWebhook(id));
-  const testMutation = useApiMutation(queryKeys.webhooks.list(), (id: string) => testWebhook(id));
+  const deleteMutation = useApiMutation(queryKeys.webhooks.all, (id: string) => deleteWebhook(id));
+  const testMutation = useApiMutation(queryKeys.webhooks.all, (id: string) => testWebhook(id));
 
   // ── Local state ──
   const [modalOpen, setModalOpen] = useState(false);

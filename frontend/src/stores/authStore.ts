@@ -112,28 +112,20 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     set({ token: null, isAuthenticated: false, loginError: null });
   },
 
-  initialize: () => {
+    initialize: () => {
     // auth 未启用时直接通过
     if (!config.auth.enabled) {
       set({ token: null, isAuthenticated: true, isLoading: false });
       return;
     }
 
-    // 检查 localStorage 和 sessionStorage 中的 token
-    let token =
-      localStorage.getItem(config.auth.storageKey) ||
-      sessionStorage.getItem(config.auth.storageKey);
-
-    // 默认保持登录状态：没有 token 时自动签发默认 token
-    // 只有主动点击「退出登录」才会清除 token 回到登录页
-    if (!token) {
-      token = MOCK_TOKEN;
-      localStorage.setItem(config.auth.storageKey, token);
-    }
+    const token =
+      localStorage.getItem(config.auth.storageKey)
+      ?? sessionStorage.getItem(config.auth.storageKey);
 
     set({
       token,
-      isAuthenticated: true,
+      isAuthenticated: !!token,
       isLoading: false,
     });
   },

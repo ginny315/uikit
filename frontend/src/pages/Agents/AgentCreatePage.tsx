@@ -9,6 +9,8 @@ import { useForm } from '@mantine/form';
 import { IconDeviceFloppy, IconX } from '@tabler/icons-react';
 import { PageHeader } from '../../components/shared/PageHeader/PageHeader';
 import type { BreadcrumbItem } from '../../components/shared/PageHeader/PageHeader';
+import { useApiMutation, queryKeys } from '../../hooks/useApi';
+import { createAgent } from '../../services/agents';
 import classes from './AgentCreate.module.css';
 
 const TOOL_OPTIONS = [
@@ -90,10 +92,25 @@ export function AgentCreatePage() {
     { label: t('agents:create.title') },
   ];
 
+  const createMutation = useApiMutation(queryKeys.agents.all, (values: typeof form.values) =>
+    createAgent({
+      name: values.name,
+      description: values.description,
+      llmProvider: values.provider,
+      llmModel: values.model,
+      tools: values.tools,
+      dailyTokenQuota: values.dailyTokenQuota,
+    }),
+  );
+
   function handleSubmit(values: typeof form.values) {
     setTriedSubmit(false);
-    notifications.show({ message: `Agent "${values.name}" 创建成功`, color: 'green', withCloseButton: true });
-    navigate('/agents');
+    createMutation.mutate(values, {
+      onSuccess: () => {
+        notifications.show({ message: `Agent "${values.name}" 创建成功`, color: 'green', withCloseButton: true });
+        navigate('/agents');
+      },
+    });
   }
 
   function handleValidationError() {
@@ -174,7 +191,7 @@ export function AgentCreatePage() {
           </div>
 
           <div className={classes.formActions}>
-            <Button type="submit" leftSection={<IconDeviceFloppy size={16} />}>
+            <Button type="submit" leftSection={<IconDeviceFloppy size={16} />} loading={createMutation.isPending}>
               {t('agents:create.submitBtn')}
             </Button>
             <Button variant="subtle" color="gray" leftSection={<IconX size={16} />} onClick={() => navigate('/agents')}>

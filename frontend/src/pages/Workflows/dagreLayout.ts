@@ -7,12 +7,6 @@
 import { graphlib, layout } from '@dagrejs/dagre';
 import type { Node, Edge } from '@xyflow/react';
 
-/** dagre 节点 label 类型 — 只包含布局所需尺寸 */
-interface DagreNodeLabel {
-  width: number;
-  height: number;
-}
-
 /** dagre 图配置：从上到下，层级间距 80px，节点间距 60px */
 const DAGRE_CONFIG = {
   rankdir: 'TB',    // Top → Bottom
@@ -30,9 +24,9 @@ const DAGRE_CONFIG = {
  * 返回新数组，不修改原始 nodes。
  */
 export function runDagreLayout(nodes: Node[], edges: Edge[]): Node[] {
-  const g = new graphlib.Graph<DagreNodeLabel>()
-    .setDefaultEdgeLabel(() => ({}))
-    .setGraph(DAGRE_CONFIG);
+  const g = new graphlib.Graph();
+  g.setDefaultEdgeLabel(() => ({}));
+  g.setGraph(DAGRE_CONFIG);
 
   // 添加节点
   for (const node of nodes) {

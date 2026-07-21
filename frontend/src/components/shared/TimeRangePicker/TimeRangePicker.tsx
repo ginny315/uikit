@@ -80,7 +80,7 @@ export function TimeRangePicker({ value, onChange }: TimeRangePickerProps) {
           <DatePicker
             key={`start-${opened}`}
             value={draftStart}
-            onChange={setDraftStart}
+            onChange={(v) => setDraftStart(v ? dayjs(v).toDate() : null)}
             defaultDate={value.start ? dayjs(value.start).toDate() : undefined}
             maxDate={draftEnd ?? undefined}
             size="sm"
@@ -88,7 +88,7 @@ export function TimeRangePicker({ value, onChange }: TimeRangePickerProps) {
           <DatePicker
             key={`end-${opened}`}
             value={draftEnd}
-            onChange={setDraftEnd}
+            onChange={(v) => setDraftEnd(v ? dayjs(v).toDate() : null)}
             defaultDate={value.end ? dayjs(value.end).toDate() : undefined}
             minDate={draftStart ?? undefined}
             size="sm"

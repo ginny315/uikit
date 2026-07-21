@@ -1,16 +1,13 @@
 /**
  * NodeConfigPanel — 节点配置侧边面板
- *
- * 当用户在 DAG 画布中选中一个 Agent 节点时，该面板从右侧滑入，
- * 用于配置节点的 Agent 选择、输入模板等。
- * Start/End 节点不显示此面板。
  */
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Select, Textarea, Button, Text } from '@mantine/core';
 import { IconTrash } from '@tabler/icons-react';
 import type { WorkflowNode, WorkflowNodeData } from '../../types';
-import { MOCK_AGENTS } from '../../mocks/agents';
+import { useApiQuery, queryKeys } from '../../hooks/useApi';
+import { fetchAgents } from '../../services/agents';
 import classes from './NodeConfigPanel.module.css';
 
 interface NodeConfigPanelProps {
@@ -23,13 +20,18 @@ interface NodeConfigPanelProps {
 export function NodeConfigPanel({ node, visible, onChange, onDelete }: NodeConfigPanelProps) {
   const { t } = useTranslation();
 
-  // 只显示运行中的 Agent（停止/错误的 Agent 不可选）
-  const agentOptions = useMemo(
-    () => MOCK_AGENTS
-      .filter((a) => a.status === 'running')
-      .map((a) => ({ value: a.id, label: `${a.name} (${a.llmModel})` })),
-    [],
+  const { data: agentsData } = useApiQuery(
+    queryKeys.agents.list({ status: 'running', pageSize: 100 }),
+    () => fetchAgents({ status: 'running', pageSize: 100 }),
   );
+
+  const agentOptions = useMemo(
+    () => (agentsData?.data ?? [])
+      .map((a) => ({ value: a.id, label: `${a.name} (${a.llmModel})` })),
+    [agentsData?.data],
+  );
+
+  const runningAgents = agentsData?.data ?? [];
 
   if (!visible || !node || node.type !== 'agent') return null;
 
@@ -51,7 +53,7 @@ export function NodeConfigPanel({ node, visible, onChange, onDelete }: NodeConfi
           value={data.agentId ?? ''}
           onChange={(v) => {
             if (v) {
-              const agent = MOCK_AGENTS.find((a) => a.id === v);
+              const agent = runningAgents.find((a) => a.id === v);
               onChange(node.id, {
                 agentId: v,
                 agentName: agent?.name ?? '',

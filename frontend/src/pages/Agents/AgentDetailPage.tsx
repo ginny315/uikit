@@ -1,7 +1,7 @@
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Button, Tabs, Modal, Text, Tooltip } from '@mantine/core';
+import { Button, Tabs, Modal, Text, Tooltip, Center, Loader } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { useDisclosure } from '@mantine/hooks';
 import {
@@ -12,16 +12,12 @@ import { StatusBadge } from '../../components/shared/StatusBadge/StatusBadge';
 import { PriorityBadge } from '../../components/shared/PriorityBadge/PriorityBadge';
 import { PageHeader } from '../../components/shared/PageHeader/PageHeader';
 import type { BreadcrumbItem } from '../../components/shared/PageHeader/PageHeader';
-import type { Agent } from '../../types';
-import { MOCK_AGENTS as MOCK_AGENTS_LIST } from '../../mocks/agents';
-import { MOCK_TASKS } from '../../mocks/tasks';
+import type { AgentStatus } from '../../types';
+import { useApiQuery, useApiMutation, queryKeys } from '../../hooks/useApi';
+import { fetchAgent, updateAgent, deleteAgent } from '../../services/agents';
+import { fetchTasks } from '../../services/tasks';
 import { formatTokens, formatDuration } from '../../lib/format';
 import classes from './AgentDetail.module.css';
-
-// 数组 → id 索引，O(1) 查找
-const MOCK_AGENTS: Record<string, Agent> = Object.fromEntries(
-  MOCK_AGENTS_LIST.map((a) => [a.id, a]),
-);
 
 function TruncatedText({ text, maxLen = 32 }: { text: string; maxLen?: number }) {
   if (text.length <= maxLen) return <span>{text}</span>;
@@ -41,14 +37,30 @@ export function AgentDetailPage() {
   const [activeTab, setActiveTab] = useState<string | null>('overview');
   const [deleteOpened, { open: openDelete, close: closeDelete }] = useDisclosure(false);
 
-  // 该 Agent 的任务（共享 mock 数据源，与任务调度页一致）
-  const agentTasks = useMemo(() => MOCK_TASKS.filter((task) => task.agentId === id), [id]);
+  const { data: agent, isLoading, isError } = useApiQuery(
+    queryKeys.agents.detail(id ?? ''),
+    () => fetchAgent(id!),
+    { enabled: !!id },
+  );
 
-  const baseAgent = id ? MOCK_AGENTS[id] : undefined;
-  const [agentStatus, setAgentStatus] = useState(baseAgent?.status ?? 'stopped');
-  const agent = baseAgent ? { ...baseAgent, status: agentStatus } : undefined;
+  const { data: tasksData } = useApiQuery(
+    queryKeys.tasks.list({ agentId: id }),
+    () => fetchTasks({ agentId: id, pageSize: 100 }),
+    { enabled: !!id },
+  );
 
-  if (!agent) {
+  const statusMutation = useApiMutation(queryKeys.agents.all, (status: AgentStatus) =>
+    updateAgent(id!, { status }),
+  );
+  const deleteMutation = useApiMutation(queryKeys.agents.all, () => deleteAgent(id!));
+
+  const agentTasks = tasksData?.data ?? [];
+
+  if (isLoading) {
+    return <Center h="60vh"><Loader size="md" /></Center>;
+  }
+
+  if (!agent || isError) {
     return (
       <div style={{ padding: 48, textAlign: 'center' }}>
         <IconAlertTriangle size={48} style={{ color: 'var(--mantine-color-dimmed)' }} />
@@ -61,8 +73,8 @@ export function AgentDetailPage() {
     );
   }
 
-  // TS won't narrow `agent` inside closures — hoist to const
-  const agentName: string = agent.name;
+  const agentName = agent.name;
+  const agentStatus = agent.status;
 
   const breadcrumbs: BreadcrumbItem[] = [
     { label: t('nav:pageTitles./agents'), path: '/agents' },
@@ -72,31 +84,43 @@ export function AgentDetailPage() {
   const tabTasksLabel = `${t('agents:detail.tabs.tasks')} (${agentTasks.length})`;
 
   function handleToggleStatus() {
-    const next = agentStatus === 'running' ? 'stopped' : 'running';
-    setAgentStatus(next);
-    notifications.show({
-      message: next === 'running' ? `"${agentName}" 已启动` : `"${agentName}" 已停止`,
-      color: next === 'running' ? 'green' : 'yellow',
-      withCloseButton: true,
+    const next: AgentStatus = agentStatus === 'running' ? 'stopped' : 'running';
+    statusMutation.mutate(next, {
+      onSuccess: () => {
+        notifications.show({
+          message: next === 'running' ? `"${agentName}" 已启动` : `"${agentName}" 已停止`,
+          color: next === 'running' ? 'green' : 'yellow',
+          withCloseButton: true,
+        });
+      },
     });
   }
 
   function handleRestart() {
-    setAgentStatus('running');
-    notifications.show({ message: `"${agentName}" 已重启`, color: 'green', withCloseButton: true });
+    statusMutation.mutate('running', {
+      onSuccess: () => {
+        notifications.show({ message: `"${agentName}" 已重启`, color: 'green', withCloseButton: true });
+      },
+    });
+  }
+
+  function handleDeleteConfirm() {
+    deleteMutation.mutate(undefined, {
+      onSuccess: () => {
+        closeDelete();
+        navigate('/agents');
+      },
+    });
   }
 
   return (
     <>
-      <PageHeader
-        breadcrumbs={breadcrumbs}
-        title={agent.name}
-      >
+      <PageHeader breadcrumbs={breadcrumbs} title={agent.name}>
         <StatusBadge status={agent.status} />
         <span className={classes.providerBadge} style={{ marginLeft: 4, marginRight: 12 }}>
           {agent.llmProvider} / {agent.llmModel}
         </span>
-        {agentStatus === 'running' ? (
+        {agent.status === 'running' ? (
           <Button variant="light" color="yellow" size="sm" leftSection={<IconPlayerStop size={14} />} onClick={handleToggleStatus}>
             {t('common:actions.stop')}
           </Button>
@@ -123,7 +147,6 @@ export function AgentDetailPage() {
             <Tabs.Tab value="tasks">{tabTasksLabel}</Tabs.Tab>
           </Tabs.List>
 
-          {/* ── 概览 ── */}
           <Tabs.Panel value="overview">
             <div className={classes.tabContent}>
               <div className={classes.statsRow}>
@@ -169,7 +192,7 @@ export function AgentDetailPage() {
                 <div className={classes.infoGridFull}>
                   <div className={classes.infoLabel}>{t('agents:detail.info.tools')} ({agent.tools.length})</div>
                   <div className={classes.toolsWrap}>
-                    {agent.tools.map((t) => <span key={t} className={classes.toolTag}>{t}</span>)}
+                    {agent.tools.map((tool) => <span key={tool} className={classes.toolTag}>{tool}</span>)}
                   </div>
                 </div>
               </div>
@@ -181,7 +204,6 @@ export function AgentDetailPage() {
             </div>
           </Tabs.Panel>
 
-          {/* ── 任务 ── */}
           <Tabs.Panel value="tasks">
             <div className={classes.tabContent}>
               <table className={classes.taskTable}>
@@ -214,7 +236,6 @@ export function AgentDetailPage() {
               </table>
             </div>
           </Tabs.Panel>
-
         </Tabs>
       </div>
 
@@ -224,7 +245,7 @@ export function AgentDetailPage() {
         </Text>
         <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
           <Button variant="subtle" color="gray" onClick={closeDelete}>{t('common:actions.cancel')}</Button>
-          <Button color="red" onClick={() => { closeDelete(); navigate('/agents'); }}>
+          <Button color="red" loading={deleteMutation.isPending} onClick={handleDeleteConfirm}>
             {t('agents:detail.deleteModal.confirmBtn')}
           </Button>
         </div>

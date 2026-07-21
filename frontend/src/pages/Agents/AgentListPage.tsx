@@ -1,7 +1,7 @@
-import { useState, useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { TextInput, Button, ActionIcon, Tooltip, Badge, Pagination, Select, Modal, Text } from '@mantine/core';
+import { TextInput, Button, ActionIcon, Tooltip, Badge, Pagination, Select, Modal, Text, Center, Loader } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { useDisclosure } from '@mantine/hooks';
 import {
@@ -10,7 +10,8 @@ import {
 } from '@tabler/icons-react';
 import { StatusBadge } from '../../components/shared/StatusBadge/StatusBadge';
 import type { Agent, AgentStatus } from '../../types';
-import { MOCK_AGENTS } from '../../mocks/agents';
+import { useApiQuery, useApiMutation, queryKeys } from '../../hooks/useApi';
+import { fetchAgents, deleteAgent } from '../../services/agents';
 import { formatTokens } from '../../lib/format';
 import classes from './AgentList.module.css';
 
@@ -39,7 +40,6 @@ function TruncatedCell({ text }: { text: string }) {
 export function AgentListPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const [agents, setAgents] = useState<Agent[]>(MOCK_AGENTS);
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<AgentStatus | 'all'>('all');
   const [sortField, setSortField] = useState<SortField>('name');
@@ -48,6 +48,27 @@ export function AgentListPage() {
   const [page, setPage] = useState(1);
   const [deleteTarget, setDeleteTarget] = useState<Agent | null>(null);
   const [deleteOpened, { open: openDelete, close: closeDelete }] = useDisclosure(false);
+
+  const listParams = useMemo(() => ({
+    search: search.trim() || undefined,
+    status: statusFilter === 'all' ? undefined : statusFilter,
+    sort: sortField,
+    order: sortDir,
+    page,
+    pageSize,
+  }), [search, statusFilter, sortField, sortDir, page, pageSize]);
+
+  const { data, isLoading } = useApiQuery(
+    queryKeys.agents.list(listParams),
+    () => fetchAgents(listParams),
+  );
+
+  const deleteMutation = useApiMutation(queryKeys.agents.all, deleteAgent);
+
+  const agents = data?.data ?? [];
+  const total = data?.total ?? 0;
+  const totalPages = Math.max(1, Math.ceil(total / pageSize));
+  const safePage = Math.min(page, totalPages);
 
   const STATUS_FILTERS: { value: AgentStatus | 'all'; label: string }[] = [
     { value: 'all', label: t('agents:list.filterAll') },
@@ -67,33 +88,15 @@ export function AgentListPage() {
 
   function handleDeleteConfirm() {
     if (!deleteTarget) return;
-    setAgents((prev) => prev.filter((a) => a.id !== deleteTarget.id));
-    notifications.show({ message: `Agent "${deleteTarget.name}" 已删除`, color: 'green', withCloseButton: true });
-    closeDelete();
-    setDeleteTarget(null);
-  }
-
-  const filtered = useMemo(() => {
-    let list = agents;
-    if (search.trim()) {
-      const q = search.toLowerCase();
-      list = list.filter((a) => a.name.toLowerCase().includes(q) || a.description.toLowerCase().includes(q));
-    }
-    if (statusFilter !== 'all') list = list.filter((a) => a.status === statusFilter);
-    list = [...list].sort((a, b) => {
-      const dir = sortDir === 'asc' ? 1 : -1;
-      if (sortField === 'name') return dir * a.name.localeCompare(b.name);
-      if (sortField === 'status') return dir * a.status.localeCompare(b.status);
-      if (sortField === 'todayTasks') return dir * (a.todayTasks - b.todayTasks);
-      if (sortField === 'todayTokens') return dir * (a.todayTokens - b.todayTokens);
-      return 0;
+    const name = deleteTarget.name;
+    deleteMutation.mutate(deleteTarget.id, {
+      onSuccess: () => {
+        notifications.show({ message: `Agent "${name}" 已删除`, color: 'green', withCloseButton: true });
+        closeDelete();
+        setDeleteTarget(null);
+      },
     });
-    return list;
-  }, [agents, search, statusFilter, sortField, sortDir]);
-
-  const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
-  const safePage = Math.min(page, totalPages);
-  const paginated = filtered.slice((safePage - 1) * pageSize, safePage * pageSize);
+  }
 
   return (
     <>
@@ -127,98 +130,100 @@ export function AgentListPage() {
       </div>
 
       <div className={classes.tableCard}>
-        <div className={classes.tableWrap}>
-          <table>
-            <colgroup>
-              <col className={classes.colStickyLeft} />
-              <col />
-              <col />
-              <col />
-              <col />
-              <col />
-              <col className={classes.colStickyRight} />
-            </colgroup>
-            <thead>
-              <tr>
-                <th className={classes.stickyLeft} onClick={() => toggleSort('name')}>
-                  {t('agents:list.columns.name')} <SortIcon field="name" sortField={sortField} sortDir={sortDir} />
-                </th>
-                <th>{t('agents:list.columns.description')}</th>
-                <th onClick={() => toggleSort('status')}>
-                  {t('agents:list.columns.status')} <SortIcon field="status" sortField={sortField} sortDir={sortDir} />
-                </th>
-                <th>{t('agents:list.columns.providerModel')}</th>
-                <th onClick={() => toggleSort('todayTasks')}>
-                  {t('agents:list.columns.todayTasks')} <SortIcon field="todayTasks" sortField={sortField} sortDir={sortDir} />
-                </th>
-                <th onClick={() => toggleSort('todayTokens')}>
-                  {t('agents:list.columns.todayTokens')} <SortIcon field="todayTokens" sortField={sortField} sortDir={sortDir} />
-                </th>
-                <th className={classes.stickyRight}>{t('agents:list.columns.actions')}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {paginated.map((agent) => (
-                <tr key={agent.id} onClick={() => navigate(`/agents/${agent.id}`)}>
-                  <td className={classes.stickyLeft}><span className={classes.agentName}>{agent.name}</span></td>
-                  <td className={classes.descCell}><TruncatedCell text={agent.description} /></td>
-                  <td><StatusBadge status={agent.status} /></td>
-                  <td>
-                    <span className={classes.dimmedCell} style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'block' }}>
-                      {agent.llmProvider} / {agent.llmModel}
-                    </span>
-                  </td>
-                  <td className={classes.monoCell}>{agent.todayTasks}</td>
-                  <td className={classes.monoCell}>
-                    <Tooltip label={`${agent.todayTokens.toLocaleString()} / ${agent.dailyTokenQuota.toLocaleString()} tokens`} openDelay={400}>
-                      <span>
-                        {formatTokens(agent.todayTokens)}
-                        <span className={classes.dimmedCell}> / {formatTokens(agent.dailyTokenQuota)}</span>
-                      </span>
-                    </Tooltip>
-                  </td>
-                  <td className={classes.stickyRight}>
-                    <div className={classes.actions} onClick={(e) => e.stopPropagation()}>
-                      <Tooltip label={t('common:actions.edit')}>
-                        <ActionIcon variant="subtle" color="gray" size="sm" onClick={() => navigate(`/agents/${agent.id}`)}>
-                          <IconPencil size={14} />
-                        </ActionIcon>
-                      </Tooltip>
-                      <Tooltip label={t('common:actions.delete')}>
-                        <ActionIcon variant="subtle" color="red" size="sm" onClick={() => { setDeleteTarget(agent); openDelete(); }}>
-                          <IconTrash size={14} />
-                        </ActionIcon>
-                      </Tooltip>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        {isLoading ? (
+          <Center py="xl"><Loader size="md" /></Center>
+        ) : (
+          <>
+            <div className={classes.tableWrap}>
+              <table>
+                <colgroup>
+                  <col className={classes.colStickyLeft} />
+                  <col /><col /><col /><col /><col />
+                  <col className={classes.colStickyRight} />
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th className={classes.stickyLeft} onClick={() => toggleSort('name')}>
+                      {t('agents:list.columns.name')} <SortIcon field="name" sortField={sortField} sortDir={sortDir} />
+                    </th>
+                    <th>{t('agents:list.columns.description')}</th>
+                    <th onClick={() => toggleSort('status')}>
+                      {t('agents:list.columns.status')} <SortIcon field="status" sortField={sortField} sortDir={sortDir} />
+                    </th>
+                    <th>{t('agents:list.columns.providerModel')}</th>
+                    <th onClick={() => toggleSort('todayTasks')}>
+                      {t('agents:list.columns.todayTasks')} <SortIcon field="todayTasks" sortField={sortField} sortDir={sortDir} />
+                    </th>
+                    <th onClick={() => toggleSort('todayTokens')}>
+                      {t('agents:list.columns.todayTokens')} <SortIcon field="todayTokens" sortField={sortField} sortDir={sortDir} />
+                    </th>
+                    <th className={classes.stickyRight}>{t('agents:list.columns.actions')}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {agents.map((agent) => (
+                    <tr key={agent.id} onClick={() => navigate(`/agents/${agent.id}`)}>
+                      <td className={classes.stickyLeft}><span className={classes.agentName}>{agent.name}</span></td>
+                      <td className={classes.descCell}><TruncatedCell text={agent.description} /></td>
+                      <td><StatusBadge status={agent.status} /></td>
+                      <td>
+                        <span className={classes.dimmedCell} style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'block' }}>
+                          {agent.llmProvider} / {agent.llmModel}
+                        </span>
+                      </td>
+                      <td className={classes.monoCell}>{agent.todayTasks}</td>
+                      <td className={classes.monoCell}>
+                        <Tooltip label={`${agent.todayTokens.toLocaleString()} / ${agent.dailyTokenQuota.toLocaleString()} tokens`} openDelay={400}>
+                          <span>
+                            {formatTokens(agent.todayTokens)}
+                            <span className={classes.dimmedCell}> / {formatTokens(agent.dailyTokenQuota)}</span>
+                          </span>
+                        </Tooltip>
+                      </td>
+                      <td className={classes.stickyRight}>
+                        <div className={classes.actions} onClick={(e) => e.stopPropagation()}>
+                          <Tooltip label={t('common:actions.edit')}>
+                            <ActionIcon variant="subtle" color="gray" size="sm" onClick={() => navigate(`/agents/${agent.id}`)}>
+                              <IconPencil size={14} />
+                            </ActionIcon>
+                          </Tooltip>
+                          <Tooltip label={t('common:actions.delete')}>
+                            <ActionIcon variant="subtle" color="red" size="sm" onClick={() => { setDeleteTarget(agent); openDelete(); }}>
+                              <IconTrash size={14} />
+                            </ActionIcon>
+                          </Tooltip>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
 
-        {filtered.length === 0 && (
-          <div className={classes.empty}>{t('agents:list.empty')}</div>
+            {agents.length === 0 && (
+              <div className={classes.empty}>{t('agents:list.empty')}</div>
+            )}
+
+            <div className={classes.paginationRow}>
+              <div className={classes.pageSizeWrap}>
+                <Select
+                  data={PAGE_SIZE_OPTIONS}
+                  value={String(pageSize)}
+                  onChange={(v) => { setPageSize(Number(v)); setPage(1); }}
+                  size="xs"
+                  w={120}
+                  allowDeselect={false}
+                />
+                <span className={classes.totalText}>
+                  {t('agents:list.totalAgents', { count: total })}
+                </span>
+              </div>
+              {totalPages > 1 && (
+                <Pagination total={totalPages} value={safePage} onChange={setPage} size="sm" withEdges />
+              )}
+            </div>
+          </>
         )}
-
-        <div className={classes.paginationRow}>
-          <div className={classes.pageSizeWrap}>
-            <Select
-              data={PAGE_SIZE_OPTIONS}
-              value={String(pageSize)}
-              onChange={(v) => { setPageSize(Number(v)); setPage(1); }}
-              size="xs"
-              w={120}
-              allowDeselect={false}
-            />
-            <span className={classes.totalText}>
-              {t('agents:list.totalAgents', { count: filtered.length })}
-            </span>
-          </div>
-          {totalPages > 1 && (
-            <Pagination total={totalPages} value={safePage} onChange={setPage} size="sm" withEdges />
-          )}
-        </div>
       </div>
 
       <Modal opened={deleteOpened} onClose={closeDelete} title={t('agents:detail.deleteModal.title')} centered>
@@ -227,7 +232,9 @@ export function AgentListPage() {
         </Text>
         <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
           <Button variant="subtle" color="gray" onClick={closeDelete}>{t('common:actions.cancel')}</Button>
-          <Button color="red" onClick={handleDeleteConfirm}>{t('agents:detail.deleteModal.confirmBtn')}</Button>
+          <Button color="red" loading={deleteMutation.isPending} onClick={handleDeleteConfirm}>
+            {t('agents:detail.deleteModal.confirmBtn')}
+          </Button>
         </div>
       </Modal>
     </>

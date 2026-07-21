@@ -1,17 +1,16 @@
-import { useState, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Button, Modal, Text } from '@mantine/core';
+import { Button, Modal, Text, Center, Loader } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { useDisclosure } from '@mantine/hooks';
-import dayjs from 'dayjs';
 import { IconAlertTriangle, IconBan, IconRefresh } from '@tabler/icons-react';
 import { StatusBadge } from '../../components/shared/StatusBadge/StatusBadge';
 import { PriorityBadge } from '../../components/shared/PriorityBadge/PriorityBadge';
 import { PageHeader } from '../../components/shared/PageHeader/PageHeader';
 import type { BreadcrumbItem } from '../../components/shared/PageHeader/PageHeader';
-import type { TaskStatus, TaskTimelineEvent } from '../../types';
-import { MOCK_TASKS, getTaskTimeline } from '../../mocks/tasks';
+import type { TaskTimelineEvent } from '../../types';
+import { useApiQuery, useApiMutation, queryKeys } from '../../hooks/useApi';
+import { fetchTask, fetchTaskTimeline, cancelTask } from '../../services/tasks';
 import { formatDuration } from '../../lib/format';
 import classes from './TaskDetail.module.css';
 
@@ -32,27 +31,25 @@ export function TaskDetailPage() {
   const navigate = useNavigate();
   const [cancelOpened, { open: openCancel, close: closeCancel }] = useDisclosure(false);
 
-  const baseTask = useMemo(() => MOCK_TASKS.find((task) => task.id === id), [id]);
-  // 会话内状态覆盖（取消 / 重试），与 AgentDetailPage 的 agentStatus 模式一致
-  const [statusOverride, setStatusOverride] = useState<TaskStatus | null>(null);
-  const task = baseTask ? { ...baseTask, status: statusOverride ?? baseTask.status } : undefined;
+  const { data: task, isLoading, isError } = useApiQuery(
+    queryKeys.tasks.detail(id ?? ''),
+    () => fetchTask(id!),
+    { enabled: !!id },
+  );
 
-  // 时间线：基于原始任务推导；会话内改变状态后追加对应事件
-  const timeline = useMemo<TaskTimelineEvent[]>(() => {
-    if (!baseTask) return [];
-    const events = [...getTaskTimeline(baseTask)];
-    if (statusOverride && statusOverride !== baseTask.status) {
-      const now = dayjs().format('YYYY-MM-DD HH:mm:ss');
-      if (statusOverride === 'cancelled') {
-        events.push({ timestamp: now, type: 'cancelled', detail: t('tasks:detail.cancelledDetail') });
-      } else if (statusOverride === 'queued') {
-        events.push({ timestamp: now, type: 'retry', detail: t('tasks:detail.requeuedDetail') });
-      }
-    }
-    return events;
-  }, [baseTask, statusOverride, t]);
+  const { data: timeline = [] } = useApiQuery(
+    queryKeys.tasks.timeline(id ?? ''),
+    () => fetchTaskTimeline(id!),
+    { enabled: !!id && !!task },
+  );
 
-  if (!task) {
+  const cancelMutation = useApiMutation(queryKeys.tasks.all, () => cancelTask(id!));
+
+  if (isLoading) {
+    return <Center h="60vh"><Loader size="md" /></Center>;
+  }
+
+  if (!task || isError) {
     return (
       <div style={{ padding: 48, textAlign: 'center' }}>
         <IconAlertTriangle size={48} style={{ color: 'var(--mantine-color-dimmed)' }} />
@@ -65,8 +62,7 @@ export function TaskDetailPage() {
     );
   }
 
-  // TS won't narrow `task` inside closures — hoist to const
-  const taskId: string = task.id;
+  const taskId = task.id;
   const isCancellable = task.status === 'queued' || task.status === 'running';
   const isRetryable = task.status === 'failed' || task.status === 'cancelled';
 
@@ -76,13 +72,15 @@ export function TaskDetailPage() {
   ];
 
   function handleCancelConfirm() {
-    setStatusOverride('cancelled');
-    notifications.show({ message: t('tasks:cancelModal.successMsg', { id: taskId }), color: 'yellow', withCloseButton: true });
-    closeCancel();
+    cancelMutation.mutate(undefined, {
+      onSuccess: () => {
+        notifications.show({ message: t('tasks:cancelModal.successMsg', { id: taskId }), color: 'yellow', withCloseButton: true });
+        closeCancel();
+      },
+    });
   }
 
   function handleRetry() {
-    setStatusOverride('queued');
     notifications.show({ message: t('tasks:detail.retryMsg', { id: taskId }), color: 'green', withCloseButton: true });
   }
 
@@ -103,7 +101,6 @@ export function TaskDetailPage() {
         )}
       </PageHeader>
 
-      {/* ── 概览 ── */}
       <div className={classes.card}>
         <div className={classes.statsRow}>
           <div className={classes.statMini}>
@@ -156,7 +153,6 @@ export function TaskDetailPage() {
         </div>
       </div>
 
-      {/* ── 输入 / 输出 ── */}
       <div className={classes.card}>
         <div className={classes.sectionTitle}>{t('tasks:detail.input')}</div>
         <div className={classes.contentBlock}>{task.input}</div>
@@ -180,7 +176,6 @@ export function TaskDetailPage() {
         </div>
       )}
 
-      {/* ── 执行时间线 ── */}
       <div className={classes.card}>
         <div className={classes.sectionTitle}>{t('tasks:detail.timeline')}</div>
         <div className={classes.timeline}>
@@ -200,14 +195,15 @@ export function TaskDetailPage() {
         </div>
       </div>
 
-      {/* ── 取消任务确认 ── */}
       <Modal opened={cancelOpened} onClose={closeCancel} title={t('tasks:cancelModal.title')} centered>
         <Text size="sm" mb="md">
           {t('tasks:cancelModal.message', { id: taskId })}
         </Text>
         <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
           <Button variant="subtle" color="gray" onClick={closeCancel}>{t('tasks:cancelModal.keepBtn')}</Button>
-          <Button color="red" onClick={handleCancelConfirm}>{t('tasks:cancelModal.confirmBtn')}</Button>
+          <Button color="red" loading={cancelMutation.isPending} onClick={handleCancelConfirm}>
+            {t('tasks:cancelModal.confirmBtn')}
+          </Button>
         </div>
       </Modal>
     </>

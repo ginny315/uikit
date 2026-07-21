@@ -12,6 +12,7 @@ import {
   fetchApiKeys,
   createApiKey,
   revokeApiKey,
+  fetchAuditLogs,
 } from '../../services/access';
 import type { User, UserRole, ApiKey } from '../../types';
 import classes from './AccessSettings.module.css';
@@ -48,31 +49,19 @@ function Avatar({ name }: { name: string }) {
   return <span className={classes.avatar}>{initials}</span>;
 }
 
-// 本地审计日志 mock（未接入 MSW 端点）
-const MOCK_AUDIT = [
-  { id: 'a1', timestamp: '2026-07-21 10:32:15', user: 'Alice Chen', action: 'task_created', resource: 'task_7a3f2', detail: '提交代码审查任务', ip: '192.168.1.100' },
-  { id: 'a2', timestamp: '2026-07-21 09:15:00', user: 'Bob Zhang', action: 'agent_created', resource: 'agent_5', detail: '创建 Agent: doc-writer', ip: '192.168.1.101' },
-  { id: 'a3', timestamp: '2026-07-20 18:00:30', user: 'Alice Chen', action: 'api_key_created', resource: 'key_2', detail: '创建 API Key: Local Dev', ip: '192.168.1.100' },
-  { id: 'a4', timestamp: '2026-07-20 16:45:00', user: 'Carol Li', action: 'role_changed', resource: 'user_u4', detail: 'David Wang: viewer → member', ip: '192.168.1.102' },
-  { id: 'a5', timestamp: '2026-07-19 14:20:00', user: 'Alice Chen', action: 'webhook_created', resource: 'wh_1', detail: '创建 Webhook: Slack 通知', ip: '192.168.1.100' },
-  { id: 'a6', timestamp: '2026-07-19 11:00:00', user: 'Bob Zhang', action: 'task_cancelled', resource: 'task_9d55c', detail: '取消长时间运行任务', ip: '192.168.1.101' },
-  { id: 'a7', timestamp: '2026-07-18 09:30:00', user: 'Alice Chen', action: 'user_invited', resource: 'user_u5', detail: '邀请 Eve Liu 加入团队', ip: '192.168.1.100' },
-  { id: 'a8', timestamp: '2026-07-17 15:10:00', user: 'Carol Li', action: 'api_key_revoked', resource: 'key_old', detail: '吊销旧 CI Key', ip: '192.168.1.102' },
-];
-
 export function AccessSettingsPage() {
   const { t } = useTranslation();
 
-  // ── Data fetching ──
   const { data: users, isLoading: usersLoading } = useApiQuery(queryKeys.users.list(), fetchUsers);
-  const { data: apiKeys, isLoading: keysLoading } = useApiQuery(queryKeys.users.list(), fetchApiKeys);
+  const { data: apiKeys, isLoading: keysLoading } = useApiQuery(queryKeys.apiKeys.list(), fetchApiKeys);
+  const { data: auditLogs, isLoading: auditLoading } = useApiQuery(queryKeys.audit.list(), fetchAuditLogs);
 
-  const roleMutation = useApiMutation(queryKeys.users.list(), (vars: { id: string; role: string }) =>
+  const roleMutation = useApiMutation(queryKeys.users.all, (vars: { id: string; role: string }) =>
     updateUserRole(vars.id, vars.role),
   );
-  const removeUserMutation = useApiMutation(queryKeys.users.list(), (id: string) => removeUser(id));
-  const createKeyMutation = useApiMutation(queryKeys.users.list(), (name: string) => createApiKey(name));
-  const revokeKeyMutation = useApiMutation(queryKeys.users.list(), (id: string) => revokeApiKey(id));
+  const removeUserMutation = useApiMutation(queryKeys.users.all, (id: string) => removeUser(id));
+  const createKeyMutation = useApiMutation(queryKeys.apiKeys.all, (name: string) => createApiKey(name));
+  const revokeKeyMutation = useApiMutation(queryKeys.apiKeys.all, (id: string) => revokeApiKey(id));
 
   // ── Local state ──
   const [createModalOpen, setCreateModalOpen] = useState(false);
@@ -250,6 +239,9 @@ export function AccessSettingsPage() {
               <span className={classes.sectionTitle}>{t('access:auditLog.title')}</span>
             </div>
             <div className={classes.tableWrap}>
+              {auditLoading ? (
+                <Center py="xl"><Loader size="sm" /></Center>
+              ) : (
               <table>
                 <thead>
                   <tr>
@@ -262,7 +254,7 @@ export function AccessSettingsPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {MOCK_AUDIT.map((entry) => (
+                  {(auditLogs ?? []).map((entry) => (
                     <tr key={entry.id}>
                       <td className={classes.monoCell}>{entry.timestamp}</td>
                       <td className={classes.nameCell}>{entry.user}</td>
@@ -278,6 +270,7 @@ export function AccessSettingsPage() {
                   ))}
                 </tbody>
               </table>
+              )}
             </div>
           </div>
         </Tabs.Panel>

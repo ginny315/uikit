@@ -8,7 +8,8 @@ export interface LogSearchParams {
   search?: string;
   level?: string;
   source?: string;
-  timeRange?: string;
+  start?: string;
+  end?: string;
   page?: number;
   pageSize?: number;
 }

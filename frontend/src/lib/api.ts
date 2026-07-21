@@ -35,11 +35,31 @@ export class ApiRequestError extends Error {
   get isServerError() { return this.status >= 500; }
 }
 
+function getStoredToken(): string | null {
+  return (
+    localStorage.getItem(config.auth.storageKey)
+    ?? sessionStorage.getItem(config.auth.storageKey)
+  );
+}
+
+function clearStoredToken(): void {
+  localStorage.removeItem(config.auth.storageKey);
+  sessionStorage.removeItem(config.auth.storageKey);
+}
+
+function handleUnauthorized(): void {
+  clearStoredToken();
+  if (typeof window !== 'undefined' && !window.location.pathname.startsWith(config.auth.loginPath)) {
+    window.location.assign(config.auth.loginPath);
+  }
+}
+
 /**
  * fetch 封装
  *
  * - auth.enabled=true 时自动附加 Authorization header
  * - 统一错误分类为 ApiRequestError
+ * - 401 时清除 token 并跳转登录页
  * - 超时控制
  */
 async function request<T>(
@@ -54,7 +74,7 @@ async function request<T>(
   };
 
   if (config.auth.enabled) {
-    const token = localStorage.getItem(config.auth.storageKey);
+    const token = getStoredToken();
     if (token) {
       headers['Authorization'] = `Bearer ${token}`;
     }
@@ -72,6 +92,11 @@ async function request<T>(
     });
 
     clearTimeout(timeoutId);
+
+    if (response.status === 401 && config.auth.enabled) {
+      handleUnauthorized();
+      throw new ApiRequestError('Unauthorized', 401, 'UNAUTHORIZED');
+    }
 
     if (!response.ok) {
       let apiError: ApiError;
@@ -132,13 +157,18 @@ export function apiDelete<T>(path: string): Promise<T> {
 
 // ── Token 管理 ──
 export function getToken(): string | null {
-  return localStorage.getItem(config.auth.storageKey);
+  return getStoredToken();
 }
 
-export function setToken(token: string): void {
-  localStorage.setItem(config.auth.storageKey, token);
+export function setToken(token: string, persistent = true): void {
+  clearStoredToken();
+  if (persistent) {
+    localStorage.setItem(config.auth.storageKey, token);
+  } else {
+    sessionStorage.setItem(config.auth.storageKey, token);
+  }
 }
 
 export function removeToken(): void {
-  localStorage.removeItem(config.auth.storageKey);
+  clearStoredToken();
 }

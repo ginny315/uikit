@@ -7,7 +7,7 @@
 
 import { http, HttpResponse, delay } from 'msw';
 import { config } from '../config';
-import type { WorkflowSummary, Webhook } from '../types';
+import type { WorkflowSummary, WorkflowDetail, Webhook, User, TaskPriority } from '../types';
 import {
   dbAgents,
   dbTasks,
@@ -20,6 +20,8 @@ import {
   dbWebhooks,
   dbDashboardMetrics,
   dbSystemHealth,
+  dbServiceHealth,
+  dbAuditLogs,
 } from './data';
 
 const BASE = config.api.baseUrl; // http://localhost:8080
@@ -51,6 +53,18 @@ export const handlers = [
     await mockDelay();
     return HttpResponse.json(dbSystemHealth);
   }),
+  http.get(`${BASE}/api/v1/metrics/services`, async () => {
+    await mockDelay();
+    return HttpResponse.json(dbServiceHealth);
+  }),
+
+  // ═══════════════════════════════════════════════════════════
+  // Audit Logs
+  // ═══════════════════════════════════════════════════════════
+  http.get(`${BASE}/api/v1/audit-logs`, async () => {
+    await mockDelay();
+    return HttpResponse.json(dbAuditLogs);
+  }),
 
   // ═══════════════════════════════════════════════════════════
   // Agents
@@ -72,14 +86,19 @@ export const handlers = [
       filtered = filtered.filter((a) => a.status === status);
     }
     if (sort === 'name') filtered.sort((a, b) => a.name.localeCompare(b.name));
-    if (sort === 'tasks') filtered.sort((a, b) => b.todayTasks - a.todayTasks);
-    if (sort === 'tokens') filtered.sort((a, b) => b.todayTokens - a.todayTokens);
+    else if (sort === 'status') filtered.sort((a, b) => a.status.localeCompare(b.status));
+    else if (sort === 'todayTasks') filtered.sort((a, b) => a.todayTasks - b.todayTasks);
+    else if (sort === 'todayTokens') filtered.sort((a, b) => a.todayTokens - b.todayTokens);
+    else filtered.sort((a, b) => a.name.localeCompare(b.name));
+
+    const order = url.searchParams.get('order') ?? 'asc';
+    if (order === 'desc') filtered.reverse();
 
     const total = filtered.length;
     const start = (page - 1) * pageSize;
-    const items = filtered.slice(start, start + pageSize);
+    const data = filtered.slice(start, start + pageSize);
 
-    return HttpResponse.json({ items, total, page, pageSize });
+    return HttpResponse.json({ data, total, page, pageSize });
   }),
 
   http.get(`${BASE}/api/v1/agents/:id`, async ({ params }) => {
@@ -159,9 +178,9 @@ export const handlers = [
 
     const total = filtered.length;
     const start = (page - 1) * pageSize;
-    const items = filtered.slice(start, start + pageSize);
+    const data = filtered.slice(start, start + pageSize);
 
-    return HttpResponse.json({ items, total, page, pageSize });
+    return HttpResponse.json({ data, total, page, pageSize });
   }),
 
   http.get(`${BASE}/api/v1/tasks/:id`, async ({ params }) => {
@@ -186,7 +205,7 @@ export const handlers = [
       agentId: body.agentId as string,
       agentName: dbAgents.find((a) => a.id === body.agentId)?.name ?? 'unknown',
       status: 'queued' as const,
-      priority: (body.priority as number) ?? 3,
+      priority: (body.priority as TaskPriority) ?? 3,
       input: body.input as string,
       createdAt: new Date().toISOString().replace('T', ' ').slice(0, 19),
     };
@@ -212,34 +231,37 @@ export const handlers = [
     const search = url.searchParams.get('search')?.toLowerCase();
     const level = url.searchParams.get('level');
     const source = url.searchParams.get('source');
-    const timeRange = url.searchParams.get('timeRange');
+    const start = url.searchParams.get('start');
+    const end = url.searchParams.get('end');
     const page = Number(url.searchParams.get('page')) || 1;
     const pageSize = Number(url.searchParams.get('pageSize')) || 10;
 
     let filtered = [...dbLogs];
     if (search) filtered = filtered.filter((l) => l.message.toLowerCase().includes(search));
     if (level && level !== 'all') filtered = filtered.filter((l) => l.level === level);
-    if (source && source !== 'all') filtered = filtered.filter((l) => l.agentId === source);
-
-    // Filter by time range
-    if (timeRange) {
-      const now = new Date();
-      const ranges: Record<string, number> = { '1h': 60, '6h': 360, '24h': 1440, '7d': 10080 };
-      const minutes = ranges[timeRange];
-      if (minutes) {
-        const cutoff = new Date(now.getTime() - minutes * 60000).toISOString();
-        filtered = filtered.filter((l) => l.timestamp >= cutoff);
+    if (source && source !== 'all') {
+      if (source === '__system__') {
+        filtered = filtered.filter((l) => !l.agentId);
+      } else {
+        filtered = filtered.filter((l) => l.agentName === source);
       }
+    }
+
+    if (start) {
+      filtered = filtered.filter((l) => l.timestamp >= start.replace('T', ' ').slice(0, 23));
+    }
+    if (end) {
+      filtered = filtered.filter((l) => l.timestamp <= end.replace('T', ' ').slice(0, 23));
     }
 
     // Newest first
     filtered.sort((a, b) => b.timestamp.localeCompare(a.timestamp));
 
     const total = filtered.length;
-    const start = (page - 1) * pageSize;
-    const items = filtered.slice(start, start + pageSize);
+    const offset = (page - 1) * pageSize;
+    const data = filtered.slice(offset, offset + pageSize);
 
-    return HttpResponse.json({ items, total, page, pageSize });
+    return HttpResponse.json({ data, total, page, pageSize });
   }),
 
   // ═══════════════════════════════════════════════════════════
