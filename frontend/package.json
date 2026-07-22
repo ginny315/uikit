@@ -18,7 +18,6 @@
     "@mantine/form": "^9.4.1",
     "@mantine/hooks": "^9.4.1",
     "@mantine/notifications": "^9.4.1",
-    "@mantine/spotlight": "^9.4.1",
     "@tabler/icons-react": "^3.44.0",
     "@tanstack/react-query": "^5.101.2",
     "@xyflow/react": "^12.11.2",

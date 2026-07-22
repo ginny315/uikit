@@ -1,6 +1,6 @@
 # AgentSys 前端待办清单
 
-**最后更新**: 2026-07-21 · **P0 已完成**（commit `8db13c7`）· **P1 功能缺口已完成**
+**最后更新**: 2026-07-22 · **P0 已完成**（commit `8db13c7`）· **P1 功能缺口已完成**
 **关联**: [FRONTEND_PLAN.md](./FRONTEND_PLAN.md) · [PRD.md](./PRD.md) · [DESIGN_SPEC.md](./DESIGN_SPEC.md) · [TECH_DESIGN.md](./TECH_DESIGN.md)
 
 ---
@@ -60,14 +60,22 @@
 
 ## P2 — 质量 & 工程化
 
+| 项 | 状态 | 备注 |
+|----|------|------|
+| `.gitignore` 加入 `frontend/dist/` | ✅ | 根目录 `.gitignore` 第 21 行 |
+| GitHub Actions：`npm ci` → `lint` → `build` | ❌ | 无 `.github/workflows/` |
+| 测试：Vitest（format / dagValidate / MSW CRUD） | ❌ | 无 vitest 配置与 `*.test.ts`；`lib/format.ts`、`pages/Workflows/dagValidate.ts` 待覆盖 |
+| Playwright E2E | ❌ | 后期 |
+| i18n：页面 UI 走 `t()` + en-US / zh-CN key 对账 | ✅ | 26 个 locale 文件 key 一致 |
+| 配额错误 UI（`ApiRequestError.isQuotaError`） | ❌ | `lib/api.ts` 已定义 getter，无 UI 处理 |
+
+**待办 checklist（按优先级）**
+
 - [ ] GitHub Actions：`npm ci` → `lint` → `build`
-- [ ] `.gitignore` 加入 `frontend/dist/`
+- [x] `.gitignore` 加入 `frontend/dist/`
+- [x] i18n：页面 UI 走 `t()` + en-US / zh-CN key 对账
 - [ ] 测试：Vitest（format / dagValidate / MSW CRUD）；后期 Playwright E2E
-- [ ] i18n：清除硬编码中文；en-US key 对账
-- [ ] 部署：`frontend/Dockerfile` + nginx SPA fallback
-- [ ] `@mantine/spotlight` 命令面板
 - [ ] 配额错误 UI（`ApiRequestError.isQuotaError`）
-- [ ] 设计对齐：Agent 卡片布局 vs 表格、移动端表格/图表验证
 
 ---
 
@@ -104,6 +112,7 @@
 
 | 日期 | 变更 |
 |------|------|
+| 2026-07-22 | P2 工程化盘点：`.gitignore`、i18n 标记完成；部署 / Spotlight / 设计对齐移出清单；其余 3 项待做（CI / 测试 / 配额 UI） |
 | 2026-07-21 | P1 功能缺口完成：编辑/重试/邀请/图表/useRealtime/env/清理 mocks |
 | 2026-07-21 | 精简文档：P0 折叠，删除已完成 checklist |
 | 2026-07-21 | P0 完成 + 文档同步 |

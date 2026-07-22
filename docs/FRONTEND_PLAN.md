@@ -29,7 +29,6 @@ Mantine v9                — 组件 (100+) + 主题 + hooks (50+)
 @mantine/form + zod       — 表单 + 校验
 @mantine/charts           — 图表 (Recharts 封装)
 @mantine/notifications    — 通知系统
-@mantine/spotlight        — 命令面板（已安装，待接入）
 @tanstack/react-query     — 异步状态管理
 zustand                   — 客户端状态 (auth, theme, filters)
 React Router v7           — 路由

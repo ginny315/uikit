@@ -15,7 +15,6 @@ export default defineConfig({
       '@mantine/dates',
       '@mantine/notifications',
       '@mantine/charts',
-      '@mantine/spotlight',
     ],
   },
 })
