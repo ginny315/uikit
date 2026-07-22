@@ -41,7 +41,7 @@
 .brandIcon {
   width: 30px;
   height: 30px;
-  background: linear-gradient(135deg, var(--mantine-color-agentGreen-6), var(--mantine-color-agentCyan-5));
+  background: linear-gradient(135deg, var(--agentsys-accent, var(--mantine-color-agentGreen-6)), var(--agentsys-accent-secondary, var(--mantine-color-agentCyan-5)));
   border-radius: 8px;
   display: flex;
   align-items: center;

@@ -53,5 +53,18 @@
     "placeholder": "选择日期范围",
     "separator": "至",
     "apply": "确定"
+  },
+
+  "theme": {
+    "pickerLabel": "选择配色主题",
+    "panelTitle": "选择主题",
+    "panelDesc": "选择界面配色方案，明暗模式可单独切换",
+    "palettes": {
+      "forest": "Forest",
+      "ocean": "Ocean",
+      "sunset": "Sunset",
+      "rose": "Rose",
+      "lavender": "Lavender"
+    }
   }
 }

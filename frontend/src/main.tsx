@@ -1,10 +1,9 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { MantineProvider } from '@mantine/core';
 import { Notifications } from '@mantine/notifications';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter } from 'react-router-dom';
-import { theme } from './theme';
+import { AppThemeProvider } from './providers/AppThemeProvider';
 import { App } from './App';
 import { config } from './config';
 import './i18n';
@@ -15,6 +14,7 @@ import '@mantine/charts/styles.css';
 import '@mantine/dates/styles.css';
 import '@mantine/spotlight/styles.css';
 import './styles/globals.css';
+import './styles/palette.css';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -39,15 +39,12 @@ async function bootstrap() {
   createRoot(root).render(
     <StrictMode>
       <QueryClientProvider client={queryClient}>
-        <MantineProvider
-          theme={theme}
-          defaultColorScheme={(localStorage.getItem('agentsys-theme') as 'light' | 'dark' | null) ?? 'light'}
-        >
+        <AppThemeProvider>
           <Notifications position="top-right" />
           <BrowserRouter>
             <App />
           </BrowserRouter>
-        </MantineProvider>
+        </AppThemeProvider>
       </QueryClientProvider>
     </StrictMode>,
   );

@@ -1,0 +1,144 @@
+.trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 32px;
+  padding: 0 12px 0 8px;
+  border-radius: 999px;
+  border: 1px solid var(--agentsys-card-border);
+  background: var(--agentsys-card-bg);
+  color: var(--mantine-color-dimmed);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  transition: border-color 150ms ease, color 150ms ease, box-shadow 150ms ease;
+  box-shadow: 0 1px 2px var(--agentsys-muted-fill);
+}
+
+.trigger:hover {
+  border-color: var(--mantine-color-default-border);
+  color: var(--mantine-color-text);
+}
+
+.triggerDot {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
+}
+
+.triggerLabel {
+  max-width: 88px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.triggerCaret {
+  font-size: 0.6rem;
+  opacity: 0.5;
+  line-height: 1;
+}
+
+.dropdown {
+  padding: 16px !important;
+}
+
+.panelTitle {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--mantine-color-text);
+  margin-bottom: 4px;
+}
+
+.panelDesc {
+  font-size: 0.75rem;
+  color: var(--mantine-color-dimmed);
+  margin-bottom: 14px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 8px;
+  border-radius: 12px;
+  border: 1px solid var(--agentsys-border-subtle);
+  background: var(--agentsys-page-bg);
+  cursor: pointer;
+  transition: border-color 150ms ease, transform 150ms ease, box-shadow 150ms ease;
+}
+
+.card:hover {
+  border-color: var(--mantine-color-default-border);
+  transform: translateY(-1px);
+}
+
+.cardActive {
+  border-color: var(--agentsys-accent, var(--mantine-color-agentGreen-6));
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--agentsys-accent, var(--mantine-color-agentGreen-6)) 35%, transparent);
+}
+
+.swatch {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--agentsys-border-subtle);
+  transition: transform 150ms ease;
+}
+
+.card:hover .swatch {
+  transform: scale(1.08);
+}
+
+.swatchForest {
+  background: linear-gradient(135deg, #16A34A 35%, #F8F9FB 35%);
+}
+
+.swatchOcean {
+  background: linear-gradient(135deg, #06B6D4 35%, #0A1F3F 35%);
+}
+
+.swatchSunset {
+  background: linear-gradient(135deg, #EA7A1E 35%, #FFF8EE 35%);
+}
+
+.swatchRose {
+  background: linear-gradient(135deg, #F43F5E 35%, #1F111A 35%);
+}
+
+.swatchLavender {
+  background: linear-gradient(135deg, #9333EA 35%, #F8F6FC 35%);
+}
+
+.cardName {
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--mantine-color-text);
+  text-align: center;
+  line-height: 1.2;
+}
+
+@media (max-width: 768px) {
+  .triggerLabel {
+    display: none;
+  }
+
+  .trigger {
+    width: 32px;
+    padding: 0;
+    justify-content: center;
+  }
+
+  .triggerCaret {
+    display: none;
+  }
+}

@@ -53,5 +53,18 @@
     "placeholder": "Select date range",
     "separator": "to",
     "apply": "Apply"
+  },
+
+  "theme": {
+    "pickerLabel": "Choose color theme",
+    "panelTitle": "Choose Theme",
+    "panelDesc": "Pick a color palette. Light/dark mode can be toggled separately.",
+    "palettes": {
+      "forest": "Forest",
+      "ocean": "Ocean",
+      "sunset": "Sunset",
+      "rose": "Rose",
+      "lavender": "Lavender"
+    }
   }
 }

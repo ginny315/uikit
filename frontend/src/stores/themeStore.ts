@@ -1,35 +1,65 @@
 import { create } from 'zustand';
+import { isThemePalette, type ThemePalette } from '../themes/palettes';
 
-type ThemeMode = 'light' | 'dark';
+export type ThemeMode = 'light' | 'dark';
+
+const MODE_STORAGE_KEY = 'agentsys-theme';
+const PALETTE_STORAGE_KEY = 'agentsys-palette';
 
 interface ThemeState {
+  palette: ThemePalette;
   mode: ThemeMode;
-  toggleTheme: () => void;
-  setTheme: (mode: ThemeMode) => void;
+  setPalette: (palette: ThemePalette) => void;
+  setMode: (mode: ThemeMode) => void;
+  toggleMode: () => void;
   initialize: () => void;
 }
 
-const STORAGE_KEY = 'agentsys-theme';
+function readStoredMode(): ThemeMode {
+  const stored = localStorage.getItem(MODE_STORAGE_KEY);
+  return stored === 'dark' ? 'dark' : 'light';
+}
 
-export const useThemeStore = create<ThemeState>((set) => ({
+function readStoredPalette(): ThemePalette {
+  const stored = localStorage.getItem(PALETTE_STORAGE_KEY);
+  if (isThemePalette(stored)) return stored;
+  return 'forest';
+}
+
+export function applyThemeAttributes(palette: ThemePalette, mode: ThemeMode) {
+  const root = document.documentElement;
+  root.setAttribute('data-agentsys-palette', palette);
+  root.setAttribute('data-mantine-color-scheme', mode);
+}
+
+export const useThemeStore = create<ThemeState>((set, get) => ({
+  palette: 'forest',
   mode: 'light',
 
-  toggleTheme: () =>
-    set((state) => {
-      const next = state.mode === 'light' ? 'dark' : 'light';
-      localStorage.setItem(STORAGE_KEY, next);
-      return { mode: next };
-    }),
+  setPalette: (palette) => {
+    localStorage.setItem(PALETTE_STORAGE_KEY, palette);
+    set({ palette });
+    applyThemeAttributes(palette, get().mode);
+  },
 
-  setTheme: (mode: ThemeMode) => {
-    localStorage.setItem(STORAGE_KEY, mode);
+  setMode: (mode) => {
+    localStorage.setItem(MODE_STORAGE_KEY, mode);
     set({ mode });
+    applyThemeAttributes(get().palette, mode);
+  },
+
+  toggleMode: () => {
+    const next = get().mode === 'light' ? 'dark' : 'light';
+    get().setMode(next);
   },
 
   initialize: () => {
-    const stored = localStorage.getItem(STORAGE_KEY) as ThemeMode | null;
-    if (stored) {
-      set({ mode: stored });
-    }
+    const palette = readStoredPalette();
+    const mode = readStoredMode();
+    set({ palette, mode });
+    applyThemeAttributes(palette, mode);
   },
 }));
+
+// 首屏渲染前同步 DOM，避免闪烁
+applyThemeAttributes(readStoredPalette(), readStoredMode());
