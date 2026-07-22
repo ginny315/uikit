@@ -293,7 +293,7 @@ export function CostsPage() {
                 label={t('costs:alerts.email')}
                 value={alertEmail}
                 onChange={(e) => setAlertEmail(e.currentTarget.value)}
-                placeholder="admin@example.com"
+                placeholder={t('costs:alerts.emailPlaceholder')}
                 w={280}
               />
               <Button onClick={handleSaveAlert} mt="lg" loading={alertMutation.isPending}>

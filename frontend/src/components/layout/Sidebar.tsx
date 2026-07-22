@@ -138,7 +138,7 @@ export function Sidebar({ collapsed = false, onToggleCollapse, onClose, classNam
         className={classes.collapseBtn}
         onClick={onToggleCollapse}
         type="button"
-        aria-label={collapsed ? '展开侧边栏' : '折叠侧边栏'}
+        aria-label={collapsed ? t('common:aria.expandSidebar') : t('common:aria.collapseSidebar')}
       >
         {collapsed ? <IconChevronRight size={16} /> : <IconChevronLeft size={16} />}
       </button>

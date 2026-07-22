@@ -25,7 +25,17 @@
 
   "pagination": {
     "total": "{{count}} total",
-    "page": "Page {{current}} / {{total}}"
+    "page": "Page {{current}} / {{total}}",
+    "pageSize": "{{size}} per page"
+  },
+
+  "aria": {
+    "openNavMenu": "Open navigation menu",
+    "userMenu": "User menu",
+    "switchToEnglish": "Switch to English",
+    "switchToChinese": "Switch to Chinese",
+    "expandSidebar": "Expand sidebar",
+    "collapseSidebar": "Collapse sidebar"
   },
 
   "empty": {
@@ -37,5 +47,11 @@
     "today": "Today",
     "thisWeek": "This week",
     "thisMonth": "This month"
+  },
+
+  "dateRange": {
+    "placeholder": "Select date range",
+    "separator": "to",
+    "apply": "Apply"
   }
 }

@@ -90,7 +90,9 @@ export function AgentDetailPage() {
     statusMutation.mutate(next, {
       onSuccess: () => {
         notifications.show({
-          message: next === 'running' ? `"${agentName}" 已启动` : `"${agentName}" 已停止`,
+          message: next === 'running'
+            ? t('agents:detail.notifications.started', { name: agentName })
+            : t('agents:detail.notifications.stopped', { name: agentName }),
           color: next === 'running' ? 'green' : 'yellow',
           withCloseButton: true,
         });
@@ -101,7 +103,7 @@ export function AgentDetailPage() {
   function handleRestart() {
     statusMutation.mutate('running', {
       onSuccess: () => {
-        notifications.show({ message: `"${agentName}" 已重启`, color: 'green', withCloseButton: true });
+        notifications.show({ message: t('agents:detail.notifications.restarted', { name: agentName }), color: 'green', withCloseButton: true });
       },
     });
   }

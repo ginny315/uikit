@@ -1,4 +1,5 @@
 import { useState, useCallback, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Popover, Button, Text, CloseButton, Input, Group } from '@mantine/core';
 import { DatePicker } from '@mantine/dates';
 import dayjs from 'dayjs';
@@ -20,6 +21,7 @@ interface TimeRangePickerProps {
 // ── Component ──
 
 export function TimeRangePicker({ value, onChange }: TimeRangePickerProps) {
+  const { t } = useTranslation();
   const [opened, setOpened] = useState(false);
 
   // Popover 内草稿（各自独立的日期面板）
@@ -50,10 +52,10 @@ export function TimeRangePicker({ value, onChange }: TimeRangePickerProps) {
   );
 
   const triggerLabel = useMemo(() => {
-    if (!value.start && !value.end) return '选择日期范围';
+    if (!value.start && !value.end) return t('common:dateRange.placeholder');
     const fmt = (d: string | null) => (d ? dayjs(d).format('YYYY-MM-DD') : '—');
-    return `${fmt(value.start)} 至 ${fmt(value.end)}`;
-  }, [value]);
+    return `${fmt(value.start)} ${t('common:dateRange.separator')} ${fmt(value.end)}`;
+  }, [value, t]);
 
   const hasValue = !!(value.start || value.end);
 
@@ -98,11 +100,11 @@ export function TimeRangePicker({ value, onChange }: TimeRangePickerProps) {
         <Group justify="space-between" mt="md" pt="sm" className={classes.footer}>
           <Text size="xs" c="dimmed">
             {draftStart ? dayjs(draftStart).format('YYYY-MM-DD') : '—'}
-            {' 至 '}
+            {` ${t('common:dateRange.separator')} `}
             {draftEnd ? dayjs(draftEnd).format('YYYY-MM-DD') : '—'}
           </Text>
           <Button size="xs" color="agentGreen" onClick={handleApply}>
-            确定
+            {t('common:dateRange.apply')}
           </Button>
         </Group>
       </Popover.Dropdown>

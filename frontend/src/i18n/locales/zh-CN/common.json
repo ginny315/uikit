@@ -25,7 +25,17 @@
 
   "pagination": {
     "total": "共 {{count}} 个",
-    "page": "第 {{current}} / {{total}} 页"
+    "page": "第 {{current}} / {{total}} 页",
+    "pageSize": "{{size}} 条/页"
+  },
+
+  "aria": {
+    "openNavMenu": "打开导航菜单",
+    "userMenu": "用户菜单",
+    "switchToEnglish": "Switch to English",
+    "switchToChinese": "切换到中文",
+    "expandSidebar": "展开侧边栏",
+    "collapseSidebar": "折叠侧边栏"
   },
 
   "empty": {
@@ -37,5 +47,11 @@
     "today": "今日",
     "thisWeek": "本周",
     "thisMonth": "本月"
+  },
+
+  "dateRange": {
+    "placeholder": "选择日期范围",
+    "separator": "至",
+    "apply": "确定"
   }
 }

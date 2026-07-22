@@ -16,13 +16,8 @@ import { AppModal } from '../../components/shared/AppModal/AppModal';
 import { ConfirmModal } from '../../components/shared/ConfirmModal/ConfirmModal';
 import { useApiQuery, useApiMutation, queryKeys } from '../../hooks/useApi';
 import { fetchWorkflows, createWorkflow, updateWorkflow, deleteWorkflow } from '../../services/workflows';
+import { buildPageSizeOptions, DEFAULT_PAGE_SIZES } from '../../lib/pagination';
 import classes from './WorkflowList.module.css';
-
-const PAGE_SIZE_OPTIONS = [
-  { value: '10', label: '10 条/页' },
-  { value: '20', label: '20 条/页' },
-  { value: '50', label: '50 条/页' },
-];
 
 const WORKFLOW_STATUSES: WorkflowStatus[] = ['active', 'paused', 'draft'];
 
@@ -70,11 +65,16 @@ export function WorkflowListPage() {
     ...WORKFLOW_STATUSES.map((s) => ({ value: s, label: t(`workflows:status.${s}`) })),
   ];
 
+  const pageSizeOptions = useMemo(
+    () => buildPageSizeOptions(DEFAULT_PAGE_SIZES, t),
+    [t],
+  );
+
   const createForm = useForm({
     initialValues: { name: '', description: '' },
     validate: {
-      name: (v) => (v.trim().length > 0 ? null : '请输入工作流名称'),
-      description: (v) => (v.trim().length > 0 ? null : '请输入描述'),
+      name: (v) => (v.trim().length > 0 ? null : t('validation:workflowNameRequired')),
+      description: (v) => (v.trim().length > 0 ? null : t('validation:workflowDescRequired')),
     },
   });
 
@@ -93,7 +93,7 @@ export function WorkflowListPage() {
       { name: values.name.trim(), description: values.description.trim() },
       {
         onSuccess: (newWf) => {
-          notifications.show({ message: `工作流「${newWf.name}」已创建`, color: 'green', withCloseButton: true });
+          notifications.show({ message: t('workflows:list.createSuccess', { name: newWf.name }), color: 'green', withCloseButton: true });
           closeCreate();
           createForm.reset();
           setPage(1);
@@ -120,7 +120,7 @@ export function WorkflowListPage() {
     const name = deleteTarget.name;
     deleteMutation.mutate(deleteTarget.id, {
       onSuccess: () => {
-        notifications.show({ message: `工作流「${name}」已删除`, color: 'green', withCloseButton: true });
+        notifications.show({ message: t('workflows:list.deleteSuccess', { name }), color: 'green', withCloseButton: true });
         closeDelete();
         setDeleteTarget(null);
       },
@@ -228,7 +228,7 @@ export function WorkflowListPage() {
           <div className={classes.paginationRow}>
             <div className={classes.pageSizeWrap}>
               <Select
-                data={PAGE_SIZE_OPTIONS}
+                data={pageSizeOptions}
                 value={String(pageSize)}
                 onChange={(v) => { setPageSize(Number(v)); setPage(1); }}
                 size="xs"

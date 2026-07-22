@@ -153,7 +153,7 @@ export function LoginPage() {
                 className={classes.pwToggle}
                 onClick={() => setShowPassword((v) => !v)}
                 tabIndex={-1}
-                aria-label={showPassword ? '隐藏密码' : '显示密码'}
+                aria-label={showPassword ? t('auth:hidePassword') : t('auth:showPassword')}
               >
                 {showPassword ? <IconEyeOff size={18} /> : <IconEye size={18} />}
               </button>

@@ -9,5 +9,7 @@
   "quotaMax": "Daily quota cannot exceed {{max}} tokens",
   "taskAgentRequired": "Please select an agent",
   "taskInputRequired": "Please enter the task content",
-  "taskInputMinLength": "Task content must be at least {{min}} characters"
+  "taskInputMinLength": "Task content must be at least {{min}} characters",
+  "workflowNameRequired": "Please enter the workflow name",
+  "workflowDescRequired": "Please enter a description"
 }

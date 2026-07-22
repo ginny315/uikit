@@ -21,13 +21,8 @@ import { useRealtimeInterval } from '../../hooks/useRealtime';
 import { fetchTasks, createTask, cancelTask } from '../../services/tasks';
 import { fetchAgents } from '../../services/agents';
 import { formatDuration } from '../../lib/format';
+import { buildPageSizeOptions, DEFAULT_PAGE_SIZES } from '../../lib/pagination';
 import classes from './TaskList.module.css';
-
-const PAGE_SIZE_OPTIONS = [
-  { value: '10', label: '10 条/页' },
-  { value: '20', label: '20 条/页' },
-  { value: '50', label: '50 条/页' },
-];
 
 const TASK_STATUSES: TaskStatus[] = ['queued', 'running', 'succeeded', 'failed', 'cancelled'];
 
@@ -108,6 +103,11 @@ export function TaskListPage() {
     { value: '3', label: t('status:priority.medium') },
     { value: '4', label: t('status:priority.low') },
   ];
+
+  const pageSizeOptions = useMemo(
+    () => buildPageSizeOptions(DEFAULT_PAGE_SIZES, t),
+    [t],
+  );
 
   const AGENT_OPTIONS = useMemo(
     () => (agentsData?.data ?? []).map((a) => ({ value: a.id, label: a.name })),
@@ -281,7 +281,7 @@ export function TaskListPage() {
             <div className={classes.paginationRow}>
               <div className={classes.pageSizeWrap}>
                 <Select
-                  data={PAGE_SIZE_OPTIONS}
+                  data={pageSizeOptions}
                   value={String(pageSize)}
                   onChange={(v) => { setPageSize(Number(v)); setPage(1); }}
                   size="xs"

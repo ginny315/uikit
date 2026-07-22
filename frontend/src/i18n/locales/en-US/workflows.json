@@ -7,7 +7,9 @@
     "empty": "No workflows yet. Click the button above to create your first one.",
     "stepCount": "{{count}} steps",
     "confirmDeleteTitle": "Confirm Delete",
-    "confirmDeleteMsg": "Are you sure you want to delete \"{{name}}\"? This action cannot be undone."
+    "confirmDeleteMsg": "Are you sure you want to delete \"{{name}}\"? This action cannot be undone.",
+    "createSuccess": "Workflow \"{{name}}\" created",
+    "deleteSuccess": "Workflow \"{{name}}\" deleted"
   },
 
   "create": {
@@ -40,6 +42,11 @@
     "inputTemplateDesc": "Supports placeholders: {{prev.output}}, {{workflow.input}}, etc.",
     "noAgentSelected": "No agent selected",
     "unsavedChanges": "You have unsaved changes. Are you sure you want to leave?",
+    "unsavedTitle": "Unsaved changes",
+    "unsavedHint": "Unsaved changes",
+    "leaveConfirm": "Leave",
+    "saveFailed": "Save failed",
+    "namePlaceholder": "Workflow name",
     "startNode": "Start",
     "endNode": "End",
     "dagInvalid": "Workflow contains a cycle. Please check step connections and try again.",

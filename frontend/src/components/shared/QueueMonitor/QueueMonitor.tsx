@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import classes from './QueueMonitor.module.css';
 
 export type QueueLevel = 'critical' | 'high' | 'medium' | 'low';
@@ -20,9 +21,11 @@ export interface QueueMonitorProps {
 }
 
 export function QueueMonitor({ items }: QueueMonitorProps) {
+  const { t } = useTranslation();
+
   return (
     <div className={classes.card}>
-      <div className={classes.title}>队列状态</div>
+      <div className={classes.title}>{t('dashboard:queue.title')}</div>
       {items.map((item) => (
         <div key={item.level} className={classes.item}>
           <span className={`${classes.dot} ${DOT_CLASS[item.level]}`} />

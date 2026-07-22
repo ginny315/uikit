@@ -43,6 +43,7 @@
     "dailyThreshold": "Daily cost threshold ($)",
     "weeklyThreshold": "Weekly cost threshold ($)",
     "email": "Notification Email",
+    "emailPlaceholder": "admin@example.com",
     "saveAlert": "Save Alert Rules",
     "alertSaved": "Alert rules saved"
   }

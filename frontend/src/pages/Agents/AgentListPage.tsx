@@ -14,13 +14,8 @@ import type { Agent, AgentStatus } from '../../types';
 import { useApiQuery, useApiMutation, queryKeys } from '../../hooks/useApi';
 import { fetchAgents, deleteAgent } from '../../services/agents';
 import { formatTokens } from '../../lib/format';
+import { buildPageSizeOptions, DEFAULT_PAGE_SIZES } from '../../lib/pagination';
 import classes from './AgentList.module.css';
-
-const PAGE_SIZE_OPTIONS = [
-  { value: '10', label: '10 条/页' },
-  { value: '20', label: '20 条/页' },
-  { value: '50', label: '50 条/页' },
-];
 
 type SortField = 'name' | 'status' | 'todayTasks' | 'todayTokens';
 type SortDir = 'asc' | 'desc';
@@ -78,6 +73,11 @@ export function AgentListPage() {
     { value: 'error', label: t('agents:list.filterError') },
   ];
 
+  const pageSizeOptions = useMemo(
+    () => buildPageSizeOptions(DEFAULT_PAGE_SIZES, t),
+    [t],
+  );
+
   function toggleSort(field: SortField) {
     if (sortField === field) {
       setSortDir((d) => (d === 'asc' ? 'desc' : 'asc'));
@@ -92,7 +92,7 @@ export function AgentListPage() {
     const name = deleteTarget.name;
     deleteMutation.mutate(deleteTarget.id, {
       onSuccess: () => {
-        notifications.show({ message: `Agent "${name}" 已删除`, color: 'green', withCloseButton: true });
+        notifications.show({ message: t('agents:detail.notifications.deleted', { name }), color: 'green', withCloseButton: true });
         closeDelete();
         setDeleteTarget(null);
       },
@@ -208,7 +208,7 @@ export function AgentListPage() {
             <div className={classes.paginationRow}>
               <div className={classes.pageSizeWrap}>
                 <Select
-                  data={PAGE_SIZE_OPTIONS}
+                  data={pageSizeOptions}
                   value={String(pageSize)}
                   onChange={(v) => { setPageSize(Number(v)); setPage(1); }}
                   size="xs"

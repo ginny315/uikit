@@ -98,6 +98,12 @@
       "message": "确定要删除 {{name}} 吗？此操作不可撤销。",
       "confirmBtn": "确认删除"
     },
+    "notifications": {
+      "started": "Agent \"{{name}}\" 已启动",
+      "stopped": "Agent \"{{name}}\" 已停止",
+      "restarted": "Agent \"{{name}}\" 已重启",
+      "deleted": "Agent \"{{name}}\" 已删除"
+    },
     "tasksTable": {
       "taskId": "任务 ID",
       "status": "状态",

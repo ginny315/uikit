@@ -20,11 +20,7 @@ import {
 import type { User, UserRole, ApiKey } from '../../types';
 import classes from './AccessSettings.module.css';
 
-const ROLE_OPTIONS: { value: UserRole; label: string }[] = [
-  { value: 'admin', label: '管理员' },
-  { value: 'member', label: '成员' },
-  { value: 'viewer', label: '观察者' },
-];
+const ROLE_VALUES: UserRole[] = ['admin', 'member', 'viewer'];
 
 const ROLE_COLORS: Record<UserRole, string> = {
   admin: 'red',
@@ -32,11 +28,11 @@ const ROLE_COLORS: Record<UserRole, string> = {
   viewer: 'gray',
 };
 
-function formatDate(iso: string): string {
-  return new Date(iso).toLocaleDateString('zh-CN', { month: 'short', day: 'numeric', year: 'numeric' });
+function formatDate(iso: string, locale: string): string {
+  return new Date(iso).toLocaleDateString(locale, { month: 'short', day: 'numeric', year: 'numeric' });
 }
 
-function formatLastUsed(iso: string | undefined, t: (key: string, opts?: Record<string, unknown>) => string): string {
+function formatLastUsed(iso: string | undefined, t: (key: string, opts?: Record<string, unknown>) => string, locale: string): string {
   if (!iso) return t('access:apiKeys.never');
   const d = new Date(iso);
   const now = new Date();
@@ -44,7 +40,7 @@ function formatLastUsed(iso: string | undefined, t: (key: string, opts?: Record<
   if (diffDays === 0) return t('access:apiKeys.today');
   if (diffDays === 1) return t('access:apiKeys.yesterday');
   if (diffDays < 7) return t('access:apiKeys.daysAgo', { count: diffDays });
-  return formatDate(iso);
+  return formatDate(iso, locale);
 }
 
 function Avatar({ name }: { name: string }) {
@@ -53,7 +49,7 @@ function Avatar({ name }: { name: string }) {
 }
 
 export function AccessSettingsPage() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const { data: users, isLoading: usersLoading } = useApiQuery(queryKeys.users.list(), fetchUsers);
   const { data: apiKeys, isLoading: keysLoading } = useApiQuery(queryKeys.apiKeys.list(), fetchApiKeys);
@@ -234,8 +230,8 @@ export function AccessSettingsPage() {
                     <tr key={key.id}>
                       <td className={classes.nameCell}>{key.name}</td>
                       <td className={classes.monoCell}>{key.prefix}</td>
-                      <td className={classes.dateCell}>{formatDate(key.createdAt)}</td>
-                      <td className={classes.dateCell}>{formatLastUsed(key.lastUsedAt, t)}</td>
+                      <td className={classes.dateCell}>{formatDate(key.createdAt, i18n.language)}</td>
+                      <td className={classes.dateCell}>{formatLastUsed(key.lastUsedAt, t, i18n.language)}</td>
                       <td>
                         <Button variant="subtle" size="compact-xs" color="red" onClick={() => setRevokeModal({ key })}>
                           {t('access:apiKeys.revoke')}
@@ -322,7 +318,7 @@ export function AccessSettingsPage() {
         />
         <MantineSelect
           label={t('access:users.invite.roleLabel')}
-          data={ROLE_OPTIONS.map((r) => ({ value: r.value, label: t(`access:users.roles.${r.value}`) }))}
+          data={ROLE_VALUES.map((value) => ({ value, label: t(`access:users.roles.${value}`) }))}
           value={inviteRole}
           onChange={(v) => v && setInviteRole(v as UserRole)}
           mt="md"
@@ -403,7 +399,7 @@ export function AccessSettingsPage() {
             <MantineSelect
               label={t('access:users.columns.role')}
               description={t(`access:users.roleDesc.${roleModal.user.role}`)}
-              data={ROLE_OPTIONS.map((r) => ({ value: r.value, label: t(`access:users.roles.${r.value}`) }))}
+              data={ROLE_VALUES.map((value) => ({ value, label: t(`access:users.roles.${value}`) }))}
               value={roleModal.user.role}
               onChange={(v) => v && handleRoleChange(roleModal.user.id, v as UserRole)}
               mt="md"

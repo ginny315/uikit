@@ -5,6 +5,7 @@
  * 有输入 handle（顶部）和输出 handle（底部），选中时高亮边框。
  */
 import { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Handle, Position } from '@xyflow/react';
 import type { NodeProps } from '@xyflow/react';
 import type { WorkflowNodeData } from '../../../types';
@@ -13,6 +14,7 @@ import { Tooltip } from '@mantine/core';
 import classes from './AgentNode.module.css';
 
 function AgentNodeComponent({ data, selected }: NodeProps) {
+  const { t } = useTranslation();
   const nodeData = data as unknown as WorkflowNodeData;
   const hasAgent = Boolean(nodeData.agentId);
 
@@ -37,7 +39,7 @@ function AgentNodeComponent({ data, selected }: NodeProps) {
           {hasAgent ? (
             <span className={classes.agentName}>{nodeData.agentName}</span>
           ) : (
-            <span className={classes.agentNameMissing}>未选择 Agent</span>
+            <span className={classes.agentNameMissing}>{t('workflows:editor.noAgentSelected')}</span>
           )}
         </div>
         {hasAgent && <span className={classes.dot} />}

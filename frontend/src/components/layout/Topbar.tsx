@@ -79,7 +79,7 @@ export function Topbar({ onMenuClick }: TopbarProps) {
             variant="subtle"
             color="gray"
             onClick={onMenuClick}
-            aria-label="打开导航菜单"
+            aria-label={t('common:aria.openNavMenu')}
           >
             <IconMenu2 size={18} />
           </ActionIcon>
@@ -94,24 +94,24 @@ export function Topbar({ onMenuClick }: TopbarProps) {
             variant="subtle"
             color="gray"
             onClick={handleToggleTheme}
-            aria-label={isDark ? '切换到浅色模式' : '切换到深色模式'}
+            aria-label={isDark ? t('common:actions.lightMode') : t('common:actions.darkMode')}
           >
             {isDark ? <IconSun size={18} /> : <IconMoon size={18} />}
           </ActionIcon>
         </Tooltip>
 
-        <Tooltip label={currentLang === 'zh-CN' ? 'Switch to English' : '切换到中文'} openDelay={400}>
+        <Tooltip label={currentLang === 'zh-CN' ? t('common:aria.switchToEnglish') : t('common:aria.switchToChinese')} openDelay={400}>
           <button
             className={classes.langBtn}
             onClick={handleToggleLang}
             type="button"
-            aria-label={currentLang === 'zh-CN' ? 'Switch to English' : '切换到中文'}
+            aria-label={currentLang === 'zh-CN' ? t('common:aria.switchToEnglish') : t('common:aria.switchToChinese')}
           >
             {currentLang === 'zh-CN' ? 'EN' : '中'}
           </button>
         </Tooltip>
 
-        <button className={classes.userBtn} type="button" aria-label="用户菜单">
+        <button className={classes.userBtn} type="button" aria-label={t('common:aria.userMenu')}>
           <div className={classes.avatar}>A</div>
           <span className={classes.avatarName}>Admin</span>
         </button>

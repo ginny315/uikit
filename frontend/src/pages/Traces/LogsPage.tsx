@@ -9,13 +9,8 @@ import type { LogEntry, LogLevel } from '../../types';
 import { useApiQuery, queryKeys } from '../../hooks/useApi';
 import { searchLogs } from '../../services/logs';
 import { fetchAgents } from '../../services/agents';
+import { buildPageSizeOptions, LOG_PAGE_SIZES } from '../../lib/pagination';
 import classes from './Logs.module.css';
-
-const PAGE_SIZE_OPTIONS = [
-  { value: '20', label: '20 条/页' },
-  { value: '50', label: '50 条/页' },
-  { value: '100', label: '100 条/页' },
-];
 
 const LOG_LEVELS: LogLevel[] = ['debug', 'info', 'warn', 'error'];
 
@@ -77,6 +72,11 @@ export function LogsPage() {
       { value: SOURCE_SYSTEM, label: t('logs:list.sourceSystem') },
     ];
   }, [agentsData, t]);
+
+  const pageSizeOptions = useMemo(
+    () => buildPageSizeOptions(LOG_PAGE_SIZES, t),
+    [t],
+  );
 
   function toggleExpand(id: string) {
     setExpandedId((cur) => (cur === id ? null : id));
@@ -254,7 +254,7 @@ export function LogsPage() {
             <div className={classes.paginationRow}>
               <div className={classes.pageSizeWrap}>
                 <Select
-                  data={PAGE_SIZE_OPTIONS}
+                  data={pageSizeOptions}
                   value={String(pageSize)}
                   onChange={(v) => { setPageSize(Number(v)); setPage(1); }}
                   size="xs"

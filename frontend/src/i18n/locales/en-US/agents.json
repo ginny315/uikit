@@ -98,6 +98,12 @@
       "message": "Are you sure you want to delete {{name}}? This action cannot be undone.",
       "confirmBtn": "Confirm Delete"
     },
+    "notifications": {
+      "started": "Agent \"{{name}}\" started",
+      "stopped": "Agent \"{{name}}\" stopped",
+      "restarted": "Agent \"{{name}}\" restarted",
+      "deleted": "Agent \"{{name}}\" deleted"
+    },
     "tasksTable": {
       "taskId": "Task ID",
       "status": "Status",

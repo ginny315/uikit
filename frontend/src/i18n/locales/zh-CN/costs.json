@@ -43,6 +43,7 @@
     "dailyThreshold": "每日费用阈值 ($)",
     "weeklyThreshold": "每周费用阈值 ($)",
     "email": "通知邮箱",
+    "emailPlaceholder": "admin@example.com",
     "saveAlert": "保存预警规则",
     "alertSaved": "预警规则已保存"
   }

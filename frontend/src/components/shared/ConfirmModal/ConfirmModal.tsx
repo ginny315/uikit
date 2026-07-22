@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Button, Text } from '@mantine/core';
 import { AppModal } from '../AppModal/AppModal';
 import classes from './ConfirmModal.module.css';
@@ -36,10 +37,12 @@ export function ConfirmModal({
   message,
   target,
   confirmLabel,
-  cancelLabel = '取消',
+  cancelLabel,
   confirmLoading,
   onConfirm,
 }: ConfirmModalProps) {
+  const { t } = useTranslation();
+  const resolvedCancelLabel = cancelLabel ?? t('common:actions.cancel');
   return (
     <AppModal
       opened={opened}
@@ -67,7 +70,7 @@ export function ConfirmModal({
       footer={
         <>
           <Button variant="default" onClick={onClose}>
-            {cancelLabel}
+            {resolvedCancelLabel}
           </Button>
           <Button color="red" onClick={onConfirm} loading={confirmLoading}>
             {confirmLabel}

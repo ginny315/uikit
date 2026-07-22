@@ -293,7 +293,7 @@ function WorkflowEditorInner({ detail, workflowId }: { detail: WorkflowDetail; w
     const cycle = detectCycle(edges);
     if (cycle) {
       notifications.show({
-        title: '保存失败',
+        title: t('workflows:editor.saveFailed'),
         message: t('workflows:editor.dagInvalid'),
         color: 'red',
         withCloseButton: true,
@@ -381,8 +381,8 @@ function WorkflowEditorInner({ detail, workflowId }: { detail: WorkflowDetail; w
             className={classes.nameInput}
             value={name}
             onChange={(e) => { setName(e.currentTarget.value); setHasChanges(true); }}
-            placeholder="工作流名称"
-            aria-label="工作流名称"
+            placeholder={t('workflows:editor.namePlaceholder')}
+            aria-label={t('workflows:editor.namePlaceholder')}
           />
           <Badge
             variant="light"
@@ -392,7 +392,7 @@ function WorkflowEditorInner({ detail, workflowId }: { detail: WorkflowDetail; w
           >
             {t(`workflows:status.${status}`)}
           </Badge>
-          {hasChanges && <span className={classes.dirtyDot} title="有未保存的更改">●</span>}
+          {hasChanges && <span className={classes.dirtyDot} title={t('workflows:editor.unsavedHint')}>●</span>}
         </div>
         <div className={classes.topRight}>
           <Tooltip label={t('workflows:editor.saveDraft')}>
@@ -510,9 +510,9 @@ function WorkflowEditorInner({ detail, workflowId }: { detail: WorkflowDetail; w
       <ConfirmModal
         opened={leaveOpened}
         onClose={closeLeave}
-        title={t('workflows:editor.unsavedTitle', '未保存的更改')}
+        title={t('workflows:editor.unsavedTitle')}
         message={t('workflows:editor.unsavedChanges')}
-        confirmLabel={t('workflows:editor.leaveConfirm', '离开')}
+        confirmLabel={t('workflows:editor.leaveConfirm')}
         cancelLabel={t('common:actions.cancel')}
         onConfirm={() => {
           closeLeave();

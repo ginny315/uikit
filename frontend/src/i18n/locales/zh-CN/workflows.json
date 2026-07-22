@@ -7,7 +7,9 @@
     "empty": "暂无工作流，点击上方按钮创建第一个。",
     "stepCount": "{{count}} 个步骤",
     "confirmDeleteTitle": "确认删除",
-    "confirmDeleteMsg": "确定要删除工作流「{{name}}」吗？此操作不可撤销。"
+    "confirmDeleteMsg": "确定要删除工作流「{{name}}」吗？此操作不可撤销。",
+    "createSuccess": "工作流「{{name}}」已创建",
+    "deleteSuccess": "工作流「{{name}}」已删除"
   },
 
   "create": {
@@ -40,6 +42,11 @@
     "inputTemplateDesc": "支持占位符: {{prev.output}}, {{workflow.input}} 等",
     "noAgentSelected": "未选择 Agent",
     "unsavedChanges": "有未保存的更改，确定离开吗？",
+    "unsavedTitle": "未保存的更改",
+    "unsavedHint": "有未保存的更改",
+    "leaveConfirm": "离开",
+    "saveFailed": "保存失败",
+    "namePlaceholder": "工作流名称",
     "startNode": "开始",
     "endNode": "结束",
     "dagInvalid": "工作流包含环路，请检查步骤连接后重试。",
