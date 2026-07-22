@@ -15,6 +15,10 @@
     "byAgent": "By Agent",
     "byUser": "By User",
     "byDay": "By Day",
+    "dailyTrend": "Daily Cost Trend",
+    "dailyTrendHint": "Adjust the period to explore daily spend",
+    "dailyTrendEmpty": "No cost data in the selected date range",
+    "periodSummary": "Period total ${{amount}}",
     "agent": "Agent",
     "user": "User",
     "cost": "Cost",
@@ -46,5 +50,17 @@
     "emailPlaceholder": "admin@example.com",
     "saveAlert": "Save Alert Rules",
     "alertSaved": "Alert rules saved"
+  },
+
+  "analysis": {
+    "title": "Period Analysis",
+    "desc": "Trend and breakdown reflect the selected date range"
+  },
+
+  "dateRange": {
+    "label": "Date range",
+    "last7Days": "Last 7 days",
+    "last30Days": "Last 30 days",
+    "thisMonth": "This month"
   }
 }

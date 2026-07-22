@@ -39,9 +39,15 @@ export interface CostReport {
   quotas: QuotaEntry[];
 }
 
-export function fetchCostReport(groupBy?: 'agent' | 'user'): Promise<CostReport> {
+export function fetchCostReport(params?: {
+  groupBy?: 'agent' | 'user';
+  start?: string;
+  end?: string;
+}): Promise<CostReport> {
   const sp = new URLSearchParams();
-  if (groupBy) sp.set('groupBy', groupBy);
+  if (params?.groupBy) sp.set('groupBy', params.groupBy);
+  if (params?.start) sp.set('start', params.start);
+  if (params?.end) sp.set('end', params.end);
   const qs = sp.toString();
   return apiGet<CostReport>(`/api/v1/costs/report${qs ? `?${qs}` : ''}`);
 }

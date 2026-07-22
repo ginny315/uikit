@@ -1,6 +1,6 @@
 /* ── StatCard ── */
 .card {
-  background: var(--mantine-color-body);
+  background: var(--agentsys-card-bg, var(--mantine-color-body));
   border: 1px solid var(--agentsys-card-border, var(--agentsys-border-subtle));
   border-radius: var(--mantine-radius-lg);
   padding: 22px 24px;
@@ -14,8 +14,8 @@
 }
 
 .card:hover {
-  border-color: rgba(22, 163, 74, 0.35);
-  background: #F4F6FA;
+  border-color: color-mix(in srgb, var(--mantine-color-agentGreen-6) 35%, transparent);
+  background: var(--agentsys-row-hover);
   transform: translateY(-2px);
   box-shadow: var(--mantine-shadow-lg);
 }
@@ -71,7 +71,7 @@
 }
 
 .trendDown {
-  color: #E11D48;
+  color: var(--mantine-color-red-6);
 }
 
 .trendNeutral {

@@ -9,6 +9,7 @@ import {
   IconChartLine,
 } from '@tabler/icons-react';
 import { StatCard } from '../../components/shared/StatCard/StatCard';
+import { STAT_ICON } from '../../lib/statIconTheme';
 import { QueueMonitor } from '../../components/shared/QueueMonitor/QueueMonitor';
 import type { QueueItem } from '../../components/shared/QueueMonitor/QueueMonitor';
 import { SystemHealthCard } from '../../components/shared/SystemHealthCard/SystemHealthCard';
@@ -125,8 +126,8 @@ export function DashboardPage() {
       <div className={classes.statsRow}>
         <StatCard
           icon={<IconRobot size={16} strokeWidth={2.2} />}
-          iconBg="rgba(168,85,247,0.12)"
-          iconColor="#A855F7"
+          iconBg={STAT_ICON.cyan.iconBg}
+          iconColor={STAT_ICON.cyan.iconColor}
           label={t('dashboard:stats.activeAgents')}
           value={metrics?.activeAgents ?? 0}
           trend={t('dashboard:stats.newThisWeek', { count: 2 })}
@@ -134,8 +135,8 @@ export function DashboardPage() {
         />
         <StatCard
           icon={<IconChecklist size={16} strokeWidth={2.2} />}
-          iconBg="rgba(6,182,212,0.12)"
-          iconColor="#06B6D4"
+          iconBg={STAT_ICON.green.iconBg}
+          iconColor={STAT_ICON.green.iconColor}
           label={t('dashboard:stats.todayTasks')}
           value={metrics?.todayTasks.toLocaleString() ?? '0'}
           trend={t('dashboard:stats.vsYesterday', { pct: 12.5 })}
@@ -143,8 +144,8 @@ export function DashboardPage() {
         />
         <StatCard
           icon={<IconCircleCheck size={16} strokeWidth={2.2} />}
-          iconBg="rgba(34,197,94,0.12)"
-          iconColor="#22C55E"
+          iconBg={STAT_ICON.green.iconBg}
+          iconColor={STAT_ICON.green.iconColor}
           label={t('dashboard:stats.successRate')}
           value={String(metrics?.successRate ?? 0)}
           unit="%"
@@ -153,8 +154,8 @@ export function DashboardPage() {
         />
         <StatCard
           icon={<IconChartLine size={16} strokeWidth={2.2} />}
-          iconBg="rgba(245,158,11,0.12)"
-          iconColor="#F59E0B"
+          iconBg={STAT_ICON.amber.iconBg}
+          iconColor={STAT_ICON.amber.iconColor}
           label={t('dashboard:stats.tokenUsage')}
           value={formatTokens(metrics?.todayTokens ?? 0)}
           unit={` / ${formatTokens(metrics?.dailyQuota ?? 0)}`}

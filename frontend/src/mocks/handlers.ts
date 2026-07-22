@@ -360,6 +360,13 @@ export const handlers = [
     await mockDelay();
     const url = new URL(request.url);
     const groupBy = url.searchParams.get('groupBy') ?? 'agent';
+    const startParam = url.searchParams.get('start');
+    const endParam = url.searchParams.get('end');
+
+    const end = endParam ? new Date(endParam) : new Date();
+    const start = startParam
+      ? new Date(startParam)
+      : new Date(end.getTime() - 6 * 24 * 60 * 60 * 1000);
 
     const costByAgent = [
       { id: '1', name: 'code-reviewer', cost: 42.50, tokens: 425000, tasks: 87 },
@@ -376,12 +383,23 @@ export const handlers = [
       { id: 'u4', name: 'David Wang', cost: 6.20, tokens: 62000, tasks: 32 },
     ];
 
-    const costByDay = [
-      { date: '07/15', cost: 18.50 }, { date: '07/16', cost: 22.30 },
-      { date: '07/17', cost: 15.80 }, { date: '07/18', cost: 28.90 },
-      { date: '07/19', cost: 19.20 }, { date: '07/20', cost: 25.60 },
-      { date: '07/21', cost: 12.40 },
-    ];
+    const costByDay: { date: string; cost: number }[] = [];
+    const cursor = new Date(start);
+    cursor.setHours(0, 0, 0, 0);
+    const endDay = new Date(end);
+    endDay.setHours(0, 0, 0, 0);
+
+    while (cursor <= endDay) {
+      const y = cursor.getFullYear();
+      const m = String(cursor.getMonth() + 1).padStart(2, '0');
+      const d = String(cursor.getDate()).padStart(2, '0');
+      const iso = `${y}-${m}-${d}`;
+      const seed = cursor.getDate() + cursor.getMonth() * 3;
+      costByDay.push({ date: iso, cost: Math.round((12 + (seed % 7) * 2.3 + (seed % 5) * 1.1) * 100) / 100 });
+      cursor.setDate(cursor.getDate() + 1);
+    }
+
+    const rangeTotal = costByDay.reduce((sum, item) => sum + item.cost, 0);
 
     const quotas = [
       { id: '1', name: 'code-reviewer', dailyLimit: 500000, used: 425000 },
@@ -393,8 +411,8 @@ export const handlers = [
 
     return HttpResponse.json({
       summary: {
-        todayCost: 12.40,
-        weekCost: 108.65,
+        todayCost: costByDay.at(-1)?.cost ?? 0,
+        weekCost: Math.round(rangeTotal * 100) / 100,
         monthCost: 452.80,
         todayTokens: 124000,
         avgCostPerTask: 0.36,

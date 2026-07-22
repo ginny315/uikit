@@ -15,6 +15,10 @@
     "byAgent": "按 Agent",
     "byUser": "按用户",
     "byDay": "按日期",
+    "dailyTrend": "每日成本趋势",
+    "dailyTrendHint": "调整统计周期查看每日费用变化",
+    "dailyTrendEmpty": "所选日期范围内暂无成本数据",
+    "periodSummary": "周期合计 ${{amount}}",
     "agent": "Agent",
     "user": "用户",
     "cost": "费用",
@@ -46,5 +50,17 @@
     "emailPlaceholder": "admin@example.com",
     "saveAlert": "保存预警规则",
     "alertSaved": "预警规则已保存"
+  },
+
+  "analysis": {
+    "title": "周期分析",
+    "desc": "以下趋势与明细均按所选日期范围统计"
+  },
+
+  "dateRange": {
+    "label": "统计周期",
+    "last7Days": "近 7 天",
+    "last30Days": "近 30 天",
+    "thisMonth": "本月"
   }
 }

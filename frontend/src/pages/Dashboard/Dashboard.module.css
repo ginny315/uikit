@@ -1,5 +1,5 @@
 /* ════════════════════════════════════════════════════════════
-   Dashboard Page Styles
+   Dashboard Page — aligned with Costs / list page tokens
    ════════════════════════════════════════════════════════════ */
 
 /* ── Stats Row ── */
@@ -19,10 +19,11 @@
 }
 
 .chartCard {
-  background: var(--mantine-color-body);
+  background: var(--agentsys-card-bg, var(--mantine-color-body));
   border: 1px solid var(--agentsys-card-border, var(--agentsys-border-subtle));
   border-radius: var(--mantine-radius-lg);
   padding: 22px 24px;
+  overflow: hidden;
 }
 
 .chartHeader {
@@ -33,8 +34,10 @@
 }
 
 .chartTitle {
+  font-family: 'Space Grotesk', sans-serif;
   font-size: 0.95rem;
   font-weight: 600;
+  color: var(--mantine-color-text);
 }
 
 /* ── CSS Bar Chart (Task Throughput) ── */
@@ -65,23 +68,15 @@
 }
 
 .bar:hover {
-  filter: brightness(1.3);
+  filter: brightness(1.15);
 }
 
 .barGreen {
-  background: linear-gradient(180deg, #22C55E, #16A34A);
-}
-
-.barCyan {
-  background: linear-gradient(180deg, #06B6D4, #0891B2);
-}
-
-.barPurple {
-  background: linear-gradient(180deg, #C084FC, #9333EA);
-}
-
-.barAmber {
-  background: linear-gradient(180deg, #FBBF24, #D97706);
+  background: linear-gradient(
+    180deg,
+    var(--mantine-color-agentGreen-5),
+    var(--mantine-color-agentGreen-7)
+  );
 }
 
 .barLabel {
@@ -90,7 +85,7 @@
   color: var(--mantine-color-dimmed);
 }
 
-/* ── Latency Distribution ── */
+/* ── Latency Distribution — 绿 / 青 / 琥珀，尾部保留 red 语义 ── */
 .latencyBars {
   display: flex;
   flex-direction: column;
@@ -127,19 +122,31 @@
 }
 
 .latencyFast {
-  background: linear-gradient(90deg, #86EFAC, #22C55E);
+  background: linear-gradient(
+    90deg,
+    var(--mantine-color-agentGreen-3),
+    var(--mantine-color-agentGreen-6)
+  );
 }
 
 .latencyMid {
-  background: linear-gradient(90deg, #67E8F9, #06B6D4);
+  background: linear-gradient(
+    90deg,
+    var(--mantine-color-cyan-3),
+    var(--mantine-color-cyan-6)
+  );
 }
 
 .latencySlow {
-  background: linear-gradient(90deg, #FDE68A, #F59E0B);
+  background: linear-gradient(
+    90deg,
+    var(--mantine-color-yellow-3),
+    var(--mantine-color-yellow-6)
+  );
 }
 
 .latencyTail {
-  background: linear-gradient(90deg, #FECDD3, #F43F5E);
+  background: linear-gradient(90deg, var(--mantine-color-red-3), var(--mantine-color-red-6));
 }
 
 .latencyCount {
@@ -149,6 +156,7 @@
   font-weight: 600;
   text-align: right;
   flex-shrink: 0;
+  color: var(--mantine-color-text);
 }
 
 /* ── Queue + Tasks Row ── */
@@ -161,7 +169,7 @@
 
 /* ── Tasks Card ── */
 .tasksCard {
-  background: var(--mantine-color-body);
+  background: var(--agentsys-card-bg, var(--mantine-color-body));
   border: 1px solid var(--agentsys-card-border, var(--agentsys-border-subtle));
   border-radius: var(--mantine-radius-lg);
   padding: 22px 24px;
@@ -176,8 +184,10 @@
 }
 
 .tasksTitle {
+  font-family: 'Space Grotesk', sans-serif;
   font-size: 0.95rem;
   font-weight: 600;
+  color: var(--mantine-color-text);
 }
 
 .tasksLink {
@@ -207,16 +217,17 @@
   font-weight: 500;
   color: var(--mantine-color-dimmed);
   text-align: left;
-  padding: 8px 12px;
+  padding: 12px 16px;
   border-bottom: 1px solid var(--agentsys-border-subtle);
   white-space: nowrap;
 }
 
 .tableWrap tbody td {
-  padding: 9px 12px;
+  padding: 12px 16px;
   border-bottom: 1px solid var(--agentsys-border-lighter);
   white-space: nowrap;
-  font-size: 0.83rem;
+  font-size: 0.85rem;
+  color: var(--mantine-color-text);
 }
 
 .tableWrap tbody tr:hover {
@@ -226,17 +237,18 @@
 .monoCell {
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.78rem;
+  color: var(--mantine-color-dimmed);
 }
 
 .priorityHigh {
-  color: #D97706;
+  color: var(--mantine-color-yellow-7);
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.72rem;
   font-weight: 600;
 }
 
 .priorityUrgent {
-  color: #E11D48;
+  color: var(--mantine-color-red-7);
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.72rem;
   font-weight: 600;
@@ -261,7 +273,7 @@
 
 /* ── System Health Row ── */
 .healthSection {
-  background: var(--mantine-color-body);
+  background: var(--agentsys-card-bg, var(--mantine-color-body));
   border: 1px solid var(--agentsys-card-border, var(--agentsys-border-subtle));
   border-radius: var(--mantine-radius-lg);
   padding: 22px 24px;
@@ -275,8 +287,10 @@
 }
 
 .healthTitle {
+  font-family: 'Space Grotesk', sans-serif;
   font-size: 0.95rem;
   font-weight: 600;
+  color: var(--mantine-color-text);
 }
 
 .healthStatus {
@@ -332,7 +346,7 @@
 
   .tableWrap thead th,
   .tableWrap tbody td {
-    padding: 8px;
+    padding: 8px 12px;
   }
 }
 

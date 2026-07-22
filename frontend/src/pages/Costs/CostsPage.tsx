@@ -1,7 +1,9 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Switch, TextInput, Button, NumberInput, Loader, Center } from '@mantine/core';
+import { Switch, TextInput, Button, NumberInput, Loader, Center, Badge, Text } from '@mantine/core';
+import { BarChart } from '@mantine/charts';
 import { notifications } from '@mantine/notifications';
+import dayjs from 'dayjs';
 import {
   IconCoin,
   IconChartLine,
@@ -14,24 +16,63 @@ import { StatCard } from '../../components/shared/StatCard/StatCard';
 import { AppModal } from '../../components/shared/AppModal/AppModal';
 import { Select } from '../../components/shared/Select/Select';
 import type { SelectOption } from '../../components/shared/Select/Select';
+import { TimeRangePicker, type TimeRange } from '../../components/shared/TimeRangePicker/TimeRangePicker';
 import { useApiQuery, useApiMutation, queryKeys } from '../../hooks/useApi';
 import { fetchCostReport, updateQuota, updateAlerts } from '../../services/costs';
 import type { CostBreakdownItem, QuotaEntry } from '../../services/costs';
+import { STAT_ICON } from '../../lib/statIconTheme';
 import classes from './Costs.module.css';
+
+type DatePreset = '7d' | '30d' | 'month';
+
+function buildDefaultDateRange(): TimeRange {
+  return {
+    start: dayjs().subtract(6, 'day').startOf('day').toISOString(),
+    end: dayjs().endOf('day').toISOString(),
+  };
+}
+
+function buildPresetRange(preset: DatePreset): TimeRange {
+  const end = dayjs().endOf('day');
+  if (preset === '7d') {
+    return { start: dayjs().subtract(6, 'day').startOf('day').toISOString(), end: end.toISOString() };
+  }
+  if (preset === '30d') {
+    return { start: dayjs().subtract(29, 'day').startOf('day').toISOString(), end: end.toISOString() };
+  }
+  return { start: dayjs().startOf('month').toISOString(), end: end.toISOString() };
+}
+
+function formatChartDate(isoDate: string): string {
+  return dayjs(isoDate).format('MM/DD');
+}
+
+function matchesPreset(range: TimeRange, preset: DatePreset): boolean {
+  if (!range.start || !range.end) return false;
+  const expected = buildPresetRange(preset);
+  return dayjs(range.start).isSame(expected.start, 'day') && dayjs(range.end).isSame(expected.end, 'day');
+}
 
 export function CostsPage() {
   const { t } = useTranslation();
 
   const [breakdownTab, setBreakdownTab] = useState<'agent' | 'user'>('agent');
+  const [dateRange, setDateRange] = useState<TimeRange>(buildDefaultDateRange);
   const [alertEnabled, setAlertEnabled] = useState(false);
   const [dailyThreshold, setDailyThreshold] = useState(50);
   const [alertEmail, setAlertEmail] = useState('admin@example.com');
   const [editQuota, setEditQuota] = useState<QuotaEntry | null>(null);
 
   // ── Data fetching ──
+  const reportParams = useMemo(() => ({
+    groupBy: breakdownTab,
+    start: dateRange.start ?? undefined,
+    end: dateRange.end ?? undefined,
+  }), [breakdownTab, dateRange.start, dateRange.end]);
+
   const { data: report, isLoading } = useApiQuery(
-    queryKeys.costs.report({ groupBy: breakdownTab }),
-    () => fetchCostReport(breakdownTab === 'agent' ? 'agent' : 'user'),
+    queryKeys.costs.report(reportParams),
+    () => fetchCostReport(reportParams),
   );
 
   const quotaMutation = useApiMutation(queryKeys.costs.all, (vars: { agentId: string; limit: number }) =>
@@ -47,10 +88,25 @@ export function CostsPage() {
     { value: 'user', label: t('costs:breakdown.byUser') },
   ];
 
+  const datePresets: { id: DatePreset; label: string }[] = [
+    { id: '7d', label: t('costs:dateRange.last7Days') },
+    { id: '30d', label: t('costs:dateRange.last30Days') },
+    { id: 'month', label: t('costs:dateRange.thisMonth') },
+  ];
+
+  const dailyTrend = report?.dailyTrend ?? [];
   const breakdownData: CostBreakdownItem[] = report?.breakdown ?? [];
   const quotas: QuotaEntry[] = report?.quotas ?? [];
   const maxBarCost = Math.max(...breakdownData.map((a) => a.cost), 1);
-  const maxDayCost = Math.max(...(report?.dailyTrend ?? []).map((d) => d.cost), 1);
+  const periodTotal = dailyTrend.reduce((sum, d) => sum + d.cost, 0);
+
+  const trendChartData = useMemo(
+    () => (report?.dailyTrend ?? []).map((day) => ({
+      date: formatChartDate(day.date),
+      cost: day.cost,
+    })),
+    [report?.dailyTrend],
+  );
 
   const summary = report?.summary;
 
@@ -87,60 +143,108 @@ export function CostsPage() {
         <h1 className={classes.title}>{t('costs:title')}</h1>
       </div>
 
-      {/* ── Stats Cards ── */}
+      {/* ── Stats Cards（固定快照，不受周期筛选影响）── */}
       <div className={classes.statsRow}>
         <StatCard
           icon={<IconCoin size={16} strokeWidth={2.2} />}
-          iconBg="rgba(245,158,11,0.12)"
-          iconColor="#F59E0B"
+          iconBg={STAT_ICON.amber.iconBg}
+          iconColor={STAT_ICON.amber.iconColor}
           label={t('costs:stats.todayCost')}
           value={summary?.todayCost.toFixed(2) ?? '—'}
           unit="$"
         />
         <StatCard
           icon={<IconReceipt size={16} strokeWidth={2.2} />}
-          iconBg="rgba(6,182,212,0.12)"
-          iconColor="#06B6D4"
+          iconBg={STAT_ICON.green.iconBg}
+          iconColor={STAT_ICON.green.iconColor}
           label={t('costs:stats.weekCost')}
           value={summary?.weekCost.toFixed(2) ?? '—'}
           unit="$"
         />
         <StatCard
           icon={<IconChartLine size={16} strokeWidth={2.2} />}
-          iconBg="rgba(168,85,247,0.12)"
-          iconColor="#A855F7"
+          iconBg={STAT_ICON.green.iconBg}
+          iconColor={STAT_ICON.green.iconColor}
           label={t('costs:stats.monthCost')}
           value={summary?.monthCost.toFixed(2) ?? '—'}
           unit="$"
         />
         <StatCard
           icon={<IconFlame size={16} strokeWidth={2.2} />}
-          iconBg="rgba(239,68,68,0.12)"
-          iconColor="#EF4444"
+          iconBg={STAT_ICON.cyan.iconBg}
+          iconColor={STAT_ICON.cyan.iconColor}
           label={t('costs:stats.todayTokens')}
           value={summary?.todayTokens.toLocaleString() ?? '—'}
         />
         <StatCard
           icon={<IconGauge size={16} strokeWidth={2.2} />}
-          iconBg="rgba(34,197,94,0.12)"
-          iconColor="#22C55E"
+          iconBg={STAT_ICON.cyan.iconBg}
+          iconColor={STAT_ICON.cyan.iconColor}
           label={t('costs:stats.avgCostPerTask')}
           value={summary?.avgCostPerTask.toFixed(2) ?? '—'}
           unit="$"
         />
         <StatCard
           icon={<IconChartLine size={16} strokeWidth={2.2} />}
-          iconBg="rgba(59,130,246,0.12)"
-          iconColor="#3B82F6"
+          iconBg={STAT_ICON.amber.iconBg}
+          iconColor={STAT_ICON.amber.iconColor}
           label={t('costs:stats.projectedMonth')}
           value={summary?.projectedMonth.toFixed(2) ?? '—'}
           unit="$"
         />
       </div>
 
-      {/* ── Cost Breakdown + Trend Chart ── */}
-      <div className={classes.chartsRow}>
-        {/* Breakdown Table */}
+      {/* ── 周期分析：日期控件 + 趋势图 + 明细表 ── */}
+      <section className={classes.analysisSection}>
+        <div className={classes.analysisToolbar}>
+          <div>
+            <Text className={classes.analysisTitle}>{t('costs:analysis.title')}</Text>
+            <Text size="xs" c="dimmed" mt={4}>{t('costs:analysis.desc')}</Text>
+          </div>
+          <div className={classes.dateToolbar}>
+            {datePresets.map((preset) => (
+              <Badge
+                key={preset.id}
+                className={classes.presetChip}
+                variant={matchesPreset(dateRange, preset.id) ? 'filled' : 'light'}
+                color={matchesPreset(dateRange, preset.id) ? 'agentGreen' : 'gray'}
+                onClick={() => setDateRange(buildPresetRange(preset.id))}
+              >
+                {preset.label}
+              </Badge>
+            ))}
+            <TimeRangePicker value={dateRange} onChange={setDateRange} />
+          </div>
+        </div>
+
+        <div className={classes.chartCard}>
+          <div className={classes.chartHeader}>
+            <div>
+              <span className={classes.chartTitle}>{t('costs:breakdown.dailyTrend')}</span>
+              {dailyTrend.length > 0 && (
+                <Text size="xs" c="dimmed" mt={4}>
+                  {t('costs:breakdown.periodSummary', { amount: periodTotal.toFixed(2) })}
+                </Text>
+              )}
+            </div>
+          </div>
+          {dailyTrend.length === 0 ? (
+            <div className={classes.chartEmpty}>{t('costs:breakdown.dailyTrendEmpty')}</div>
+          ) : (
+            <BarChart
+              h={260}
+              data={trendChartData}
+              dataKey="date"
+              series={[{ name: 'cost', label: t('costs:breakdown.cost'), color: 'agentGreen.6' }]}
+              tickLine="y"
+              gridAxis="xy"
+              withLegend={false}
+              valueFormatter={(value) => `$${Number(value).toFixed(2)}`}
+              className={classes.trendChart}
+            />
+          )}
+        </div>
+
         <div className={classes.chartCard}>
           <div className={classes.chartHeader}>
             <span className={classes.chartTitle}>{t('costs:breakdown.title')}</span>
@@ -185,26 +289,7 @@ export function CostsPage() {
             </table>
           </div>
         </div>
-
-        {/* Daily Trend Chart */}
-        <div className={classes.chartCard}>
-          <div className={classes.chartHeader}>
-            <span className={classes.chartTitle}>{t('costs:breakdown.byDay')}</span>
-          </div>
-          <div className={classes.barChart}>
-            {(report?.dailyTrend ?? []).map((day) => (
-              <div key={day.date} className={classes.barCol}>
-                <div
-                  className={classes.bar}
-                  style={{ height: `${(day.cost / maxDayCost) * 100}%` }}
-                />
-                <span className={classes.barLabel}>{day.date}</span>
-                <span className={classes.barValue}>${day.cost.toFixed(1)}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
+      </section>
 
       {/* ── Quota Management ── */}
       <div className={classes.section}>
