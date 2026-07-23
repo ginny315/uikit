@@ -1,0 +1,86 @@
+{
+  "menu": {
+    "userSettings": "用户设置",
+    "logout": "退出登录",
+    "logoutConfirmTitle": "确认退出",
+    "logoutConfirmMessage": "确定要退出登录吗？"
+  },
+
+  "sidebar": {
+    "title": "个人设置",
+    "profile": "用户名",
+    "password": "密码",
+    "email": "邮箱",
+    "phone": "手机号"
+  },
+
+  "profile": {
+    "title": "用户名",
+    "description": "在此更新您的头像和用户名。",
+    "accountId": "账号 ID",
+    "accountIdHint": "注册后不可更改。",
+    "username": "用户名",
+    "usernameRequired": "请输入用户名",
+    "usernameFormat": "用户名只能包含字母、数字和下划线，且以字母或下划线开头",
+    "avatar": "头像",
+    "uploadAvatar": "上传头像",
+    "saveSuccess": "个人资料已保存",
+    "usernameChangeTitle": "确认修改用户名",
+    "usernameChangeMessage": "修改用户名后需要重新登录，是否继续？"
+  },
+
+  "password": {
+    "title": "密码",
+    "description": "在此更新您的登录密码。",
+    "current": "当前密码",
+    "currentRequired": "请输入当前密码",
+    "new": "新密码",
+    "newRequired": "请输入新密码",
+    "confirm": "确认密码",
+    "confirmRequired": "请再次输入新密码",
+    "mismatch": "两次输入的密码不一致",
+    "sameAsOld": "新密码不能与当前密码相同",
+    "invalidFormat": "密码需 8–14 位，且包含大小写字母和数字",
+    "wrongCurrent": "当前密码不正确",
+    "changeTitle": "确认修改密码",
+    "changeMessage": "修改密码后需要重新登录，是否继续？",
+    "changeSuccess": "密码已更新，请重新登录"
+  },
+
+  "email": {
+    "title": "邮箱",
+    "description": "在此更新您的绑定邮箱。",
+    "address": "邮箱地址",
+    "addressRequired": "请输入邮箱地址",
+    "addressInvalid": "请输入有效的邮箱地址",
+    "code": "验证码",
+    "codeRequired": "请输入验证码",
+    "sendCode": "发送验证码",
+    "resendCode": "{{seconds}}s 后重发",
+    "codeSent": "验证码已发送（演示模式：123456）",
+    "verifyPassword": "登录密码",
+    "verifyPasswordRequired": "请输入登录密码以确认身份",
+    "changeTitle": "确认修改邮箱",
+    "changeMessage": "修改邮箱后需要重新登录，是否继续？",
+    "changeSuccess": "邮箱已更新，请重新登录"
+  },
+
+  "phone": {
+    "title": "手机号",
+    "description": "在此更新您的绑定手机号。",
+    "countryCode": "国家/地区码",
+    "number": "手机号",
+    "numberRequired": "请输入手机号",
+    "numberInvalid": "请输入有效的手机号",
+    "code": "验证码",
+    "codeRequired": "请输入验证码",
+    "sendCode": "发送验证码",
+    "resendCode": "{{seconds}}s 后重发",
+    "codeSent": "验证码已发送（演示模式：123456）",
+    "verifyPassword": "登录密码",
+    "verifyPasswordRequired": "请输入登录密码以确认身份",
+    "changeTitle": "确认修改手机号",
+    "changeMessage": "修改手机号后需要重新登录，是否继续？",
+    "changeSuccess": "手机号已更新，请重新登录"
+  }
+}

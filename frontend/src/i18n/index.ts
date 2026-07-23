@@ -15,6 +15,7 @@ import workflowsZh from './locales/zh-CN/workflows.json';
 import costsZh from './locales/zh-CN/costs.json';
 import accessZh from './locales/zh-CN/access.json';
 import webhooksZh from './locales/zh-CN/webhooks.json';
+import profileZh from './locales/zh-CN/profile.json';
 
 import commonEn from './locales/en-US/common.json';
 import navEn from './locales/en-US/nav.json';
@@ -29,6 +30,7 @@ import workflowsEn from './locales/en-US/workflows.json';
 import costsEn from './locales/en-US/costs.json';
 import accessEn from './locales/en-US/access.json';
 import webhooksEn from './locales/en-US/webhooks.json';
+import profileEn from './locales/en-US/profile.json';
 
 const resources = {
   'zh-CN': {
@@ -45,6 +47,7 @@ const resources = {
     costs: costsZh,
     access: accessZh,
     webhooks: webhooksZh,
+    profile: profileZh,
   },
   'en-US': {
     common: commonEn,
@@ -60,6 +63,7 @@ const resources = {
     costs: costsEn,
     access: accessEn,
     webhooks: webhooksEn,
+    profile: profileEn,
   },
 };
 
@@ -71,7 +75,7 @@ i18n
     fallbackLng: 'zh-CN',
     lng: 'zh-CN', // 默认语言，LanguageDetector 会自动覆盖 localStorage 中的值
     defaultNS: 'common',
-    ns: ['common', 'nav', 'auth', 'dashboard', 'agents', 'tasks', 'logs', 'status', 'validation', 'workflows', 'costs', 'access', 'webhooks'],
+    ns: ['common', 'nav', 'auth', 'dashboard', 'agents', 'tasks', 'logs', 'status', 'validation', 'workflows', 'costs', 'access', 'webhooks', 'profile'],
     interpolation: {
       escapeValue: false, // React 已经处理 XSS
     },

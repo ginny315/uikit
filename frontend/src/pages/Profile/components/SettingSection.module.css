@@ -1,0 +1,19 @@
+.header {
+  margin-bottom: 24px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--agentsys-card-border, var(--mantine-color-default-border));
+}
+
+.title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: var(--mantine-color-text);
+  margin-bottom: 6px;
+}
+
+.description {
+  font-size: 0.875rem;
+  color: var(--mantine-color-dimmed);
+  line-height: 1.5;
+}

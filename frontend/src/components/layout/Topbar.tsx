@@ -1,11 +1,14 @@
+import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Button, ActionIcon, Tooltip } from '@mantine/core';
+import { ActionIcon, Tooltip, Menu } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { useMediaQuery } from '@mantine/hooks';
-import { IconMenu2, IconLogout, IconCheck, IconSun, IconMoon } from '@tabler/icons-react';
+import { IconMenu2, IconLogout, IconCheck, IconSun, IconMoon, IconSettings } from '@tabler/icons-react';
 import { ThemePicker } from '../shared/ThemePicker/ThemePicker';
+import { ConfirmModal } from '../shared/ConfirmModal/ConfirmModal';
 import { useAuthStore } from '../../stores/authStore';
+import { getProfileInitials, useProfileStore } from '../../stores/profileStore';
 import { useThemeStore } from '../../stores/themeStore';
 import { config } from '../../config';
 import classes from './Topbar.module.css';
@@ -21,6 +24,8 @@ function resolvePageTitle(pathname: string, t: (key: string) => string): string 
     '/', '/agents', '/agents/create', '/tasks',
     '/workflows', '/logs', '/costs',
     '/settings/access', '/settings/webhooks',
+    '/settings/profile', '/settings/profile/password',
+    '/settings/profile/email', '/settings/profile/phone',
   ];
   if (staticRoutes.includes(pathname)) {
     return t(`nav:pageTitles.${pathname}`);
@@ -38,10 +43,13 @@ export function Topbar({ onMenuClick }: TopbarProps) {
   const location = useLocation();
   const navigate = useNavigate();
   const { logout } = useAuthStore();
+  const { profile } = useProfileStore();
   const { mode, toggleMode } = useThemeStore();
+  const [logoutConfirmOpen, setLogoutConfirmOpen] = useState(false);
   const isDark = mode === 'dark';
   const pageTitle = resolvePageTitle(location.pathname, t);
   const currentLang = i18n.language?.startsWith('en') ? 'en-US' : 'zh-CN';
+  const initials = getProfileInitials(profile.username);
 
   const handleToggleTheme = () => {
     toggleMode();
@@ -110,20 +118,50 @@ export function Topbar({ onMenuClick }: TopbarProps) {
           </button>
         </Tooltip>
 
-        <button className={classes.userBtn} type="button" aria-label={t('common:aria.userMenu')}>
-          <div className={classes.avatar}>A</div>
-          <span className={classes.avatarName}>Admin</span>
-        </button>
-        <Button
-          variant="subtle"
-          color="gray"
-          size="sm"
-          leftSection={<IconLogout size={16} />}
-          onClick={handleLogout}
-        >
-          {t('common:actions.logout')}
-        </Button>
+        <Menu position="bottom-end" width={200} shadow="md" radius="md">
+          <Menu.Target>
+            <button className={classes.userBtn} type="button" aria-label={t('common:aria.userMenu')}>
+              <div className={classes.avatar}>
+                {profile.avatarUrl ? (
+                  <img src={profile.avatarUrl} alt={profile.username} className={classes.avatarImg} />
+                ) : (
+                  initials
+                )}
+              </div>
+              <span className={classes.avatarName}>{profile.username}</span>
+            </button>
+          </Menu.Target>
+
+          <Menu.Dropdown>
+            <Menu.Item
+              leftSection={<IconSettings size={16} />}
+              onClick={() => navigate('/settings/profile')}
+            >
+              {t('profile:menu.userSettings')}
+            </Menu.Item>
+            <Menu.Divider />
+            <Menu.Item
+              leftSection={<IconLogout size={16} />}
+              color="red"
+              onClick={() => setLogoutConfirmOpen(true)}
+            >
+              {t('profile:menu.logout')}
+            </Menu.Item>
+          </Menu.Dropdown>
+        </Menu>
       </div>
+
+      <ConfirmModal
+        opened={logoutConfirmOpen}
+        onClose={() => setLogoutConfirmOpen(false)}
+        title={t('profile:menu.logoutConfirmTitle')}
+        message={t('profile:menu.logoutConfirmMessage')}
+        confirmLabel={t('profile:menu.logout')}
+        onConfirm={() => {
+          setLogoutConfirmOpen(false);
+          handleLogout();
+        }}
+      />
     </header>
   );
 }

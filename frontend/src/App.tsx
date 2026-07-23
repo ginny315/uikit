@@ -22,6 +22,11 @@ const LogsPage = lazy(() => import('./pages/Traces/LogsPage').then((m) => ({ def
 const CostsPage = lazy(() => import('./pages/Costs/CostsPage').then((m) => ({ default: m.CostsPage })));
 const AccessSettingsPage = lazy(() => import('./pages/Settings/AccessSettingsPage').then((m) => ({ default: m.AccessSettingsPage })));
 const WebhookSettingsPage = lazy(() => import('./pages/Settings/WebhookSettingsPage').then((m) => ({ default: m.WebhookSettingsPage })));
+const ProfileLayout = lazy(() => import('./pages/Profile/ProfileLayout').then((m) => ({ default: m.ProfileLayout })));
+const ProfileSettingsPage = lazy(() => import('./pages/Profile/ProfileSettingsPage').then((m) => ({ default: m.ProfileSettingsPage })));
+const PasswordSettingsPage = lazy(() => import('./pages/Profile/PasswordSettingsPage').then((m) => ({ default: m.PasswordSettingsPage })));
+const EmailSettingsPage = lazy(() => import('./pages/Profile/EmailSettingsPage').then((m) => ({ default: m.EmailSettingsPage })));
+const PhoneSettingsPage = lazy(() => import('./pages/Profile/PhoneSettingsPage').then((m) => ({ default: m.PhoneSettingsPage })));
 
 function PageLoader() {
   return (
@@ -69,6 +74,12 @@ export function App() {
             <Route path="/costs" element={<SuspensePage><CostsPage /></SuspensePage>} />
             <Route path="/settings/access" element={<SuspensePage><AccessSettingsPage /></SuspensePage>} />
             <Route path="/settings/webhooks" element={<SuspensePage><WebhookSettingsPage /></SuspensePage>} />
+            <Route path="/settings/profile" element={<SuspensePage><ProfileLayout /></SuspensePage>}>
+              <Route index element={<SuspensePage><ProfileSettingsPage /></SuspensePage>} />
+              <Route path="password" element={<SuspensePage><PasswordSettingsPage /></SuspensePage>} />
+              <Route path="email" element={<SuspensePage><EmailSettingsPage /></SuspensePage>} />
+              <Route path="phone" element={<SuspensePage><PhoneSettingsPage /></SuspensePage>} />
+            </Route>
           </Route>
         </Route>
 

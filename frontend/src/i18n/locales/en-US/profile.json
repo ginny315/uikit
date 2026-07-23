@@ -1,0 +1,86 @@
+{
+  "menu": {
+    "userSettings": "User Settings",
+    "logout": "Sign Out",
+    "logoutConfirmTitle": "Confirm Sign Out",
+    "logoutConfirmMessage": "Are you sure you want to sign out?"
+  },
+
+  "sidebar": {
+    "title": "Personal Settings",
+    "profile": "Profile",
+    "password": "Password",
+    "email": "Email",
+    "phone": "Phone"
+  },
+
+  "profile": {
+    "title": "Profile",
+    "description": "Update your avatar and username here.",
+    "accountId": "Account ID",
+    "accountIdHint": "Cannot be changed after registration.",
+    "username": "Username",
+    "usernameRequired": "Username is required",
+    "usernameFormat": "Username must start with a letter or underscore and contain only letters, numbers, and underscores",
+    "avatar": "Avatar",
+    "uploadAvatar": "Upload Avatar",
+    "saveSuccess": "Profile saved",
+    "usernameChangeTitle": "Confirm Username Change",
+    "usernameChangeMessage": "You will need to sign in again after changing your username. Continue?"
+  },
+
+  "password": {
+    "title": "Password",
+    "description": "Update your login password here.",
+    "current": "Current Password",
+    "currentRequired": "Current password is required",
+    "new": "New Password",
+    "newRequired": "New password is required",
+    "confirm": "Confirm Password",
+    "confirmRequired": "Please confirm your new password",
+    "mismatch": "Passwords do not match",
+    "sameAsOld": "New password must differ from current password",
+    "invalidFormat": "Password must be 8–14 characters with uppercase, lowercase, and a digit",
+    "wrongCurrent": "Current password is incorrect",
+    "changeTitle": "Confirm Password Change",
+    "changeMessage": "You will need to sign in again after changing your password. Continue?",
+    "changeSuccess": "Password updated. Please sign in again"
+  },
+
+  "email": {
+    "title": "Email",
+    "description": "Update your bound email address here.",
+    "address": "Email Address",
+    "addressRequired": "Email is required",
+    "addressInvalid": "Please enter a valid email address",
+    "code": "Verification Code",
+    "codeRequired": "Verification code is required",
+    "sendCode": "Send Code",
+    "resendCode": "Resend in {{seconds}}s",
+    "codeSent": "Code sent (demo mode: 123456)",
+    "verifyPassword": "Login Password",
+    "verifyPasswordRequired": "Enter your password to confirm",
+    "changeTitle": "Confirm Email Change",
+    "changeMessage": "You will need to sign in again after changing your email. Continue?",
+    "changeSuccess": "Email updated. Please sign in again"
+  },
+
+  "phone": {
+    "title": "Phone",
+    "description": "Update your bound phone number here.",
+    "countryCode": "Country Code",
+    "number": "Phone Number",
+    "numberRequired": "Phone number is required",
+    "numberInvalid": "Please enter a valid phone number",
+    "code": "Verification Code",
+    "codeRequired": "Verification code is required",
+    "sendCode": "Send Code",
+    "resendCode": "Resend in {{seconds}}s",
+    "codeSent": "Code sent (demo mode: 123456)",
+    "verifyPassword": "Login Password",
+    "verifyPasswordRequired": "Enter your password to confirm",
+    "changeTitle": "Confirm Phone Change",
+    "changeMessage": "You will need to sign in again after changing your phone. Continue?",
+    "changeSuccess": "Phone updated. Please sign in again"
+  }
+}
