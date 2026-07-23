@@ -16,8 +16,8 @@
 .card:hover {
   border-color: color-mix(in srgb, var(--mantine-color-agentGreen-6) 35%, transparent);
   background: var(--agentsys-row-hover);
-  transform: translateY(-2px);
-  box-shadow: var(--mantine-shadow-lg);
+  transform: var(--agentsys-card-hover-transform, translateY(-2px));
+  box-shadow: var(--agentsys-card-hover-shadow, var(--mantine-shadow-lg));
 }
 
 /* ── Header: label + icon ── */

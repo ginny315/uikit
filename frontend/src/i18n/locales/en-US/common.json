@@ -52,19 +52,27 @@
   "dateRange": {
     "placeholder": "Select date range",
     "separator": "to",
-    "apply": "Apply"
+    "apply": "Apply",
+    "clear": "Clear",
+    "startDate": "Start date",
+    "endDate": "End date",
+    "invalidRange": "Start date cannot be after end date",
+    "last7Days": "Last 7 days",
+    "last30Days": "Last 30 days",
+    "thisMonth": "This month"
   },
 
   "theme": {
     "pickerLabel": "Choose color theme",
     "panelTitle": "Choose Theme",
-    "panelDesc": "Pick a color palette. Light/dark mode can be toggled separately.",
+    "panelDesc": "Pick a color palette. Light/dark toggles separately. All except Forest include full radius, nav, and spacing styles.",
     "palettes": {
       "forest": "Forest",
       "ocean": "Ocean",
       "sunset": "Sunset",
-      "rose": "Rose",
-      "lavender": "Lavender"
+      "lavender": "Lavender",
+      "clinical": "Clinical",
+      "analytics": "Analytics"
     }
   }
 }

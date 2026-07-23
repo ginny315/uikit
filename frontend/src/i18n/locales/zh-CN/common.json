@@ -52,19 +52,27 @@
   "dateRange": {
     "placeholder": "选择日期范围",
     "separator": "至",
-    "apply": "确定"
+    "apply": "确定",
+    "clear": "清除",
+    "startDate": "开始日期",
+    "endDate": "结束日期",
+    "invalidRange": "开始日期不能晚于结束日期",
+    "last7Days": "近 7 天",
+    "last30Days": "近 30 天",
+    "thisMonth": "本月"
   },
 
   "theme": {
     "pickerLabel": "选择配色主题",
     "panelTitle": "选择主题",
-    "panelDesc": "选择界面配色方案，明暗模式可单独切换",
+    "panelDesc": "选择界面配色方案，明暗模式可单独切换。除 Forest 外均含完整圆角、导航与间距风格",
     "palettes": {
       "forest": "Forest",
       "ocean": "Ocean",
       "sunset": "Sunset",
-      "rose": "Rose",
-      "lavender": "Lavender"
+      "lavender": "Lavender",
+      "clinical": "Clinical",
+      "analytics": "Analytics"
     }
   }
 }

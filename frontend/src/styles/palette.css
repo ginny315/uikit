@@ -11,12 +11,12 @@
     --agentsys-accent-secondary: #06B6D4;
   }
 
-  /* ── Ocean ── */
+  /* ── Ocean（深海仪表盘：紧凑圆角、青色指示条、蓝调阴影） ── */
   [data-agentsys-palette='ocean'][data-mantine-color-scheme='light'] {
     --mantine-color-body: #EEF6FA;
     --mantine-color-text: #0C2340;
     --mantine-color-dimmed: #4A6788;
-    --agentsys-sidebar-bg: #E8F2F8;
+    --agentsys-sidebar-bg: #EEF6FA;
     --agentsys-topbar-bg: rgba(255, 255, 255, 0.88);
     --agentsys-card-bg: #FFFFFF;
     --agentsys-card-border: rgba(8, 145, 178, 0.12);
@@ -28,13 +28,24 @@
     --agentsys-accent: #0891B2;
     --agentsys-accent-glow: #06B6D4;
     --agentsys-accent-secondary: #38BDF8;
+    --agentsys-nav-active-bg: rgba(6, 182, 212, 0.10);
+    --agentsys-nav-active-color: #0891B2;
+    --agentsys-nav-active-indicator: #06B6D4;
+    --agentsys-nav-indicator-width: 3px;
+    --agentsys-nav-item-radius: 6px;
+    --agentsys-brand-radius: 6px;
+    --agentsys-nav-active-shadow: none;
+    --agentsys-control-radius: 6px;
+    --agentsys-badge-radius: 4px;
+    --agentsys-card-hover-transform: translateY(-1px);
+    --agentsys-card-hover-shadow: 0 4px 16px rgba(6, 182, 212, 0.10);
   }
 
   [data-agentsys-palette='ocean'][data-mantine-color-scheme='dark'] {
     --mantine-color-body: #060B14;
     --mantine-color-text: #E8EDF5;
     --mantine-color-dimmed: #8FA4C0;
-    --agentsys-sidebar-bg: #0C1525;
+    --agentsys-sidebar-bg: #060B14;
     --agentsys-topbar-bg: rgba(10, 17, 31, 0.82);
     --agentsys-card-bg: #152238;
     --agentsys-card-border: rgba(100, 160, 220, 0.10);
@@ -46,14 +57,25 @@
     --agentsys-accent: #06B6D4;
     --agentsys-accent-glow: #22D3EE;
     --agentsys-accent-secondary: #38BDF8;
+    --agentsys-nav-active-bg: rgba(6, 182, 212, 0.12);
+    --agentsys-nav-active-color: #22D3EE;
+    --agentsys-nav-active-indicator: #06B6D4;
+    --agentsys-nav-indicator-width: 3px;
+    --agentsys-nav-item-radius: 6px;
+    --agentsys-brand-radius: 6px;
+    --agentsys-nav-active-shadow: none;
+    --agentsys-control-radius: 6px;
+    --agentsys-badge-radius: 4px;
+    --agentsys-card-hover-transform: translateY(-1px);
+    --agentsys-card-hover-shadow: 0 4px 16px rgba(6, 182, 212, 0.14);
   }
 
-  /* ── Sunset ── */
+  /* ── Sunset（暖色暮光：大圆角、琥珀 pill 导航、柔和暖影） ── */
   [data-agentsys-palette='sunset'][data-mantine-color-scheme='light'] {
     --mantine-color-body: #FDF8F0;
     --mantine-color-text: #2D1F10;
     --mantine-color-dimmed: #7C5F3E;
-    --agentsys-sidebar-bg: #FEF7ED;
+    --agentsys-sidebar-bg: #FDF8F0;
     --agentsys-topbar-bg: rgba(255, 251, 245, 0.92);
     --agentsys-card-bg: #FFFFFF;
     --agentsys-card-border: rgba(180, 130, 60, 0.12);
@@ -65,13 +87,25 @@
     --agentsys-accent: #EA7A1E;
     --agentsys-accent-glow: #F5973A;
     --agentsys-accent-secondary: #14B8A6;
+    --agentsys-nav-active-bg: #EA7A1E;
+    --agentsys-nav-active-color: #FFFFFF;
+    --agentsys-nav-active-indicator: transparent;
+    --agentsys-nav-indicator-width: 0px;
+    --agentsys-nav-item-radius: 10px;
+    --agentsys-nav-active-radius: 10px;
+    --agentsys-brand-radius: 10px;
+    --agentsys-nav-active-shadow: 0 2px 8px rgba(234, 122, 30, 0.28);
+    --agentsys-control-radius: 10px;
+    --agentsys-badge-radius: 8px;
+    --agentsys-card-hover-transform: translateY(-2px);
+    --agentsys-card-hover-shadow: 0 6px 24px rgba(234, 122, 30, 0.12);
   }
 
   [data-agentsys-palette='sunset'][data-mantine-color-scheme='dark'] {
     --mantine-color-body: #1A1208;
     --mantine-color-text: #F5E8D8;
     --mantine-color-dimmed: #B8956E;
-    --agentsys-sidebar-bg: #221808;
+    --agentsys-sidebar-bg: #1A1208;
     --agentsys-topbar-bg: rgba(26, 18, 8, 0.85);
     --agentsys-card-bg: #2A1E10;
     --agentsys-card-border: rgba(234, 122, 30, 0.14);
@@ -83,51 +117,26 @@
     --agentsys-accent: #F5973A;
     --agentsys-accent-glow: #FB923C;
     --agentsys-accent-secondary: #2DD4BF;
+    --agentsys-nav-active-bg: #F5973A;
+    --agentsys-nav-active-color: #1A1208;
+    --agentsys-nav-active-indicator: transparent;
+    --agentsys-nav-indicator-width: 0px;
+    --agentsys-nav-item-radius: 10px;
+    --agentsys-nav-active-radius: 10px;
+    --agentsys-brand-radius: 10px;
+    --agentsys-nav-active-shadow: 0 2px 10px rgba(245, 151, 58, 0.30);
+    --agentsys-control-radius: 10px;
+    --agentsys-badge-radius: 8px;
+    --agentsys-card-hover-transform: translateY(-2px);
+    --agentsys-card-hover-shadow: 0 6px 24px rgba(245, 151, 58, 0.14);
   }
 
-  /* ── Rose ── */
-  [data-agentsys-palette='rose'][data-mantine-color-scheme='light'] {
-    --mantine-color-body: #FDF5F8;
-    --mantine-color-text: #3B1224;
-    --mantine-color-dimmed: #8E6A82;
-    --agentsys-sidebar-bg: #FBF0F5;
-    --agentsys-topbar-bg: rgba(255, 252, 254, 0.92);
-    --agentsys-card-bg: #FFFFFF;
-    --agentsys-card-border: rgba(244, 63, 94, 0.12);
-    --agentsys-page-bg: #FDF5F8;
-    --agentsys-border-subtle: rgba(244, 63, 94, 0.10);
-    --agentsys-border-lighter: rgba(244, 63, 94, 0.06);
-    --agentsys-row-hover: rgba(244, 63, 94, 0.06);
-    --agentsys-muted-fill: rgba(244, 63, 94, 0.08);
-    --agentsys-accent: #E11D48;
-    --agentsys-accent-glow: #F43F5E;
-    --agentsys-accent-secondary: #2DD4BF;
-  }
-
-  [data-agentsys-palette='rose'][data-mantine-color-scheme='dark'] {
-    --mantine-color-body: #0E060A;
-    --mantine-color-text: #F5ECF2;
-    --mantine-color-dimmed: #C4A0B8;
-    --agentsys-sidebar-bg: #11080E;
-    --agentsys-topbar-bg: rgba(20, 10, 16, 0.82);
-    --agentsys-card-bg: #241520;
-    --agentsys-card-border: rgba(220, 120, 160, 0.10);
-    --agentsys-page-bg: #0E060A;
-    --agentsys-border-subtle: rgba(220, 120, 160, 0.08);
-    --agentsys-border-lighter: rgba(220, 120, 160, 0.05);
-    --agentsys-row-hover: rgba(244, 63, 94, 0.08);
-    --agentsys-muted-fill: rgba(244, 63, 94, 0.10);
-    --agentsys-accent: #F43F5E;
-    --agentsys-accent-glow: #FB7185;
-    --agentsys-accent-secondary: #2DD4BF;
-  }
-
-  /* ── Lavender ── */
+  /* ── Lavender（暮紫优雅：Inter 字体、浮起卡片导航、紫调阴影） ── */
   [data-agentsys-palette='lavender'][data-mantine-color-scheme='light'] {
     --mantine-color-body: #F8F6FC;
     --mantine-color-text: #1E1338;
     --mantine-color-dimmed: #5C4D7A;
-    --agentsys-sidebar-bg: #F5F1FB;
+    --agentsys-sidebar-bg: #F8F6FC;
     --agentsys-topbar-bg: rgba(253, 252, 255, 0.92);
     --agentsys-card-bg: #FFFFFF;
     --agentsys-card-border: rgba(140, 110, 200, 0.10);
@@ -139,13 +148,24 @@
     --agentsys-accent: #9333EA;
     --agentsys-accent-glow: #A855F7;
     --agentsys-accent-secondary: #4F6FDE;
+    --agentsys-nav-active-bg: #FFFFFF;
+    --agentsys-nav-active-color: #9333EA;
+    --agentsys-nav-active-indicator: transparent;
+    --agentsys-nav-indicator-width: 0px;
+    --agentsys-nav-item-radius: 10px;
+    --agentsys-brand-radius: 10px;
+    --agentsys-nav-active-shadow: 0 1px 4px rgba(147, 51, 234, 0.14);
+    --agentsys-control-radius: 10px;
+    --agentsys-badge-radius: 8px;
+    --agentsys-card-hover-transform: translateY(-1px);
+    --agentsys-card-hover-shadow: 0 4px 20px rgba(147, 51, 234, 0.10);
   }
 
   [data-agentsys-palette='lavender'][data-mantine-color-scheme='dark'] {
     --mantine-color-body: #120A1E;
     --mantine-color-text: #F0EAF8;
     --mantine-color-dimmed: #9888B8;
-    --agentsys-sidebar-bg: #160F22;
+    --agentsys-sidebar-bg: #120A1E;
     --agentsys-topbar-bg: rgba(18, 10, 30, 0.85);
     --agentsys-card-bg: #1E1430;
     --agentsys-card-border: rgba(168, 85, 247, 0.12);
@@ -157,5 +177,128 @@
     --agentsys-accent: #A855F7;
     --agentsys-accent-glow: #C084FC;
     --agentsys-accent-secondary: #818CF8;
+    --agentsys-nav-active-bg: #1E1430;
+    --agentsys-nav-active-color: #C084FC;
+    --agentsys-nav-active-indicator: transparent;
+    --agentsys-nav-indicator-width: 0px;
+    --agentsys-nav-item-radius: 10px;
+    --agentsys-brand-radius: 10px;
+    --agentsys-nav-active-shadow: 0 1px 4px rgba(168, 85, 247, 0.22);
+    --agentsys-control-radius: 10px;
+    --agentsys-badge-radius: 8px;
+    --agentsys-card-hover-transform: translateY(-1px);
+    --agentsys-card-hover-shadow: 0 4px 20px rgba(168, 85, 247, 0.14);
+  }
+
+  /* ── Clinical（Pharmacy OS 风格：大圆角、留白、紫调、白卡片） ── */
+  [data-agentsys-palette='clinical'][data-mantine-color-scheme='light'] {
+    --mantine-color-body: #F3F3F5;
+    --mantine-color-text: #1A1A2E;
+    --mantine-color-dimmed: #6B7280;
+    --agentsys-sidebar-bg: #F3F3F5;
+    --agentsys-topbar-bg: rgba(243, 243, 245, 0.92);
+    --agentsys-card-bg: #FFFFFF;
+    --agentsys-card-border: rgba(0, 0, 0, 0.06);
+    --agentsys-page-bg: #F3F3F5;
+    --agentsys-border-subtle: rgba(0, 0, 0, 0.05);
+    --agentsys-border-lighter: rgba(0, 0, 0, 0.03);
+    --agentsys-row-hover: rgba(123, 97, 255, 0.04);
+    --agentsys-muted-fill: rgba(123, 97, 255, 0.06);
+    --agentsys-accent: #6B51EF;
+    --agentsys-accent-glow: #7B61FF;
+    --agentsys-accent-secondary: #60A5FA;
+    --agentsys-nav-active-bg: #FFFFFF;
+    --agentsys-nav-active-color: #1A1A2E;
+    --agentsys-nav-active-indicator: transparent;
+    --agentsys-nav-indicator-width: 0px;
+    --agentsys-nav-item-radius: 12px;
+    --agentsys-brand-radius: 10px;
+    --agentsys-nav-active-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  }
+
+  [data-agentsys-palette='clinical'][data-mantine-color-scheme='dark'] {
+    --mantine-color-body: #13111C;
+    --mantine-color-text: #F0EEF5;
+    --mantine-color-dimmed: #9CA3AF;
+    --agentsys-sidebar-bg: #13111C;
+    --agentsys-topbar-bg: rgba(19, 17, 28, 0.88);
+    --agentsys-card-bg: #1E1B2A;
+    --agentsys-card-border: rgba(255, 255, 255, 0.07);
+    --agentsys-page-bg: #13111C;
+    --agentsys-border-subtle: rgba(255, 255, 255, 0.06);
+    --agentsys-border-lighter: rgba(255, 255, 255, 0.03);
+    --agentsys-row-hover: rgba(155, 133, 255, 0.08);
+    --agentsys-muted-fill: rgba(155, 133, 255, 0.10);
+    --agentsys-accent: #9B85FF;
+    --agentsys-accent-glow: #B8A6FF;
+    --agentsys-accent-secondary: #60A5FA;
+    --agentsys-nav-active-bg: #1E1B2A;
+    --agentsys-nav-active-color: #F0EEF5;
+    --agentsys-nav-active-indicator: transparent;
+    --agentsys-nav-indicator-width: 0px;
+    --agentsys-nav-item-radius: 12px;
+    --agentsys-brand-radius: 10px;
+    --agentsys-nav-active-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+  }
+
+  /* ── Analytics（薄荷绿底、翡翠主色、直角卡片、仅 nav pill 圆角） ── */
+  [data-agentsys-palette='analytics'][data-mantine-color-scheme='light'] {
+    --mantine-color-body: #F4F9F6;
+    --mantine-color-text: #111827;
+    --mantine-color-dimmed: #6B7280;
+    --agentsys-sidebar-bg: #FFFFFF;
+    --agentsys-topbar-bg: rgba(255, 255, 255, 0.92);
+    --agentsys-card-bg: #FFFFFF;
+    --agentsys-card-border: rgba(16, 185, 129, 0.10);
+    --agentsys-page-bg: #F4F9F6;
+    --agentsys-border-subtle: rgba(16, 185, 129, 0.08);
+    --agentsys-border-lighter: rgba(16, 185, 129, 0.04);
+    --agentsys-row-hover: rgba(16, 185, 129, 0.05);
+    --agentsys-muted-fill: rgba(16, 185, 129, 0.07);
+    --agentsys-accent: #059669;
+    --agentsys-accent-glow: #10B981;
+    --agentsys-accent-secondary: #F97316;
+    --agentsys-nav-active-bg: #111827;
+    --agentsys-nav-active-color: #FFFFFF;
+    --agentsys-nav-active-indicator: transparent;
+    --agentsys-nav-indicator-width: 0px;
+    --agentsys-nav-item-radius: 0px;
+    --agentsys-nav-active-radius: 9999px;
+    --agentsys-brand-radius: 50%;
+    --agentsys-nav-active-shadow: none;
+    --agentsys-control-radius: 0px;
+    --agentsys-badge-radius: 0px;
+    --agentsys-card-hover-transform: none;
+    --agentsys-card-hover-shadow: none;
+  }
+
+  [data-agentsys-palette='analytics'][data-mantine-color-scheme='dark'] {
+    --mantine-color-body: #0A1210;
+    --mantine-color-text: #ECFDF5;
+    --mantine-color-dimmed: #86EFAC;
+    --agentsys-sidebar-bg: #0F1815;
+    --agentsys-topbar-bg: rgba(15, 24, 21, 0.90);
+    --agentsys-card-bg: #152420;
+    --agentsys-card-border: rgba(16, 185, 129, 0.14);
+    --agentsys-page-bg: #0A1210;
+    --agentsys-border-subtle: rgba(16, 185, 129, 0.10);
+    --agentsys-border-lighter: rgba(16, 185, 129, 0.06);
+    --agentsys-row-hover: rgba(16, 185, 129, 0.08);
+    --agentsys-muted-fill: rgba(16, 185, 129, 0.12);
+    --agentsys-accent: #34D399;
+    --agentsys-accent-glow: #6EE7B7;
+    --agentsys-accent-secondary: #FB923C;
+    --agentsys-nav-active-bg: #10B981;
+    --agentsys-nav-active-color: #FFFFFF;
+    --agentsys-nav-active-indicator: transparent;
+    --agentsys-nav-indicator-width: 0px;
+    --agentsys-nav-item-radius: 0px;
+    --agentsys-nav-active-radius: 9999px;
+    --agentsys-brand-radius: 50%;
+    --agentsys-nav-active-shadow: none;
+    --agentsys-control-radius: 0px;
+    --agentsys-badge-radius: 0px;
+    --agentsys-card-hover-transform: none;
+    --agentsys-card-hover-shadow: none;
   }
 }

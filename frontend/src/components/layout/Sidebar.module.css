@@ -42,7 +42,7 @@
   width: 30px;
   height: 30px;
   background: linear-gradient(135deg, var(--agentsys-accent, var(--mantine-color-agentGreen-6)), var(--agentsys-accent-secondary, var(--mantine-color-agentCyan-5)));
-  border-radius: 8px;
+  border-radius: var(--agentsys-brand-radius, 8px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -101,7 +101,7 @@
   align-items: center;
   gap: 10px;
   padding: 9px 12px;
-  border-radius: 8px;
+  border-radius: var(--agentsys-nav-item-radius, 8px);
   color: var(--mantine-color-dimmed);
   text-decoration: none;
   font-size: 0.88rem;
@@ -123,9 +123,11 @@
 }
 
 .navItemActive {
-  color: var(--mantine-color-agentGreen-6);
-  background: rgba(22, 163, 74, 0.08);
+  color: var(--agentsys-nav-active-color, var(--mantine-color-agentGreen-6));
+  background: var(--agentsys-nav-active-bg, rgba(22, 163, 74, 0.08));
   font-weight: 600;
+  box-shadow: var(--agentsys-nav-active-shadow, none);
+  border-radius: var(--agentsys-nav-active-radius, var(--agentsys-nav-item-radius, 8px));
 }
 
 .navItemActive::before {
@@ -134,9 +136,9 @@
   left: 0;
   top: 50%;
   transform: translateY(-50%);
-  width: 3px;
+  width: var(--agentsys-nav-indicator-width, 3px);
   height: 18px;
-  background: var(--mantine-color-agentGreen-6);
+  background: var(--agentsys-nav-active-indicator, var(--mantine-color-agentGreen-6));
   border-radius: 0 3px 3px 0;
 }
 
@@ -154,7 +156,7 @@
   padding: 10px 0;
   justify-content: center;
   gap: 0;
-  border-radius: 8px;
+  border-radius: var(--agentsys-nav-item-radius, 8px);
   margin: 1px 10px;
   width: auto;
 }

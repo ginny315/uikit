@@ -1,49 +1,46 @@
-import { useState } from 'react';
-import { Outlet } from 'react-router-dom';
+import { NavLink, Outlet } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { ActionIcon, Drawer } from '@mantine/core';
-import { useMediaQuery } from '@mantine/hooks';
-import { IconMenu2 } from '@tabler/icons-react';
-import { ProfileSidebar } from './components/ProfileSidebar';
+import {
+  IconUser,
+  IconLock,
+  IconMail,
+  IconPhone,
+} from '@tabler/icons-react';
 import classes from './ProfileLayout.module.css';
+
+const NAV_ITEMS = [
+  { key: 'profile', path: '/settings/profile', icon: IconUser },
+  { key: 'password', path: '/settings/profile/password', icon: IconLock },
+  { key: 'email', path: '/settings/profile/email', icon: IconMail },
+  { key: 'phone', path: '/settings/profile/phone', icon: IconPhone },
+] as const;
 
 export function ProfileLayout() {
   const { t } = useTranslation();
-  const isMobile = useMediaQuery('(max-width: 768px)');
-  const [drawerOpen, setDrawerOpen] = useState(false);
 
   return (
-    <div className={classes.profileLayout}>
-      {!isMobile && <ProfileSidebar />}
+    <div className={classes.page}>
+      <nav className={classes.tabNav} aria-label={t('profile:sidebar.title')}>
+        <div className={classes.tabList}>
+          {NAV_ITEMS.map(({ key, path, icon: Icon }) => (
+            <NavLink
+              key={key}
+              to={path}
+              end={key === 'profile'}
+              className={({ isActive }) =>
+                `${classes.tabItem} ${isActive ? classes.tabItemActive : ''}`
+              }
+            >
+              <Icon size={16} stroke={1.75} />
+              {t(`profile:sidebar.${key}`)}
+            </NavLink>
+          ))}
+        </div>
+      </nav>
 
       <div className={classes.content}>
-        {isMobile && (
-          <div className={classes.mobileHeader}>
-            <ActionIcon
-              variant="subtle"
-              color="gray"
-              onClick={() => setDrawerOpen(true)}
-              aria-label={t('common:aria.openNavMenu')}
-            >
-              <IconMenu2 size={18} />
-            </ActionIcon>
-            <span className={classes.sidebarTitle}>{t('profile:sidebar.title')}</span>
-          </div>
-        )}
         <Outlet />
       </div>
-
-      {isMobile && (
-        <Drawer
-          opened={drawerOpen}
-          onClose={() => setDrawerOpen(false)}
-          title={t('profile:sidebar.title')}
-          position="left"
-          size={280}
-        >
-          <ProfileSidebar variant="drawer" onNavigate={() => setDrawerOpen(false)} />
-        </Drawer>
-      )}
     </div>
   );
 }

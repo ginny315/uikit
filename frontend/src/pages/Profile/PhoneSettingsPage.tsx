@@ -127,9 +127,9 @@ export function PhoneSettingsPage() {
 
       <div className={classes.formRow}>
         <div className={classes.formLabel}>{t('profile:phone.code')}</div>
-        <div style={{ display: 'flex', gap: 12 }}>
+        <div className={classes.formInlineRow}>
           <TextInput
-            style={{ flex: 1 }}
+            className={classes.formInlineField}
             value={code}
             onChange={(e) => {
               setCode(e.currentTarget.value);

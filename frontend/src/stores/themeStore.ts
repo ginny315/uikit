@@ -22,6 +22,10 @@ function readStoredMode(): ThemeMode {
 
 function readStoredPalette(): ThemePalette {
   const stored = localStorage.getItem(PALETTE_STORAGE_KEY);
+  if (stored === 'rose') {
+    localStorage.setItem(PALETTE_STORAGE_KEY, 'lavender');
+    return 'lavender';
+  }
   if (isThemePalette(stored)) return stored;
   return 'forest';
 }

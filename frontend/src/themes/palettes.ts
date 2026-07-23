@@ -1,4 +1,4 @@
-export type ThemePalette = 'forest' | 'ocean' | 'sunset' | 'rose' | 'lavender';
+export type ThemePalette = 'forest' | 'ocean' | 'sunset' | 'lavender' | 'clinical' | 'analytics';
 
 export type MantineColorTuple = [
   string, string, string, string, string,
@@ -44,16 +44,6 @@ const sunsetSecondary: MantineColorTuple = [
   '#14B8A6', '#0D9488', '#0F766E', '#115E59', '#134E4A',
 ];
 
-const rosePrimary: MantineColorTuple = [
-  '#FFF1F2', '#FFE4E6', '#FECDD3', '#FDA4AF', '#FB7185',
-  '#F43F5E', '#E11D48', '#BE123C', '#9F1239', '#881337',
-];
-
-const roseSecondary: MantineColorTuple = [
-  '#F0FDFA', '#CCFBF1', '#99F6E4', '#5EEAD4', '#2DD4BF',
-  '#14B8A6', '#0D9488', '#0F766E', '#115E59', '#134E4A',
-];
-
 const lavenderPrimary: MantineColorTuple = [
   '#FAF5FF', '#F3E8FF', '#E9D5FF', '#D8B4FE', '#C084FC',
   '#A855F7', '#9333EA', '#7E22CE', '#6B21A8', '#581C87',
@@ -62,6 +52,26 @@ const lavenderPrimary: MantineColorTuple = [
 const lavenderSecondary: MantineColorTuple = [
   '#EEF2FF', '#E0E7FF', '#C7D2FE', '#A5B4FC', '#818CF8',
   '#6366F1', '#4F46E5', '#4338CA', '#3730A3', '#312E81',
+];
+
+const clinicalPrimary: MantineColorTuple = [
+  '#FAF8FF', '#F3EEFF', '#E9E2FF', '#D4C9FF', '#B8A6FF',
+  '#9B85FF', '#7B61FF', '#6B51EF', '#5B41D9', '#4C35B8',
+];
+
+const clinicalSecondary: MantineColorTuple = [
+  '#EFF6FF', '#DBEAFE', '#BFDBFE', '#93C5FD', '#60A5FA',
+  '#3B82F6', '#2563EB', '#1D4ED8', '#1E40AF', '#1E3A8A',
+];
+
+const analyticsPrimary: MantineColorTuple = [
+  '#ECFDF5', '#D1FAE5', '#A7F3D0', '#6EE7B7', '#34D399',
+  '#10B981', '#059669', '#047857', '#065F46', '#064E3B',
+];
+
+const analyticsSecondary: MantineColorTuple = [
+  '#FFF7ED', '#FFEDD5', '#FED7AA', '#FDBA74', '#FB923C',
+  '#F97316', '#EA580C', '#C2410C', '#9A3412', '#7C2D12',
 ];
 
 export const PALETTES: Record<ThemePalette, PaletteDefinition> = {
@@ -89,14 +99,6 @@ export const PALETTES: Record<ThemePalette, PaletteDefinition> = {
     primaryScale: sunsetPrimary,
     secondaryScale: sunsetSecondary,
   },
-  rose: {
-    id: 'rose',
-    accent: '#F43F5E',
-    accentGlow: '#FB7185',
-    accentSecondary: '#2DD4BF',
-    primaryScale: rosePrimary,
-    secondaryScale: roseSecondary,
-  },
   lavender: {
     id: 'lavender',
     accent: '#9333EA',
@@ -105,9 +107,25 @@ export const PALETTES: Record<ThemePalette, PaletteDefinition> = {
     primaryScale: lavenderPrimary,
     secondaryScale: lavenderSecondary,
   },
+  clinical: {
+    id: 'clinical',
+    accent: '#6B51EF',
+    accentGlow: '#7B61FF',
+    accentSecondary: '#60A5FA',
+    primaryScale: clinicalPrimary,
+    secondaryScale: clinicalSecondary,
+  },
+  analytics: {
+    id: 'analytics',
+    accent: '#059669',
+    accentGlow: '#10B981',
+    accentSecondary: '#F97316',
+    primaryScale: analyticsPrimary,
+    secondaryScale: analyticsSecondary,
+  },
 };
 
-export const PALETTE_ORDER: ThemePalette[] = ['forest', 'ocean', 'sunset', 'rose', 'lavender'];
+export const PALETTE_ORDER: ThemePalette[] = ['forest', 'ocean', 'sunset', 'lavender', 'clinical', 'analytics'];
 
 export function isThemePalette(value: string | null): value is ThemePalette {
   return value !== null && value in PALETTES;

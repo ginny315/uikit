@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Switch, TextInput, Button, NumberInput, Loader, Center, Badge, Text } from '@mantine/core';
+import { Switch, TextInput, Button, NumberInput, Loader, Center, Text } from '@mantine/core';
 import { BarChart } from '@mantine/charts';
 import { notifications } from '@mantine/notifications';
 import dayjs from 'dayjs';
@@ -16,41 +16,19 @@ import { StatCard } from '../../components/shared/StatCard/StatCard';
 import { AppModal } from '../../components/shared/AppModal/AppModal';
 import { Select } from '../../components/shared/Select/Select';
 import type { SelectOption } from '../../components/shared/Select/Select';
-import { TimeRangePicker, type TimeRange } from '../../components/shared/TimeRangePicker/TimeRangePicker';
+import { TimeRangePicker, buildPresetRange, type TimeRange } from '../../components/shared/TimeRangePicker/TimeRangePicker';
 import { useApiQuery, useApiMutation, queryKeys } from '../../hooks/useApi';
 import { fetchCostReport, updateQuota, updateAlerts } from '../../services/costs';
 import type { CostBreakdownItem, QuotaEntry } from '../../services/costs';
 import { STAT_ICON } from '../../lib/statIconTheme';
 import classes from './Costs.module.css';
 
-type DatePreset = '7d' | '30d' | 'month';
-
 function buildDefaultDateRange(): TimeRange {
-  return {
-    start: dayjs().subtract(6, 'day').startOf('day').toISOString(),
-    end: dayjs().endOf('day').toISOString(),
-  };
-}
-
-function buildPresetRange(preset: DatePreset): TimeRange {
-  const end = dayjs().endOf('day');
-  if (preset === '7d') {
-    return { start: dayjs().subtract(6, 'day').startOf('day').toISOString(), end: end.toISOString() };
-  }
-  if (preset === '30d') {
-    return { start: dayjs().subtract(29, 'day').startOf('day').toISOString(), end: end.toISOString() };
-  }
-  return { start: dayjs().startOf('month').toISOString(), end: end.toISOString() };
+  return buildPresetRange('7d');
 }
 
 function formatChartDate(isoDate: string): string {
   return dayjs(isoDate).format('MM/DD');
-}
-
-function matchesPreset(range: TimeRange, preset: DatePreset): boolean {
-  if (!range.start || !range.end) return false;
-  const expected = buildPresetRange(preset);
-  return dayjs(range.start).isSame(expected.start, 'day') && dayjs(range.end).isSame(expected.end, 'day');
 }
 
 export function CostsPage() {
@@ -86,12 +64,6 @@ export function CostsPage() {
   const breakdownOptions: SelectOption[] = [
     { value: 'agent', label: t('costs:breakdown.byAgent') },
     { value: 'user', label: t('costs:breakdown.byUser') },
-  ];
-
-  const datePresets: { id: DatePreset; label: string }[] = [
-    { id: '7d', label: t('costs:dateRange.last7Days') },
-    { id: '30d', label: t('costs:dateRange.last30Days') },
-    { id: 'month', label: t('costs:dateRange.thisMonth') },
   ];
 
   const dailyTrend = report?.dailyTrend ?? [];
@@ -202,17 +174,6 @@ export function CostsPage() {
             <Text size="xs" c="dimmed" mt={4}>{t('costs:analysis.desc')}</Text>
           </div>
           <div className={classes.dateToolbar}>
-            {datePresets.map((preset) => (
-              <Badge
-                key={preset.id}
-                className={classes.presetChip}
-                variant={matchesPreset(dateRange, preset.id) ? 'filled' : 'light'}
-                color={matchesPreset(dateRange, preset.id) ? 'agentGreen' : 'gray'}
-                onClick={() => setDateRange(buildPresetRange(preset.id))}
-              >
-                {preset.label}
-              </Badge>
-            ))}
             <TimeRangePicker value={dateRange} onChange={setDateRange} />
           </div>
         </div>

@@ -1,43 +1,27 @@
 .trigger {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
+  width: 32px;
   height: 32px;
-  padding: 0 12px 0 8px;
-  border-radius: 999px;
+  border-radius: 6px;
   border: 1px solid var(--agentsys-card-border);
   background: var(--agentsys-card-bg);
-  color: var(--mantine-color-dimmed);
-  font-size: 0.8125rem;
-  font-weight: 500;
-  transition: border-color 150ms ease, color 150ms ease, box-shadow 150ms ease;
-  box-shadow: 0 1px 2px var(--agentsys-muted-fill);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: border-color 150ms ease;
+  line-height: 1;
 }
 
 .trigger:hover {
   border-color: var(--mantine-color-default-border);
-  color: var(--mantine-color-text);
 }
 
 .triggerDot {
-  width: 18px;
-  height: 18px;
+  width: 14px;
+  height: 14px;
   border-radius: 50%;
   flex-shrink: 0;
-  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
-}
-
-.triggerLabel {
-  max-width: 88px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.triggerCaret {
-  font-size: 0.6rem;
-  opacity: 0.5;
-  line-height: 1;
 }
 
 .dropdown {
@@ -46,7 +30,7 @@
 
 .panelTitle {
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   font-weight: 600;
   color: var(--mantine-color-text);
   margin-bottom: 4px;
@@ -55,90 +39,103 @@
 .panelDesc {
   font-size: 0.75rem;
   color: var(--mantine-color-dimmed);
-  margin-bottom: 14px;
+  margin-bottom: 16px;
+  line-height: 1.45;
 }
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 10px;
+.swatchRow {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px 12px;
 }
 
-.card {
+.swatchOption {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
-  padding: 10px 8px;
-  border-radius: 12px;
-  border: 1px solid var(--agentsys-border-subtle);
-  background: var(--agentsys-page-bg);
+  gap: 6px;
+  width: 72px;
+  padding: 6px 4px;
+  border: none;
+  border-radius: var(--mantine-radius-md);
+  background: transparent;
   cursor: pointer;
-  transition: border-color 150ms ease, transform 150ms ease, box-shadow 150ms ease;
+  transition: background 150ms ease;
 }
 
-.card:hover {
-  border-color: var(--mantine-color-default-border);
-  transform: translateY(-1px);
+.swatchOption:hover {
+  background: var(--agentsys-muted-fill);
 }
 
-.cardActive {
-  border-color: var(--agentsys-accent, var(--mantine-color-agentGreen-6));
-  box-shadow: 0 0 0 1px color-mix(in srgb, var(--agentsys-accent, var(--mantine-color-agentGreen-6)) 35%, transparent);
-}
-
-.swatch {
-  width: 36px;
-  height: 36px;
+.swatchDot {
+  position: relative;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
-  border: 1px solid var(--agentsys-border-subtle);
-  transition: transform 150ms ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
+  transition: transform 150ms ease, box-shadow 150ms ease;
 }
 
-.card:hover .swatch {
-  transform: scale(1.08);
+[data-mantine-color-scheme='dark'] .swatchDot {
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
 }
 
-.swatchForest {
-  background: linear-gradient(135deg, #16A34A 35%, #F8F9FB 35%);
+.swatchDot::after {
+  content: '';
+  position: absolute;
+  right: -1px;
+  bottom: -1px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--swatch-secondary);
+  border: 2px solid var(--agentsys-card-bg, var(--mantine-color-body));
 }
 
-.swatchOcean {
-  background: linear-gradient(135deg, #06B6D4 35%, #0A1F3F 35%);
+.swatchOption:hover .swatchDot {
+  transform: scale(1.06);
 }
 
-.swatchSunset {
-  background: linear-gradient(135deg, #EA7A1E 35%, #FFF8EE 35%);
+.swatchOptionActive .swatchDot {
+  box-shadow:
+    0 0 0 2px var(--agentsys-card-bg, var(--mantine-color-body)),
+    0 0 0 4px var(--swatch-ring);
 }
 
-.swatchRose {
-  background: linear-gradient(135deg, #F43F5E 35%, #1F111A 35%);
+.swatchCheck {
+  position: relative;
+  z-index: 1;
+  color: #fff;
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.35));
 }
 
-.swatchLavender {
-  background: linear-gradient(135deg, #9333EA 35%, #F8F6FC 35%);
-}
-
-.cardName {
-  font-size: 0.72rem;
+.swatchName {
+  font-size: 0.6875rem;
   font-weight: 500;
-  color: var(--mantine-color-text);
+  color: var(--mantine-color-dimmed);
   text-align: center;
   line-height: 1.2;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.swatchOptionActive .swatchName {
+  color: var(--mantine-color-text);
+  font-weight: 600;
 }
 
 @media (max-width: 768px) {
-  .triggerLabel {
-    display: none;
+  .swatchRow {
+    gap: 6px 8px;
   }
 
-  .trigger {
-    width: 32px;
-    padding: 0;
-    justify-content: center;
-  }
-
-  .triggerCaret {
-    display: none;
+  .swatchOption {
+    width: 64px;
   }
 }

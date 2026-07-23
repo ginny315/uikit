@@ -43,13 +43,13 @@
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #9333EA, #2563EB);
+  background: transparent;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 0.75rem;
   font-weight: 700;
-  color: #fff;
+  color: var(--mantine-color-dimmed);
   overflow: hidden;
   flex-shrink: 0;
 }
@@ -71,7 +71,7 @@
   align-items: center;
   gap: 10px;
   padding: 4px 12px 4px 4px;
-  border-radius: 24px;
+  border-radius: var(--agentsys-control-radius, 24px);
   border: 1px solid var(--agentsys-card-border);
   background: var(--agentsys-card-bg);
   cursor: pointer;
@@ -85,7 +85,7 @@
 .langBtn {
   width: 32px;
   height: 32px;
-  border-radius: 6px;
+  border-radius: var(--agentsys-control-radius, 6px);
   border: 1px solid var(--agentsys-card-border);
   background: var(--agentsys-card-bg);
   color: var(--mantine-color-dimmed);
