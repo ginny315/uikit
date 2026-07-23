@@ -1,6 +1,6 @@
 # AgentSys 前端待办清单
 
-**最后更新**: 2026-07-22 · **P0 已完成**（commit `8db13c7`）· **P1 功能缺口已完成**
+**最后更新**: 2026-07-23 · **P0 已完成**（commit `8db13c7`）· **P1 功能缺口已完成** · **Profile 模块已完成**（commit `81dcec4`）
 **关联**: [FRONTEND_PLAN.md](./FRONTEND_PLAN.md) · [PRD.md](./PRD.md) · [DESIGN_SPEC.md](./DESIGN_SPEC.md) · [TECH_DESIGN.md](./TECH_DESIGN.md)
 
 ---
@@ -112,6 +112,7 @@
 
 | 日期 | 变更 |
 |------|------|
+| 2026-07-23 | Profile 个人设置模块: 用户资料/密码/邮箱/手机号修改 + avatar 上传 + 验证码流程 + Topbar 用户菜单重构 + profile i18n namespace (commit `81dcec4`) |
 | 2026-07-22 | P2 工程化盘点：`.gitignore`、i18n 标记完成；部署 / Spotlight / 设计对齐移出清单；其余 3 项待做（CI / 测试 / 配额 UI） |
 | 2026-07-21 | P1 功能缺口完成：编辑/重试/邀请/图表/useRealtime/env/清理 mocks |
 | 2026-07-21 | 精简文档：P0 折叠，删除已完成 checklist |
