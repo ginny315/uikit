@@ -6,16 +6,16 @@
 .statsRow {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 18px;
-  margin-bottom: 28px;
+  gap: var(--agentsys-grid-gap, 18px);
+  margin-bottom: calc(var(--agentsys-grid-gap, 18px) + 10px);
 }
 
 /* ── Charts Row ── */
 .chartsRow {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 18px;
-  margin-bottom: 28px;
+  gap: var(--agentsys-grid-gap, 18px);
+  margin-bottom: calc(var(--agentsys-grid-gap, 18px) + 10px);
 }
 
 .chartCard {
@@ -34,7 +34,7 @@
 }
 
 .chartTitle {
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: var(--agentsys-font-heading, 'Space Grotesk', sans-serif);
   font-size: 0.95rem;
   font-weight: 600;
   color: var(--mantine-color-text);
@@ -62,7 +62,7 @@
 .bar {
   width: 100%;
   max-width: 48px;
-  border-radius: 6px 6px 0 0;
+  border-radius: var(--agentsys-chart-bar-radius, 6px 6px 0 0);
   transition: filter 200ms ease;
   cursor: pointer;
 }

@@ -3,7 +3,7 @@
   background: var(--agentsys-card-bg, var(--mantine-color-body));
   border: 1px solid var(--agentsys-card-border, var(--agentsys-border-subtle));
   border-radius: var(--mantine-radius-lg);
-  padding: 22px 24px;
+  padding: var(--agentsys-card-padding, 22px 24px);
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -45,7 +45,7 @@
 
 /* ── Value ── */
 .value {
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: var(--agentsys-stat-font, var(--agentsys-font-heading, 'Space Grotesk', sans-serif));
   font-size: 1.8rem;
   font-weight: 700;
   line-height: 1;

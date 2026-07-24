@@ -65,7 +65,7 @@
   "theme": {
     "pickerLabel": "选择配色主题",
     "panelTitle": "选择主题",
-    "panelDesc": "选择界面配色方案，明暗模式可单独切换。除 Forest 外均含完整圆角、导航与间距风格",
+    "panelDesc": "每套主题含独立字体、圆角、导航形态、布局密度与切换动画",
     "palettes": {
       "forest": "Forest",
       "ocean": "Ocean",

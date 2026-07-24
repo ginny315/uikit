@@ -65,7 +65,7 @@
   "theme": {
     "pickerLabel": "Choose color theme",
     "panelTitle": "Choose Theme",
-    "panelDesc": "Pick a color palette. Light/dark toggles separately. All except Forest include full radius, nav, and spacing styles.",
+    "panelDesc": "Each theme includes its own fonts, radius, nav style, layout density, and switch animation.",
     "palettes": {
       "forest": "Forest",
       "ocean": "Ocean",

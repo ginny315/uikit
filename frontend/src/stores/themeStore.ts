@@ -1,10 +1,11 @@
 import { create } from 'zustand';
-import { isThemePalette, type ThemePalette } from '../themes/palettes';
+import { PALETTES, isThemePalette, type ThemePalette } from '../themes/palettes';
 
 export type ThemeMode = 'light' | 'dark';
 
 const MODE_STORAGE_KEY = 'agentsys-theme';
 const PALETTE_STORAGE_KEY = 'agentsys-palette';
+const TRANSITION_MS = 480;
 
 interface ThemeState {
   palette: ThemePalette;
@@ -36,20 +37,54 @@ export function applyThemeAttributes(palette: ThemePalette, mode: ThemeMode) {
   root.setAttribute('data-mantine-color-scheme', mode);
 }
 
+function flashThemeAccent(accent: string) {
+  const el = document.createElement('div');
+  el.className = 'agentsys-theme-flash';
+  el.style.setProperty('--flash-color', accent);
+  document.body.appendChild(el);
+  requestAnimationFrame(() => el.classList.add('active'));
+  window.setTimeout(() => el.remove(), TRANSITION_MS);
+}
+
+function runThemeTransition(apply: () => void, accent?: string) {
+  const root = document.documentElement;
+  const doc = document as Document & {
+    startViewTransition?: (callback: () => void) => { finished: Promise<void> };
+  };
+
+  if (accent) flashThemeAccent(accent);
+
+  if (typeof doc.startViewTransition === 'function') {
+    doc.startViewTransition(() => {
+      apply();
+    });
+    return;
+  }
+
+  root.classList.add('agentsys-theme-transition');
+  apply();
+  window.setTimeout(() => root.classList.remove('agentsys-theme-transition'), TRANSITION_MS);
+}
+
 export const useThemeStore = create<ThemeState>((set, get) => ({
   palette: 'forest',
   mode: 'light',
 
   setPalette: (palette) => {
-    localStorage.setItem(PALETTE_STORAGE_KEY, palette);
-    set({ palette });
-    applyThemeAttributes(palette, get().mode);
+    const accent = PALETTES[palette].accent;
+    runThemeTransition(() => {
+      localStorage.setItem(PALETTE_STORAGE_KEY, palette);
+      set({ palette });
+      applyThemeAttributes(palette, get().mode);
+    }, accent);
   },
 
   setMode: (mode) => {
-    localStorage.setItem(MODE_STORAGE_KEY, mode);
-    set({ mode });
-    applyThemeAttributes(get().palette, mode);
+    runThemeTransition(() => {
+      localStorage.setItem(MODE_STORAGE_KEY, mode);
+      set({ mode });
+      applyThemeAttributes(get().palette, mode);
+    });
   },
 
   toggleMode: () => {

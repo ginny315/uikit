@@ -95,9 +95,28 @@
   }
 
   body {
-    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family: var(--agentsys-font-body, 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* ── 主题切换 accent 扫光 ── */
+  .agentsys-theme-flash {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 99999;
+    background: radial-gradient(
+      ellipse 80% 60% at 50% 0%,
+      color-mix(in srgb, var(--flash-color, #16A34A) 18%, transparent) 0%,
+      transparent 70%
+    );
+    opacity: 0;
+    transition: opacity 0.35s ease;
+  }
+
+  .agentsys-theme-flash.active {
+    opacity: 1;
   }
 
   /* ── 滚动条 ── */
@@ -172,7 +191,7 @@
   }
 
   .mantine-Modal-title {
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: var(--agentsys-font-heading, 'Space Grotesk', sans-serif);
     font-size: 1.0625rem;
     font-weight: 600;
     letter-spacing: -0.01em;

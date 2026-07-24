@@ -1,263 +1,356 @@
 /* ── AgentSys 配色主题（palette）× 明暗（mode）独立控制 ──
- * 对应 web/ui-kit.html 的 data-theme + data-theme-mode，但 decouple：
- * 切换 palette 不会强制改变 light/dark。
+ * B 方案：每套主题含完整字体/布局/导航/背景/动效 token，切换感知强烈。
  */
 
 @layer base {
+
+  /* ── 主题切换过渡 & View Transition ── */
+  html.agentsys-theme-transition body,
+  html.agentsys-theme-transition .main,
+  html.agentsys-theme-transition [class*='sidebar'],
+  html.agentsys-theme-transition [class*='topbar'],
+  html.agentsys-theme-transition [class*='card'],
+  html.agentsys-theme-transition [class*='navItem'] {
+    transition:
+      background 0.45s ease,
+      background-color 0.45s ease,
+      border-color 0.45s ease,
+      color 0.35s ease,
+      box-shadow 0.45s ease,
+      border-radius 0.45s ease !important;
+  }
+
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 0.42s;
+    animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* ── Forest（基准绿，轻量形态：经典指示条 + 淡绿氛围） ── */
   :root,
-  [data-agentsys-palette='forest'] {
+  [data-agentsys-palette='forest'][data-mantine-color-scheme='light'] {
     --agentsys-accent: #16A34A;
     --agentsys-accent-glow: #22C55E;
     --agentsys-accent-secondary: #06B6D4;
+    --agentsys-font-heading: 'Space Grotesk', sans-serif;
+    --agentsys-font-body: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    --agentsys-font-mono: 'JetBrains Mono', monospace;
+    --agentsys-sidebar-width: 240px;
+    --agentsys-content-padding: 28px;
+    --agentsys-grid-gap: 18px;
+    --agentsys-card-padding: 22px 24px;
+    --agentsys-chart-bar-radius: 6px 6px 0 0;
+    --agentsys-topbar-blur: 16px;
+    --agentsys-page-gradient: linear-gradient(165deg, #F0FDF4 0%, #F8F9FB 35%, #F8F9FB 100%);
+    --agentsys-nav-active-bg: rgba(22, 163, 74, 0.08);
+    --agentsys-nav-active-color: #16A34A;
+    --agentsys-nav-active-indicator: #16A34A;
+    --agentsys-nav-indicator-width: 3px;
+    --agentsys-nav-item-radius: 8px;
+    --agentsys-brand-radius: 8px;
+    --agentsys-nav-active-shadow: none;
+    --agentsys-control-radius: 8px;
+    --agentsys-badge-radius: 20px;
+    --agentsys-card-hover-transform: translateY(-2px);
+    --agentsys-card-hover-shadow: var(--mantine-shadow-lg);
+    --agentsys-stat-font: var(--agentsys-font-heading);
   }
 
-  /* ── Ocean（深海仪表盘：紧凑圆角、青色指示条、蓝调阴影） ── */
+  [data-agentsys-palette='forest'][data-mantine-color-scheme='dark'] {
+    --agentsys-accent: #22C55E;
+    --agentsys-accent-glow: #4ADE80;
+    --agentsys-accent-secondary: #06B6D4;
+    --agentsys-page-gradient: linear-gradient(165deg, #0A1F12 0%, #060912 35%, #060912 100%);
+    --agentsys-nav-active-bg: rgba(34, 197, 94, 0.10);
+    --agentsys-nav-active-color: #4ADE80;
+    --agentsys-nav-active-indicator: #22C55E;
+  }
+
+  /* ── Ocean（深海仪表盘：IBM Plex、紧凑、玻璃顶栏、underline tabs） ── */
   [data-agentsys-palette='ocean'][data-mantine-color-scheme='light'] {
-    --mantine-color-body: #EEF6FA;
-    --mantine-color-text: #0C2340;
-    --mantine-color-dimmed: #4A6788;
-    --agentsys-sidebar-bg: #EEF6FA;
-    --agentsys-topbar-bg: rgba(255, 255, 255, 0.88);
+    --mantine-color-body: #E8F4FA;
+    --mantine-color-text: #0A1E32;
+    --mantine-color-dimmed: #3D5A73;
+    --agentsys-sidebar-bg: #E8F4FA;
+    --agentsys-topbar-bg: rgba(255, 255, 255, 0.72);
     --agentsys-card-bg: #FFFFFF;
-    --agentsys-card-border: rgba(8, 145, 178, 0.12);
-    --agentsys-page-bg: #EEF6FA;
-    --agentsys-border-subtle: rgba(8, 145, 178, 0.10);
-    --agentsys-border-lighter: rgba(8, 145, 178, 0.06);
-    --agentsys-row-hover: rgba(6, 182, 212, 0.06);
-    --agentsys-muted-fill: rgba(6, 182, 212, 0.08);
+    --agentsys-card-border: rgba(8, 145, 178, 0.14);
+    --agentsys-page-bg: #E8F4FA;
+    --agentsys-border-subtle: rgba(8, 145, 178, 0.12);
+    --agentsys-border-lighter: rgba(8, 145, 178, 0.07);
+    --agentsys-row-hover: rgba(6, 182, 212, 0.07);
+    --agentsys-muted-fill: rgba(6, 182, 212, 0.09);
     --agentsys-accent: #0891B2;
     --agentsys-accent-glow: #06B6D4;
     --agentsys-accent-secondary: #38BDF8;
-    --agentsys-nav-active-bg: rgba(6, 182, 212, 0.10);
-    --agentsys-nav-active-color: #0891B2;
+    --agentsys-font-heading: 'IBM Plex Sans', sans-serif;
+    --agentsys-font-body: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    --agentsys-font-mono: 'JetBrains Mono', monospace;
+    --agentsys-sidebar-width: 216px;
+    --agentsys-content-padding: 20px;
+    --agentsys-grid-gap: 14px;
+    --agentsys-card-padding: 16px 18px;
+    --agentsys-chart-bar-radius: 2px 2px 0 0;
+    --agentsys-topbar-blur: 20px;
+    --agentsys-page-gradient: linear-gradient(180deg, #DBF0FA 0%, #E8F4FA 30%, #EEF6FA 100%);
+    --agentsys-nav-active-bg: rgba(6, 182, 212, 0.12);
+    --agentsys-nav-active-color: #0E7490;
     --agentsys-nav-active-indicator: #06B6D4;
     --agentsys-nav-indicator-width: 3px;
-    --agentsys-nav-item-radius: 6px;
-    --agentsys-brand-radius: 6px;
+    --agentsys-nav-item-radius: 4px;
+    --agentsys-brand-radius: 4px;
     --agentsys-nav-active-shadow: none;
-    --agentsys-control-radius: 6px;
-    --agentsys-badge-radius: 4px;
-    --agentsys-card-hover-transform: translateY(-1px);
-    --agentsys-card-hover-shadow: 0 4px 16px rgba(6, 182, 212, 0.10);
+    --agentsys-control-radius: 4px;
+    --agentsys-badge-radius: 2px;
+    --agentsys-card-hover-transform: none;
+    --agentsys-card-hover-shadow: 0 2px 12px rgba(6, 182, 212, 0.12);
+    --agentsys-stat-font: 'IBM Plex Sans', sans-serif;
   }
 
   [data-agentsys-palette='ocean'][data-mantine-color-scheme='dark'] {
-    --mantine-color-body: #060B14;
+    --mantine-color-body: #040810;
     --mantine-color-text: #E8EDF5;
-    --mantine-color-dimmed: #8FA4C0;
-    --agentsys-sidebar-bg: #060B14;
-    --agentsys-topbar-bg: rgba(10, 17, 31, 0.82);
-    --agentsys-card-bg: #152238;
-    --agentsys-card-border: rgba(100, 160, 220, 0.10);
-    --agentsys-page-bg: #060B14;
-    --agentsys-border-subtle: rgba(100, 160, 220, 0.08);
-    --agentsys-border-lighter: rgba(100, 160, 220, 0.05);
-    --agentsys-row-hover: rgba(6, 182, 212, 0.08);
-    --agentsys-muted-fill: rgba(6, 182, 212, 0.10);
-    --agentsys-accent: #06B6D4;
-    --agentsys-accent-glow: #22D3EE;
+    --mantine-color-dimmed: #7A94B0;
+    --agentsys-sidebar-bg: #040810;
+    --agentsys-topbar-bg: rgba(8, 14, 26, 0.78);
+    --agentsys-card-bg: #101E30;
+    --agentsys-card-border: rgba(56, 189, 248, 0.12);
+    --agentsys-page-bg: #040810;
+    --agentsys-border-subtle: rgba(56, 189, 248, 0.10);
+    --agentsys-border-lighter: rgba(56, 189, 248, 0.06);
+    --agentsys-row-hover: rgba(6, 182, 212, 0.10);
+    --agentsys-muted-fill: rgba(6, 182, 212, 0.12);
+    --agentsys-accent: #22D3EE;
+    --agentsys-accent-glow: #67E8F9;
     --agentsys-accent-secondary: #38BDF8;
-    --agentsys-nav-active-bg: rgba(6, 182, 212, 0.12);
-    --agentsys-nav-active-color: #22D3EE;
+    --agentsys-page-gradient: linear-gradient(180deg, #061018 0%, #040810 100%);
+    --agentsys-nav-active-bg: rgba(6, 182, 212, 0.14);
+    --agentsys-nav-active-color: #67E8F9;
     --agentsys-nav-active-indicator: #06B6D4;
-    --agentsys-nav-indicator-width: 3px;
-    --agentsys-nav-item-radius: 6px;
-    --agentsys-brand-radius: 6px;
-    --agentsys-nav-active-shadow: none;
-    --agentsys-control-radius: 6px;
-    --agentsys-badge-radius: 4px;
-    --agentsys-card-hover-transform: translateY(-1px);
-    --agentsys-card-hover-shadow: 0 4px 16px rgba(6, 182, 212, 0.14);
+    --agentsys-card-hover-shadow: 0 2px 16px rgba(6, 182, 212, 0.18);
   }
 
-  /* ── Sunset（暖色暮光：大圆角、琥珀 pill 导航、柔和暖影） ── */
+  /* ── Sunset（暖色暮光：大圆角、琥珀 pill 导航、暖光晕） ── */
   [data-agentsys-palette='sunset'][data-mantine-color-scheme='light'] {
-    --mantine-color-body: #FDF8F0;
-    --mantine-color-text: #2D1F10;
-    --mantine-color-dimmed: #7C5F3E;
-    --agentsys-sidebar-bg: #FDF8F0;
-    --agentsys-topbar-bg: rgba(255, 251, 245, 0.92);
+    --mantine-color-body: #FFF8EE;
+    --mantine-color-text: #2A1A08;
+    --mantine-color-dimmed: #8A6840;
+    --agentsys-sidebar-bg: #FFF8EE;
+    --agentsys-topbar-bg: rgba(255, 252, 246, 0.90);
     --agentsys-card-bg: #FFFFFF;
-    --agentsys-card-border: rgba(180, 130, 60, 0.12);
-    --agentsys-page-bg: #FDF8F0;
-    --agentsys-border-subtle: rgba(180, 130, 60, 0.10);
-    --agentsys-border-lighter: rgba(180, 130, 60, 0.06);
-    --agentsys-row-hover: rgba(234, 122, 30, 0.06);
-    --agentsys-muted-fill: rgba(234, 122, 30, 0.08);
+    --agentsys-card-border: rgba(234, 122, 30, 0.14);
+    --agentsys-page-bg: #FFF8EE;
+    --agentsys-border-subtle: rgba(234, 122, 30, 0.12);
+    --agentsys-border-lighter: rgba(234, 122, 30, 0.07);
+    --agentsys-row-hover: rgba(234, 122, 30, 0.07);
+    --agentsys-muted-fill: rgba(234, 122, 30, 0.10);
     --agentsys-accent: #EA7A1E;
     --agentsys-accent-glow: #F5973A;
     --agentsys-accent-secondary: #14B8A6;
+    --agentsys-font-heading: 'DM Sans', sans-serif;
+    --agentsys-font-body: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    --agentsys-font-mono: 'JetBrains Mono', monospace;
+    --agentsys-sidebar-width: 252px;
+    --agentsys-content-padding: 32px;
+    --agentsys-grid-gap: 22px;
+    --agentsys-card-padding: 26px 28px;
+    --agentsys-chart-bar-radius: 12px 12px 0 0;
+    --agentsys-topbar-blur: 12px;
+    --agentsys-page-gradient: radial-gradient(ellipse 120% 80% at 50% -10%, #FFEDD5 0%, #FFF8EE 55%, #FFF8EE 100%);
     --agentsys-nav-active-bg: #EA7A1E;
     --agentsys-nav-active-color: #FFFFFF;
     --agentsys-nav-active-indicator: transparent;
     --agentsys-nav-indicator-width: 0px;
-    --agentsys-nav-item-radius: 10px;
-    --agentsys-nav-active-radius: 10px;
-    --agentsys-brand-radius: 10px;
-    --agentsys-nav-active-shadow: 0 2px 8px rgba(234, 122, 30, 0.28);
-    --agentsys-control-radius: 10px;
-    --agentsys-badge-radius: 8px;
-    --agentsys-card-hover-transform: translateY(-2px);
-    --agentsys-card-hover-shadow: 0 6px 24px rgba(234, 122, 30, 0.12);
+    --agentsys-nav-item-radius: 14px;
+    --agentsys-nav-active-radius: 14px;
+    --agentsys-brand-radius: 14px;
+    --agentsys-nav-active-shadow: 0 4px 14px rgba(234, 122, 30, 0.32);
+    --agentsys-control-radius: 14px;
+    --agentsys-badge-radius: 12px;
+    --agentsys-card-hover-transform: translateY(-3px);
+    --agentsys-card-hover-shadow: 0 10px 32px rgba(234, 122, 30, 0.16);
+    --agentsys-stat-font: 'DM Sans', sans-serif;
   }
 
   [data-agentsys-palette='sunset'][data-mantine-color-scheme='dark'] {
-    --mantine-color-body: #1A1208;
-    --mantine-color-text: #F5E8D8;
-    --mantine-color-dimmed: #B8956E;
-    --agentsys-sidebar-bg: #1A1208;
-    --agentsys-topbar-bg: rgba(26, 18, 8, 0.85);
-    --agentsys-card-bg: #2A1E10;
-    --agentsys-card-border: rgba(234, 122, 30, 0.14);
-    --agentsys-page-bg: #1A1208;
-    --agentsys-border-subtle: rgba(234, 122, 30, 0.10);
-    --agentsys-border-lighter: rgba(234, 122, 30, 0.06);
-    --agentsys-row-hover: rgba(234, 122, 30, 0.08);
-    --agentsys-muted-fill: rgba(234, 122, 30, 0.10);
+    --mantine-color-body: #181008;
+    --mantine-color-text: #FAECD8;
+    --mantine-color-dimmed: #C4A070;
+    --agentsys-sidebar-bg: #181008;
+    --agentsys-topbar-bg: rgba(24, 16, 8, 0.88);
+    --agentsys-card-bg: #2C2010;
+    --agentsys-card-border: rgba(245, 151, 58, 0.16);
+    --agentsys-page-bg: #181008;
+    --agentsys-border-subtle: rgba(245, 151, 58, 0.12);
+    --agentsys-border-lighter: rgba(245, 151, 58, 0.07);
+    --agentsys-row-hover: rgba(245, 151, 58, 0.10);
+    --agentsys-muted-fill: rgba(245, 151, 58, 0.12);
     --agentsys-accent: #F5973A;
-    --agentsys-accent-glow: #FB923C;
+    --agentsys-accent-glow: #FBBF24;
     --agentsys-accent-secondary: #2DD4BF;
+    --agentsys-page-gradient: radial-gradient(ellipse 100% 60% at 50% 0%, #2A1808 0%, #181008 70%);
     --agentsys-nav-active-bg: #F5973A;
-    --agentsys-nav-active-color: #1A1208;
-    --agentsys-nav-active-indicator: transparent;
-    --agentsys-nav-indicator-width: 0px;
-    --agentsys-nav-item-radius: 10px;
-    --agentsys-nav-active-radius: 10px;
-    --agentsys-brand-radius: 10px;
-    --agentsys-nav-active-shadow: 0 2px 10px rgba(245, 151, 58, 0.30);
-    --agentsys-control-radius: 10px;
-    --agentsys-badge-radius: 8px;
-    --agentsys-card-hover-transform: translateY(-2px);
-    --agentsys-card-hover-shadow: 0 6px 24px rgba(245, 151, 58, 0.14);
+    --agentsys-nav-active-color: #181008;
+    --agentsys-nav-active-shadow: 0 4px 16px rgba(245, 151, 58, 0.35);
+    --agentsys-card-hover-shadow: 0 10px 36px rgba(245, 151, 58, 0.20);
   }
 
-  /* ── Lavender（暮紫优雅：Inter 字体、浮起卡片导航、紫调阴影） ── */
+  /* ── Lavender（暮紫优雅：Inter、浮起卡片导航） ── */
   [data-agentsys-palette='lavender'][data-mantine-color-scheme='light'] {
-    --mantine-color-body: #F8F6FC;
-    --mantine-color-text: #1E1338;
-    --mantine-color-dimmed: #5C4D7A;
-    --agentsys-sidebar-bg: #F8F6FC;
-    --agentsys-topbar-bg: rgba(253, 252, 255, 0.92);
+    --mantine-color-body: #F5F2FC;
+    --mantine-color-text: #1A1030;
+    --mantine-color-dimmed: #5A4878;
+    --agentsys-sidebar-bg: #F5F2FC;
+    --agentsys-topbar-bg: rgba(252, 251, 255, 0.92);
     --agentsys-card-bg: #FFFFFF;
-    --agentsys-card-border: rgba(140, 110, 200, 0.10);
-    --agentsys-page-bg: #F8F6FC;
-    --agentsys-border-subtle: rgba(140, 110, 200, 0.08);
-    --agentsys-border-lighter: rgba(140, 110, 200, 0.05);
+    --agentsys-card-border: rgba(147, 51, 234, 0.10);
+    --agentsys-page-bg: #F5F2FC;
+    --agentsys-border-subtle: rgba(147, 51, 234, 0.09);
+    --agentsys-border-lighter: rgba(147, 51, 234, 0.05);
     --agentsys-row-hover: rgba(147, 51, 234, 0.06);
     --agentsys-muted-fill: rgba(147, 51, 234, 0.08);
     --agentsys-accent: #9333EA;
     --agentsys-accent-glow: #A855F7;
-    --agentsys-accent-secondary: #4F6FDE;
+    --agentsys-accent-secondary: #6366F1;
+    --agentsys-font-heading: 'Inter', sans-serif;
+    --agentsys-font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --agentsys-font-mono: 'JetBrains Mono', monospace;
+    --agentsys-sidebar-width: 240px;
+    --agentsys-content-padding: 28px;
+    --agentsys-grid-gap: 20px;
+    --agentsys-card-padding: 24px 26px;
+    --agentsys-chart-bar-radius: 8px 8px 0 0;
+    --agentsys-topbar-blur: 14px;
+    --agentsys-page-gradient: linear-gradient(160deg, #EDE9FE 0%, #F5F2FC 40%, #F5F2FC 100%);
     --agentsys-nav-active-bg: #FFFFFF;
     --agentsys-nav-active-color: #9333EA;
     --agentsys-nav-active-indicator: transparent;
     --agentsys-nav-indicator-width: 0px;
-    --agentsys-nav-item-radius: 10px;
-    --agentsys-brand-radius: 10px;
-    --agentsys-nav-active-shadow: 0 1px 4px rgba(147, 51, 234, 0.14);
-    --agentsys-control-radius: 10px;
-    --agentsys-badge-radius: 8px;
-    --agentsys-card-hover-transform: translateY(-1px);
-    --agentsys-card-hover-shadow: 0 4px 20px rgba(147, 51, 234, 0.10);
+    --agentsys-nav-item-radius: 12px;
+    --agentsys-brand-radius: 12px;
+    --agentsys-nav-active-shadow: 0 2px 8px rgba(147, 51, 234, 0.16);
+    --agentsys-control-radius: 12px;
+    --agentsys-badge-radius: 10px;
+    --agentsys-card-hover-transform: translateY(-2px);
+    --agentsys-card-hover-shadow: 0 6px 24px rgba(147, 51, 234, 0.12);
+    --agentsys-stat-font: 'Inter', sans-serif;
   }
 
   [data-agentsys-palette='lavender'][data-mantine-color-scheme='dark'] {
-    --mantine-color-body: #120A1E;
+    --mantine-color-body: #100A1A;
     --mantine-color-text: #F0EAF8;
-    --mantine-color-dimmed: #9888B8;
-    --agentsys-sidebar-bg: #120A1E;
-    --agentsys-topbar-bg: rgba(18, 10, 30, 0.85);
-    --agentsys-card-bg: #1E1430;
-    --agentsys-card-border: rgba(168, 85, 247, 0.12);
-    --agentsys-page-bg: #120A1E;
-    --agentsys-border-subtle: rgba(168, 85, 247, 0.10);
+    --mantine-color-dimmed: #A090C0;
+    --agentsys-sidebar-bg: #100A1A;
+    --agentsys-topbar-bg: rgba(16, 10, 26, 0.88);
+    --agentsys-card-bg: #1C1430;
+    --agentsys-card-border: rgba(168, 85, 247, 0.14);
+    --agentsys-page-bg: #100A1A;
+    --agentsys-border-subtle: rgba(168, 85, 247, 0.11);
     --agentsys-border-lighter: rgba(168, 85, 247, 0.06);
-    --agentsys-row-hover: rgba(168, 85, 247, 0.08);
-    --agentsys-muted-fill: rgba(168, 85, 247, 0.10);
-    --agentsys-accent: #A855F7;
-    --agentsys-accent-glow: #C084FC;
+    --agentsys-row-hover: rgba(168, 85, 247, 0.09);
+    --agentsys-muted-fill: rgba(168, 85, 247, 0.11);
+    --agentsys-accent: #C084FC;
+    --agentsys-accent-glow: #D8B4FE;
     --agentsys-accent-secondary: #818CF8;
-    --agentsys-nav-active-bg: #1E1430;
-    --agentsys-nav-active-color: #C084FC;
-    --agentsys-nav-active-indicator: transparent;
-    --agentsys-nav-indicator-width: 0px;
-    --agentsys-nav-item-radius: 10px;
-    --agentsys-brand-radius: 10px;
-    --agentsys-nav-active-shadow: 0 1px 4px rgba(168, 85, 247, 0.22);
-    --agentsys-control-radius: 10px;
-    --agentsys-badge-radius: 8px;
-    --agentsys-card-hover-transform: translateY(-1px);
-    --agentsys-card-hover-shadow: 0 4px 20px rgba(168, 85, 247, 0.14);
+    --agentsys-page-gradient: linear-gradient(160deg, #1A1030 0%, #100A1A 50%);
+    --agentsys-nav-active-bg: #1C1430;
+    --agentsys-nav-active-color: #D8B4FE;
+    --agentsys-nav-active-shadow: 0 2px 10px rgba(168, 85, 247, 0.24);
+    --agentsys-card-hover-shadow: 0 6px 28px rgba(168, 85, 247, 0.16);
   }
 
-  /* ── Clinical（Pharmacy OS 风格：大圆角、留白、紫调、白卡片） ── */
+  /* ── Clinical（Pharmacy OS：大留白、白卡片导航、几乎无动效） ── */
   [data-agentsys-palette='clinical'][data-mantine-color-scheme='light'] {
-    --mantine-color-body: #F3F3F5;
-    --mantine-color-text: #1A1A2E;
+    --mantine-color-body: #F0F0F3;
+    --mantine-color-text: #111827;
     --mantine-color-dimmed: #6B7280;
-    --agentsys-sidebar-bg: #F3F3F5;
-    --agentsys-topbar-bg: rgba(243, 243, 245, 0.92);
+    --agentsys-sidebar-bg: #F0F0F3;
+    --agentsys-topbar-bg: rgba(240, 240, 243, 0.95);
     --agentsys-card-bg: #FFFFFF;
-    --agentsys-card-border: rgba(0, 0, 0, 0.06);
-    --agentsys-page-bg: #F3F3F5;
-    --agentsys-border-subtle: rgba(0, 0, 0, 0.05);
-    --agentsys-border-lighter: rgba(0, 0, 0, 0.03);
-    --agentsys-row-hover: rgba(123, 97, 255, 0.04);
-    --agentsys-muted-fill: rgba(123, 97, 255, 0.06);
+    --agentsys-card-border: rgba(0, 0, 0, 0.05);
+    --agentsys-page-bg: #F0F0F3;
+    --agentsys-border-subtle: rgba(0, 0, 0, 0.04);
+    --agentsys-border-lighter: rgba(0, 0, 0, 0.02);
+    --agentsys-row-hover: rgba(107, 81, 239, 0.03);
+    --agentsys-muted-fill: rgba(107, 81, 239, 0.05);
     --agentsys-accent: #6B51EF;
     --agentsys-accent-glow: #7B61FF;
     --agentsys-accent-secondary: #60A5FA;
+    --agentsys-font-heading: 'Inter', sans-serif;
+    --agentsys-font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --agentsys-font-mono: 'JetBrains Mono', monospace;
+    --agentsys-sidebar-width: 256px;
+    --agentsys-content-padding: 36px;
+    --agentsys-grid-gap: 28px;
+    --agentsys-card-padding: 28px 32px;
+    --agentsys-chart-bar-radius: 10px 10px 0 0;
+    --agentsys-topbar-blur: 8px;
+    --agentsys-page-gradient: #F0F0F3;
     --agentsys-nav-active-bg: #FFFFFF;
-    --agentsys-nav-active-color: #1A1A2E;
+    --agentsys-nav-active-color: #111827;
     --agentsys-nav-active-indicator: transparent;
     --agentsys-nav-indicator-width: 0px;
-    --agentsys-nav-item-radius: 12px;
-    --agentsys-brand-radius: 10px;
-    --agentsys-nav-active-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+    --agentsys-nav-item-radius: 14px;
+    --agentsys-brand-radius: 12px;
+    --agentsys-nav-active-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+    --agentsys-control-radius: 12px;
+    --agentsys-badge-radius: 10px;
+    --agentsys-card-hover-transform: none;
+    --agentsys-card-hover-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    --agentsys-stat-font: 'Inter', sans-serif;
   }
 
   [data-agentsys-palette='clinical'][data-mantine-color-scheme='dark'] {
-    --mantine-color-body: #13111C;
-    --mantine-color-text: #F0EEF5;
+    --mantine-color-body: #111018;
+    --mantine-color-text: #F3F2F8;
     --mantine-color-dimmed: #9CA3AF;
-    --agentsys-sidebar-bg: #13111C;
-    --agentsys-topbar-bg: rgba(19, 17, 28, 0.88);
-    --agentsys-card-bg: #1E1B2A;
-    --agentsys-card-border: rgba(255, 255, 255, 0.07);
-    --agentsys-page-bg: #13111C;
-    --agentsys-border-subtle: rgba(255, 255, 255, 0.06);
+    --agentsys-sidebar-bg: #111018;
+    --agentsys-topbar-bg: rgba(17, 16, 24, 0.92);
+    --agentsys-card-bg: #1C1A28;
+    --agentsys-card-border: rgba(255, 255, 255, 0.06);
+    --agentsys-page-bg: #111018;
+    --agentsys-border-subtle: rgba(255, 255, 255, 0.05);
     --agentsys-border-lighter: rgba(255, 255, 255, 0.03);
-    --agentsys-row-hover: rgba(155, 133, 255, 0.08);
-    --agentsys-muted-fill: rgba(155, 133, 255, 0.10);
+    --agentsys-row-hover: rgba(155, 133, 255, 0.06);
+    --agentsys-muted-fill: rgba(155, 133, 255, 0.08);
     --agentsys-accent: #9B85FF;
     --agentsys-accent-glow: #B8A6FF;
     --agentsys-accent-secondary: #60A5FA;
-    --agentsys-nav-active-bg: #1E1B2A;
-    --agentsys-nav-active-color: #F0EEF5;
-    --agentsys-nav-active-indicator: transparent;
-    --agentsys-nav-indicator-width: 0px;
-    --agentsys-nav-item-radius: 12px;
-    --agentsys-brand-radius: 10px;
-    --agentsys-nav-active-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+    --agentsys-page-gradient: #111018;
+    --agentsys-nav-active-bg: #1C1A28;
+    --agentsys-nav-active-color: #F3F2F8;
+    --agentsys-nav-active-shadow: 0 1px 4px rgba(0, 0, 0, 0.28);
+    --agentsys-card-hover-transform: none;
+    --agentsys-card-hover-shadow: 0 2px 10px rgba(0, 0, 0, 0.20);
   }
 
-  /* ── Analytics（薄荷绿底、翡翠主色、直角卡片、仅 nav pill 圆角） ── */
+  /* ── Analytics（数据终端：直角、窄侧栏、零 hover、等宽数字） ── */
   [data-agentsys-palette='analytics'][data-mantine-color-scheme='light'] {
-    --mantine-color-body: #F4F9F6;
-    --mantine-color-text: #111827;
-    --mantine-color-dimmed: #6B7280;
+    --mantine-color-body: #F0FAF5;
+    --mantine-color-text: #0F172A;
+    --mantine-color-dimmed: #64748B;
     --agentsys-sidebar-bg: #FFFFFF;
-    --agentsys-topbar-bg: rgba(255, 255, 255, 0.92);
+    --agentsys-topbar-bg: #FFFFFF;
     --agentsys-card-bg: #FFFFFF;
-    --agentsys-card-border: rgba(16, 185, 129, 0.10);
-    --agentsys-page-bg: #F4F9F6;
-    --agentsys-border-subtle: rgba(16, 185, 129, 0.08);
-    --agentsys-border-lighter: rgba(16, 185, 129, 0.04);
-    --agentsys-row-hover: rgba(16, 185, 129, 0.05);
-    --agentsys-muted-fill: rgba(16, 185, 129, 0.07);
+    --agentsys-card-border: rgba(16, 185, 129, 0.12);
+    --agentsys-page-bg: #F0FAF5;
+    --agentsys-border-subtle: rgba(16, 185, 129, 0.10);
+    --agentsys-border-lighter: rgba(16, 185, 129, 0.05);
+    --agentsys-row-hover: rgba(16, 185, 129, 0.04);
+    --agentsys-muted-fill: rgba(16, 185, 129, 0.06);
     --agentsys-accent: #059669;
     --agentsys-accent-glow: #10B981;
     --agentsys-accent-secondary: #F97316;
+    --agentsys-font-heading: 'Inter', sans-serif;
+    --agentsys-font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --agentsys-font-mono: 'JetBrains Mono', monospace;
+    --agentsys-sidebar-width: 196px;
+    --agentsys-content-padding: 16px;
+    --agentsys-grid-gap: 12px;
+    --agentsys-card-padding: 14px 16px;
+    --agentsys-chart-bar-radius: 0;
+    --agentsys-topbar-blur: 0px;
+    --agentsys-page-gradient: #F0FAF5;
     --agentsys-nav-active-bg: #111827;
     --agentsys-nav-active-color: #FFFFFF;
     --agentsys-nav-active-indicator: transparent;
@@ -270,35 +363,30 @@
     --agentsys-badge-radius: 0px;
     --agentsys-card-hover-transform: none;
     --agentsys-card-hover-shadow: none;
+    --agentsys-stat-font: 'JetBrains Mono', monospace;
   }
 
   [data-agentsys-palette='analytics'][data-mantine-color-scheme='dark'] {
-    --mantine-color-body: #0A1210;
+    --mantine-color-body: #080E0C;
     --mantine-color-text: #ECFDF5;
-    --mantine-color-dimmed: #86EFAC;
-    --agentsys-sidebar-bg: #0F1815;
-    --agentsys-topbar-bg: rgba(15, 24, 21, 0.90);
-    --agentsys-card-bg: #152420;
-    --agentsys-card-border: rgba(16, 185, 129, 0.14);
-    --agentsys-page-bg: #0A1210;
-    --agentsys-border-subtle: rgba(16, 185, 129, 0.10);
-    --agentsys-border-lighter: rgba(16, 185, 129, 0.06);
-    --agentsys-row-hover: rgba(16, 185, 129, 0.08);
-    --agentsys-muted-fill: rgba(16, 185, 129, 0.12);
+    --mantine-color-dimmed: #6EE7B7;
+    --agentsys-sidebar-bg: #0C1410;
+    --agentsys-topbar-bg: #0C1410;
+    --agentsys-card-bg: #101A16;
+    --agentsys-card-border: rgba(16, 185, 129, 0.16);
+    --agentsys-page-bg: #080E0C;
+    --agentsys-border-subtle: rgba(16, 185, 129, 0.12);
+    --agentsys-border-lighter: rgba(16, 185, 129, 0.07);
+    --agentsys-row-hover: rgba(16, 185, 129, 0.06);
+    --agentsys-muted-fill: rgba(16, 185, 129, 0.10);
     --agentsys-accent: #34D399;
     --agentsys-accent-glow: #6EE7B7;
     --agentsys-accent-secondary: #FB923C;
+    --agentsys-page-gradient: #080E0C;
     --agentsys-nav-active-bg: #10B981;
     --agentsys-nav-active-color: #FFFFFF;
-    --agentsys-nav-active-indicator: transparent;
-    --agentsys-nav-indicator-width: 0px;
-    --agentsys-nav-item-radius: 0px;
-    --agentsys-nav-active-radius: 9999px;
-    --agentsys-brand-radius: 50%;
-    --agentsys-nav-active-shadow: none;
-    --agentsys-control-radius: 0px;
-    --agentsys-badge-radius: 0px;
     --agentsys-card-hover-transform: none;
     --agentsys-card-hover-shadow: none;
+    --agentsys-stat-font: 'JetBrains Mono', monospace;
   }
 }

@@ -16,13 +16,12 @@
   margin-left: var(--agentsys-sidebar-width, 240px);
   padding-top: var(--agentsys-topbar-height, 64px);
   min-height: 100vh;
-  background: var(--agentsys-page-bg, var(--mantine-color-body));
-  /* 平滑过渡：侧边栏折叠时主区域跟随移动 */
-  transition: margin-left 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  background: var(--agentsys-page-gradient, var(--agentsys-page-bg, var(--mantine-color-body)));
+  transition: margin-left 250ms cubic-bezier(0.4, 0, 0.2, 1), background 0.45s ease;
 }
 
 .content {
-  padding: 28px;
+  padding: var(--agentsys-content-padding, 28px);
 }
 
 /* ── Mobile overlay ── */

@@ -79,7 +79,7 @@
 }
 
 .pillTab[data-active] .tabSection {
-  color: var(--mantine-color-agentGreen-6);
+  color: var(--agentsys-accent, var(--mantine-color-agentGreen-6));
 }
 
 /* ── Underline variant ── */
@@ -111,14 +111,14 @@
 }
 
 .underlineTab[data-active] {
-  color: var(--mantine-color-agentGreen-6);
+  color: var(--agentsys-accent, var(--mantine-color-agentGreen-6));
   background: transparent;
-  border-bottom: 2px solid var(--mantine-color-agentGreen-6);
+  border-bottom: 2px solid var(--agentsys-accent, var(--mantine-color-agentGreen-6));
   margin-bottom: -1px;
 }
 
 .underlineTab[data-active] .tabSection {
-  color: var(--mantine-color-agentGreen-6);
+  color: var(--agentsys-accent, var(--mantine-color-agentGreen-6));
 }
 
 @media (max-width: 768px) {

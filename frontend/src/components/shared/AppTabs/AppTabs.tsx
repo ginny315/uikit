@@ -1,15 +1,18 @@
-import { Tabs, type TabsProps } from '@mantine/core';
+import { Tabs, useMantineTheme, type TabsProps } from '@mantine/core';
+import type { AppTabsVariant } from '../../../themes/paletteShapes';
 import classes from './AppTabs.module.css';
 
-export type AppTabsVariant = 'pills' | 'underline';
+export type { AppTabsVariant };
 
 export interface AppTabsProps extends TabsProps {
-  /** pills: 分段控件风格（默认）| underline: 下划线风格 */
+  /** pills: 分段控件 | underline: 下划线；未传时跟随当前 palette */
   variant?: AppTabsVariant;
 }
 
-function AppTabsRoot({ variant = 'pills', classNames, children, ...props }: AppTabsProps) {
-  const isPills = variant === 'pills';
+function AppTabsRoot({ variant, classNames, children, ...props }: AppTabsProps) {
+  const theme = useMantineTheme();
+  const resolvedVariant = variant ?? (theme.other?.appTabsVariant as AppTabsVariant | undefined) ?? 'pills';
+  const isPills = resolvedVariant === 'pills';
 
   return (
     <div className={classes.card}>
