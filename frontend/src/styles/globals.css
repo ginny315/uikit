@@ -14,8 +14,7 @@
 
 @layer base {
 
-  /* ── CSS 变量 — 覆盖 Mantine 默认 (DESIGN_SPEC 附录 A) ── */
-  :root,
+  /* ── CSS 变量 — 仅作 palette 未覆盖时的兜底 ── */
   [data-mantine-color-scheme='light'] {
     /* 背景层级 */
     --mantine-color-body: #F8F9FB;
